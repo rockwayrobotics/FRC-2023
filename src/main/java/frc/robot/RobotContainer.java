@@ -7,8 +7,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 
+import frc.robot.subsystems.CameraSubsystem;
+
 public class RobotContainer {
-  public RobotContainer() {
+  private CameraSubsystem m_CameraSubsystem = new CameraSubsystem();
+
+  public RobotContainer() {    
     configureBindings();
   }
 
