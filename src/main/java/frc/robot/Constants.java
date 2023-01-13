@@ -17,6 +17,7 @@ public final class Constants {
 
     // Motor controller IDs, defined from DriverStation
     public static final class Controllers {
+        public static final int xbox = 0;
     }
 
 
