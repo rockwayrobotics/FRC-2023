@@ -6,13 +6,12 @@ package frc.robot;
 
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
-import frc.robot.Constants.CAN;
-import frc.robot.Constants.Controllers;
-import frc.robot.Constants.Digital;
+import frc.robot.Constants.*;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
 
@@ -33,7 +32,10 @@ public class RobotContainer {
     m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftX(), () -> m_xboxController.getLeftY(), m_drivebase));
   }
 
-  private void configureBindings() {    
+  private void configureBindings() {
+    final JoystickButton rightBumper = new JoystickButton(m_xboxController, XboxController.Button.kLeftBumper.value);
+    rightBumper.onTrue(new SetDriveScaleCommand(m_drivebase, Drive.SLOMODE_SCALE));
+    rightBumper.onFalse(new SetDriveScaleCommand(m_drivebase, 1));
   }
 
   public Command getAutonomousCommand() {
