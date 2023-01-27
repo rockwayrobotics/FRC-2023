@@ -6,6 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.CAN;
 import frc.robot.Constants.Controllers;
+import frc.robot.Constants.Digital;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
 // import edu.wpi.first.wpilibj.Joystick;
@@ -20,9 +21,9 @@ public class RobotContainer {
 
   private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem(
     CAN.LEFT_MOTOR_1, CAN.LEFT_MOTOR_2,
-    CAN.RIGHT_MOTOR_1, CAN.RIGHT_MOTOR_2
-    // Digital.LEFT_ENCODER_1, Digital.LEFT_ENCODER_2,
-    // Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2
+    CAN.RIGHT_MOTOR_1, CAN.RIGHT_MOTOR_2,
+    Digital.LEFT_ENCODER_1, Digital.LEFT_ENCODER_2,
+    Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2
   );
 
   private XboxController m_xboxController = new XboxController(Controllers.XBOX);
