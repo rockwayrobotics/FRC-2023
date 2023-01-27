@@ -18,10 +18,9 @@ public final class Constants {
 
 
     // Motor controller IDs, defined from DriverStation
-    public static final class Controllers {
+    public static final class Gamepads {
         public static final int XBOX = 0;
     }
-
 
     // CAN IDs for motor controllers
     public static final class CAN {

@@ -22,14 +22,14 @@ public class RobotContainer {
     Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2
   );
 
-  private XboxController m_xboxController = new XboxController(Controllers.XBOX);
+  private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   public RobotContainer() {
     configureBindings();
 
-    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftX(), () -> m_xboxController.getLeftY(), m_drivebase));
+    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
   }
 
   private void configureBindings() {
