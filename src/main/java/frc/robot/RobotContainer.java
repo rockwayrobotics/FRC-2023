@@ -4,18 +4,14 @@
 
 package frc.robot;
 
-import frc.robot.Constants.CAN;
-import frc.robot.Constants.Controllers;
-import frc.robot.Constants.Digital;
-import frc.robot.subsystems.DrivebaseSubsystem;
+import frc.robot.commands.*;
+import frc.robot.subsystems.*;
+import frc.robot.Constants.*;
 
-// import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-// import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
 
@@ -26,22 +22,24 @@ public class RobotContainer {
     Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2
   );
 
-  private XboxController m_xboxController = new XboxController(Controllers.XBOX);
+  private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   public RobotContainer() {
     configureBindings();
+
+    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
   }
 
-    private void configureBindings() {    
-    m_drivebase.setDefaultCommand(
-      new RunCommand(
-        () -> m_drivebase.set(-m_xboxController.getLeftY(), m_xboxController.getLeftX()),
-        m_drivebase
-      )
-    );}
+  private void configureBindings() {
+    final JoystickButton rightBumper = new JoystickButton(m_xboxController, XboxController.Button.kLeftBumper.value);
+    rightBumper.onTrue(new SetDriveScaleCommand(m_drivebase, Drive.SLOMODE_SCALE));
+    rightBumper.onFalse(new SetDriveScaleCommand(m_drivebase, 1));
+  }
 
   public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
+    // The selected command will be run in autonomous
+    return m_chooser.getSelected();
   }
 }
