@@ -30,8 +30,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
   ) {
     MotorControllerGroup leftDrive = new MotorControllerGroup(
       new CANSparkMax(leftMotor1, MotorType.kBrushless),
-      new CANSparkMax(leftMotor2, MotorType.kBrushless),
-      new CANSparkMax(leftMotor1, MotorType.kBrushless),
       new CANSparkMax(leftMotor2, MotorType.kBrushless)
     );
     MotorControllerGroup rightDrive = new MotorControllerGroup(
