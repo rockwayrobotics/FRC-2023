@@ -16,48 +16,48 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class CameraSubsystem extends SubsystemBase {
-  PhotonCamera camera;
+  public PhotonCamera camera;
   private XboxController m_Controller;
 
   /** Creates a new CameraSubsystem. */
   public CameraSubsystem(XboxController controller) {
-    camera = new PhotonCamera("Microsoft_LifeCam_HD");
+    camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
 
     m_Controller = controller;
   }
 
   @Override
   public void periodic() {
-    if(m_Controller.getAButton()) {
-      var result = camera.getLatestResult();
+    // if(m_Controller.getAButton()) {
+    //   var result = camera.getLatestResult();
 
-      if(result.hasTargets()) {
-        PhotonTrackedTarget target = result.getBestTarget();
+    //   if(result.hasTargets()) {
+    //     PhotonTrackedTarget target = result.getBestTarget();
 
-        // Get information from target.
-        double yaw = target.getYaw();
-        double pitch = target.getPitch();
-        double area = target.getArea();
-        double skew = target.getSkew();
-        List<TargetCorner> corners = target.getDetectedCorners();
+    //     // Get information from target.
+    //     double yaw = target.getYaw();
+    //     double pitch = target.getPitch();
+    //     double area = target.getArea();
+    //     double skew = target.getSkew();
+    //     List<TargetCorner> corners = target.getDetectedCorners();
 
-        // AprilTag specific data
-        int targetID = target.getFiducialId();
-        double poseAmbiguity = target.getPoseAmbiguity();
-        Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-        Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
+    //     // AprilTag specific data
+    //     int targetID = target.getFiducialId();
+    //     double poseAmbiguity = target.getPoseAmbiguity();
+    //     Transform3d bestCameraToTarget = target.getBestCameraToTarget();
+    //     Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
 
-        System.out.println("Yaw: " + yaw);
-        System.out.println("Pitch: " + pitch);
-        System.out.println("Area: " + area);
-        System.out.println("Skew: " + skew);
-        System.out.println("Corners: " + corners);
-        System.out.println("TargetID: " + targetID);
-        System.out.println("Pose Ambiguity: " + poseAmbiguity);
-        System.out.println("Best Camera to Target: " + bestCameraToTarget);
-        System.out.println("Alternate Camera to Target: " + alternateCameraToTarget);
-      }
-    }
+    //     System.out.println("Yaw: " + yaw);
+    //     System.out.println("Pitch: " + pitch);
+    //     System.out.println("Area: " + area);
+    //     System.out.println("Skew: " + skew);
+    //     System.out.println("Corners: " + corners);
+    //     System.out.println("TargetID: " + targetID);
+    //     System.out.println("Pose Ambiguity: " + poseAmbiguity);
+    //     System.out.println("Best Camera to Target: " + bestCameraToTarget);
+    //     System.out.println("Alternate Camera to Target: " + alternateCameraToTarget);
+      // }
+    // }
   }
 
   @Override
