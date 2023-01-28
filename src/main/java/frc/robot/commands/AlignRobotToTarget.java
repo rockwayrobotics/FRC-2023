@@ -32,6 +32,8 @@ public class AlignRobotToTarget extends CommandBase {
 
   double rotationSpeed;
 
+  double previousTimestamp;
+
   /**
    * Creates a new AlignRobotToTarget.
    *
@@ -48,6 +50,13 @@ public class AlignRobotToTarget extends CommandBase {
     final double ANGULAR_D = 0.0;
 
     turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+
+    // Create Boolean widget that displays the color
+    colorWidget = Shuffleboard.getTab("Vision").add("LostTarget", false);
+    colorWidget.withPosition(0, 4);
+    colorWidget.withProperties(Map.of("colorWhenFalse", "black"));
+    colorWidget.withProperties(Map.of("colorWhenTrue", "red"));
+    colorWidgetEntry = colorWidget.getEntry();
   }
 
   // Called when the command is initially scheduled.
@@ -59,12 +68,7 @@ public class AlignRobotToTarget extends CommandBase {
     
     finishedRunning = false;
 
-    // Create Boolean widget that displays the color
-    colorWidget = Shuffleboard.getTab("Vision").add("LostTarget", false);
-    colorWidget.withPosition(0, 4);
-    colorWidget.withProperties(Map.of("colorWhenFalse", "black"));
-    colorWidget.withProperties(Map.of("colorWhenTrue", "red"));
-    colorWidgetEntry = colorWidget.getEntry();
+    turnController.reset();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -73,12 +77,16 @@ public class AlignRobotToTarget extends CommandBase {
     
     var result = m_CameraSubsystem.camera.getLatestResult();
 
-    if(result.hasTargets()) {
-        foundTarget = true;
-        
-        rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0);
+    var resultTimestamp = result.getTimestampSeconds();
 
-        m_DrivebaseSubsystem.set(0, rotationSpeed);
+    if(resultTimestamp != previousTimestamp && result.hasTargets()) {
+      previousTimestamp = resultTimestamp;
+
+      foundTarget = true;
+        
+      rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0);
+
+      m_DrivebaseSubsystem.set(0, rotationSpeed);
     } else {
       if(foundTarget) {
         m_DrivebaseSubsystem.set(0, rotationSpeed);
