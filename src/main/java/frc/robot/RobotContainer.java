@@ -7,11 +7,14 @@ package frc.robot;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
-
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+import frc.robot.commands.DriveDistance;
 
 public class RobotContainer {
 
@@ -26,8 +29,23 @@ public class RobotContainer {
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  public final GenericEntry autoSpeed;
+
+  public final Command m_driveForever;
+  public final Command m_driveForeverSlow;
+
+
   public RobotContainer() {
     configureBindings();
+    var autoTab = Shuffleboard.getTab("Auto");
+    autoSpeed = autoTab.addPersistent("Max Speed", 1).getEntry();
+    
+    m_driveForever = new DriveDistance(m_drivebase, () -> autoSpeed.getDouble(0.5));
+    m_driveForeverSlow = new DriveDistance(m_drivebase, () -> 0.1);
+
+    m_chooser.setDefaultOption("Drive Forever", m_driveForever);
+    m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
+    autoTab.add(m_chooser);
 
     m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
   }

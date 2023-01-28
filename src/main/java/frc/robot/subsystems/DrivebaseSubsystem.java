@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -31,11 +30,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
   ) {
     MotorControllerGroup leftDrive = new MotorControllerGroup(
       new CANSparkMax(leftMotor1, MotorType.kBrushless),
+      new CANSparkMax(leftMotor2, MotorType.kBrushless),
+      new CANSparkMax(leftMotor1, MotorType.kBrushless),
       new CANSparkMax(leftMotor2, MotorType.kBrushless)
     );
     MotorControllerGroup rightDrive = new MotorControllerGroup(
-        new CANSparkMax(rightMotor1, MotorType.kBrushless),
-        new CANSparkMax(rightMotor2, MotorType.kBrushless)
+      new CANSparkMax(rightMotor1, MotorType.kBrushless),
+      new CANSparkMax(rightMotor2, MotorType.kBrushless)
     );
     m_drive = new DifferentialDrive(leftDrive, rightDrive);
     m_leftEncoder = new Encoder(leftEncoder1, leftEncoder2);
