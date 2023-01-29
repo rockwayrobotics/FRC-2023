@@ -9,12 +9,9 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
 
-import java.util.Map;
-
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -33,8 +30,6 @@ public class RobotContainer {
   private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
   private CameraSubsystem m_CameraSubsystem = new CameraSubsystem(m_xboxController);
-
-  private ShuffleboardTab m_autoSelectorTab = Shuffleboard.getTab("Auto Selection");
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 

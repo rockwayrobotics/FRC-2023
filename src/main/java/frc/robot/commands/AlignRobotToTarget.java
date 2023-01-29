@@ -51,7 +51,6 @@ public class AlignRobotToTarget extends CommandBase {
 
     // Create Boolean widget that displays the color
     colorWidget = Shuffleboard.getTab("Vision").add("Vision status", false);
-    colorWidget.withPosition(0, 4);
     colorWidget.withProperties(Map.of("colorWhenFalse", "grey"));
   }
 
@@ -85,7 +84,7 @@ public class AlignRobotToTarget extends CommandBase {
         var targetYaw = result.getBestTarget().getYaw();
         
         rotationSpeed = -turnController.calculate(targetYaw, 0);
-        
+
         m_DrivebaseSubsystem.set(0, rotationSpeed);
 
         if(Math.abs(targetYaw) <= 1) {
