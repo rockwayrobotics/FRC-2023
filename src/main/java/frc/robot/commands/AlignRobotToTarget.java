@@ -10,7 +10,6 @@ import frc.robot.subsystems.DrivebaseSubsystem;
 import java.util.Map;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -24,7 +23,6 @@ public class AlignRobotToTarget extends CommandBase {
   private PIDController turnController;
 
   private SimpleWidget colorWidget;
-  private GenericEntry colorWidgetEntry;
 
   private boolean foundTarget;
   private int cyclesEmpty;
@@ -52,11 +50,9 @@ public class AlignRobotToTarget extends CommandBase {
     turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
 
     // Create Boolean widget that displays the color
-    colorWidget = Shuffleboard.getTab("Vision").add("LostTarget", false);
+    colorWidget = Shuffleboard.getTab("Vision").add("Vision status", false);
     colorWidget.withPosition(0, 4);
-    colorWidget.withProperties(Map.of("colorWhenFalse", "black"));
-    colorWidget.withProperties(Map.of("colorWhenTrue", "red"));
-    colorWidgetEntry = colorWidget.getEntry();
+    colorWidget.withProperties(Map.of("colorWhenFalse", "grey"));
   }
 
   // Called when the command is initially scheduled.
@@ -74,29 +70,40 @@ public class AlignRobotToTarget extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
     var result = m_CameraSubsystem.camera.getLatestResult();
 
     var resultTimestamp = result.getTimestampSeconds();
 
-    if(resultTimestamp != previousTimestamp && result.hasTargets()) {
-      previousTimestamp = resultTimestamp;
+    if(result.hasTargets()) {
+      if(resultTimestamp != previousTimestamp){
+        colorWidget.withProperties(Map.of("colorWhenFalse", "yellow"));
 
-      foundTarget = true;
+        previousTimestamp = resultTimestamp;
+
+        foundTarget = true;
+
+        var targetYaw = result.getBestTarget().getYaw();
         
-      rotationSpeed = -turnController.calculate(result.getBestTarget().getYaw(), 0);
+        rotationSpeed = -turnController.calculate(targetYaw, 0);
+        
+        m_DrivebaseSubsystem.set(0, rotationSpeed);
 
-      m_DrivebaseSubsystem.set(0, rotationSpeed);
+        if(Math.abs(targetYaw) <= 1) {
+          colorWidget.withProperties(Map.of("colorWhenFalse", "lime"));
+          finishedRunning = true;
+        }
+      }
     } else {
       if(foundTarget) {
         m_DrivebaseSubsystem.set(0, rotationSpeed);
         cyclesEmpty++;
 
-        if(cyclesEmpty >= 100) {
-            colorWidgetEntry.setBoolean(true);
-            finishedRunning = true;
+        if(cyclesEmpty >= 35) {
+          colorWidget.withProperties(Map.of("colorWhenFalse", "cyan"));
+          finishedRunning = true;
         }
       } else {
+        colorWidget.withProperties(Map.of("colorWhenFalse", "red"));
         finishedRunning = true;
       }
     }
@@ -105,7 +112,9 @@ public class AlignRobotToTarget extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    
+    if(interrupted) {
+      colorWidget.withProperties(Map.of("colorWhenFalse", "grey"));
+    }
   }
 
   // Returns true when the command should end.

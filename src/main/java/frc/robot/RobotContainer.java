@@ -8,6 +8,9 @@ package frc.robot;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
+
+import java.util.Map;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -42,7 +45,6 @@ public class RobotContainer {
 
 
   public RobotContainer() {
-    configureBindings();
     var autoTab = Shuffleboard.getTab("Auto");
     autoSpeed = autoTab.addPersistent("Max Speed", 1).getEntry();
     
@@ -51,7 +53,7 @@ public class RobotContainer {
 
     m_chooser.setDefaultOption("Drive Forever", m_driveForever);
     m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
-    autoTab.add(m_chooser);
+    autoTab.add(m_chooser).withProperties(Map.of("title", "Auto Routine"));
 
     var auto1 = new SetDriveScaleCommand(m_drivebase, 0);
     var auto2 = new SetDriveScaleCommand(m_drivebase, 0.5);
@@ -66,6 +68,8 @@ public class RobotContainer {
 
     Shuffleboard.getTab("Subsystems").add(m_CameraSubsystem);
     Shuffleboard.getTab("Subsystems").add(m_drivebase);
+
+    configureBindings();
   }
 
   private void configureBindings() {
@@ -74,7 +78,7 @@ public class RobotContainer {
     rightBumper.onFalse(new SetDriveScaleCommand(m_drivebase, 1));
 
     final JoystickButton buttonA = new JoystickButton(m_xboxController, XboxController.Button.kA.value);
-    buttonA.onTrue(new AlignRobotToTarget(m_drivebase, m_CameraSubsystem));
+    buttonA.whileTrue(new AlignRobotToTarget(m_drivebase, m_CameraSubsystem));
   }
 
   public Command getAutonomousCommand() {
