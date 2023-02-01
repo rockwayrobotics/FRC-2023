@@ -5,24 +5,22 @@
 package frc.robot.subsystems;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Optional;
 
+import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.geometry.*;
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
-import org.photonvision.targeting.PhotonTrackedTarget;
-import org.photonvision.targeting.TargetCorner;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants.Vision;
+import frc.robot.Constants.Field;
 
 public class CameraSubsystem extends SubsystemBase {
   public PhotonCamera camera;
@@ -31,11 +29,19 @@ public class CameraSubsystem extends SubsystemBase {
 
   /** Creates a new CameraSubsystem. */
   public CameraSubsystem() {
+    ArrayList<AprilTag> tagList = new ArrayList<AprilTag>();
+    tagList.add(Field.tag0);
+    tagList.add(Field.tag1);
+
     camera = new PhotonCamera(Vision.camName);
 
     AprilTagFieldLayout aprilTagFieldLayout = null;
     try {
-      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      if(Field.realField) {
+        aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+      } else {
+        aprilTagFieldLayout = new AprilTagFieldLayout(tagList, Field.length, Field.width);
+      }
     } catch (IOException e) {
       e.printStackTrace();
     }
