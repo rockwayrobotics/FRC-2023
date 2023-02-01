@@ -52,6 +52,9 @@ public final class Constants {
 
 
     // Constants related to the shooter
+    /**
+     * Constants Regarding Targetting With The Shooter
+     */
     public static final class Shooter {
         public final static double OFFSET = 0.64;
         public final static double SHOOTER_VELOCITY = 5;

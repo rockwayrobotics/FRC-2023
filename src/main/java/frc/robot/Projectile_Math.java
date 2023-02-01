@@ -4,11 +4,12 @@ import frc.robot.Constants.Shooter;
 import java.lang.Math;
 
 public class Projectile_Math {
+    //Acceleration From Gravity
     public static final double g = 9.807;
 
     /**
      * Finds the angle needed to make a shot given velocity (set in constants), distance and a target
-     * @param 
+     * @param
      * @return angle (radians)
      */
     private static double find_shot_angle(Target target, double shot_distance){
