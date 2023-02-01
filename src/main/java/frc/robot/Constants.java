@@ -6,6 +6,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import frc.robot.Target;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -46,5 +47,25 @@ public final class Constants {
         public final static IdleMode ACTIVE_MODE = IdleMode.kBrake;
         public final static IdleMode DISABLED_MODE = IdleMode.kCoast;
         public final static double SLOMODE_SCALE = 0.7;
+    }
+
+
+
+    // Constants related to the shooter
+    public static final class Shooter {
+        public final static double OFFSET = 0.64;
+        public final static double SHOOTER_VELOCITY = 5;
+        public final static double MID_CUBE_HEIGHT = 0.6;
+        public final static double MID_CUBE_OFFSET = 0;
+        public final static Target MID_CUBE = new Target(MID_CUBE_HEIGHT,MID_CUBE_OFFSET);
+        public final static double HIGH_CUBE_HEIGHT = 0.9;
+        public final static double HIGH_CUBE_OFFSET = 0;
+        public final static Target HIGH_CUBE = new Target(HIGH_CUBE_HEIGHT, HIGH_CUBE_OFFSET);
+        public final static double MID_CONE_HEIGHT = 0.87;
+        public final static double MID_CONE_OFFSET = 0;
+        public final static Target MID_CONE = new Target(MID_CONE_HEIGHT, MID_CONE_OFFSET);
+        public final static double HIGH_CONE_HEIGHT = 1.17;
+        public final static double HIGH_CONE_OFFSET = 0;
+        public final static Target HIGH_CONE = new Target(HIGH_CONE_HEIGHT, HIGH_CONE_OFFSET);
     }
 }
