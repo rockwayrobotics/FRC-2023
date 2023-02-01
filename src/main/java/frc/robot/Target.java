@@ -5,8 +5,12 @@ package frc.robot;
  * Class that holds information and methods about Nodes
  */
 public class Target {
-    double offset;
-    double height;
-    public Target(double height, double offset){
+    public double offset;
+    public double height;
+    public Target(double h, double o){
+        // height = height;
+        // offset = offset;
+        height = h;
+        offset = o;
     }
 }

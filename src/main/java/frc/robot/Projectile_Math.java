@@ -4,7 +4,7 @@ import frc.robot.Constants.Shooter;
 import java.lang.Math;
 
 public class Projectile_Math {
-    public static final double g = 9.81;
+    public static final double g = 9.807;
 
     /**
      * Finds the angle needed to make a shot given velocity (set in constants), distance and a target
@@ -19,7 +19,7 @@ public class Projectile_Math {
         double x = target.offset + shot_distance;
         //y-coord of the target aimed for
         double y = target.height - Shooter.OFFSET;
-        double under_sqrt = velocity_4 - (g * ((g * Math.pow(x,2)) + (2 * y * (Math.pow(Shooter.SHOOTER_VELOCITY, 2)))));
+        double under_sqrt = velocity_4 - (g * ((g * Math.pow(x,2)) + (2 * y * Math.pow(Shooter.SHOOTER_VELOCITY, 2))));
         //Checks if angle is possible, if under_sqrt is -, there is no real angle from which it is possible to fire from
         if (under_sqrt < 0){
             System.out.println("Not Possible");
@@ -32,4 +32,12 @@ public class Projectile_Math {
             return theta;
         }
     }
+
+    //USE FOR DEBUGGING MATH
+    // public static void main(String... args){
+    //     double a = find_shot_angle(Shooter.MID_CUBE, 1.0);
+    //     System.out.println(a);
+    // }
+
+
 }
