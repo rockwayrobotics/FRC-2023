@@ -29,7 +29,7 @@ public class RobotContainer {
 
   private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
-  private CameraSubsystem m_CameraSubsystem = new CameraSubsystem(m_xboxController);
+  private CameraSubsystem m_CameraSubsystem = new CameraSubsystem();
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 

@@ -4,12 +4,24 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import java.util.Optional;
+
+import org.photonvision.EstimatedRobotPose;
+
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.estimator.DifferentialDrivePoseEstimator;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SPI;
 
 import frc.robot.Constants.Drive;
+
+
 
 public class DrivebaseSubsystem extends SubsystemBase {
   private final DifferentialDrive m_drive;
@@ -27,6 +39,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
   private static final double kD = 0.0;
   private static final double kF = 0.0;
 
+  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+
+  private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(Drive.TRACK_WIDTH);
+  private final DifferentialDrivePoseEstimator m_poseEstimator = new DifferentialDrivePoseEstimator(m_kinematics, m_gyro.getRotation2d(),0.0, 0.0, new Pose2d());
+
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem(
     int leftMotor1, int leftMotor2,
@@ -34,7 +51,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     int leftEncoder1, int leftEncoder2,
     int rightEncoder1, int rightEncoder2
   ) {
-    
+    m_gyro.reset();
 
     MotorControllerGroup leftDrive = new MotorControllerGroup(
       new CANSparkMax(leftMotor1, MotorType.kBrushless),
@@ -117,6 +134,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
   public void resetEncoders() {
     m_leftEncoder.reset();
     m_rightEncoder.reset();
+  }
+
+  public void updateOdometry(CameraSubsystem m_CameraSubsystem) {
+    m_poseEstimator.update(m_gyro.getRotation2d(), m_leftEncoder.getDistance(), m_rightEncoder.getDistance());
+
+    Optional<EstimatedRobotPose> result = m_CameraSubsystem.getEstimatedGlobalPose(m_poseEstimator.getEstimatedPosition());
   }
 
   @Override

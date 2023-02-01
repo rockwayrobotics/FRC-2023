@@ -4,60 +4,54 @@
 
 package frc.robot.subsystems;
 
-import java.util.List;
+import java.io.IOException;
+import java.util.Optional;
 
+import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 import org.photonvision.targeting.TargetCorner;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 
-// import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import frc.robot.Constants.Vision;
 
 public class CameraSubsystem extends SubsystemBase {
   public PhotonCamera camera;
-  private XboxController m_Controller;
+
+  public PhotonPoseEstimator photonPoseEstimator;
 
   /** Creates a new CameraSubsystem. */
-  public CameraSubsystem(XboxController controller) {
-    camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
+  public CameraSubsystem() {
+    camera = new PhotonCamera(Vision.camName);
 
-    m_Controller = controller;
+    AprilTagFieldLayout aprilTagFieldLayout = null;
+    try {
+      aprilTagFieldLayout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2023ChargedUp.m_resourceFile);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Vision.robotToCam);
+  }
+
+  public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d lastEstimatedRobotPose) {
+    photonPoseEstimator.setReferencePose(lastEstimatedRobotPose);
+
+    return photonPoseEstimator.update();
   }
 
   @Override
   public void periodic() {
-    // if(m_Controller.getAButton()) {
-    //   var result = camera.getLatestResult();
 
-    //   if(result.hasTargets()) {
-    //     PhotonTrackedTarget target = result.getBestTarget();
-
-    //     // Get information from target.
-    //     double yaw = target.getYaw();
-    //     double pitch = target.getPitch();
-    //     double area = target.getArea();
-    //     double skew = target.getSkew();
-    //     List<TargetCorner> corners = target.getDetectedCorners();
-
-    //     // AprilTag specific data
-    //     int targetID = target.getFiducialId();
-    //     double poseAmbiguity = target.getPoseAmbiguity();
-    //     Transform3d bestCameraToTarget = target.getBestCameraToTarget();
-    //     Transform3d alternateCameraToTarget = target.getAlternateCameraToTarget();
-
-    //     System.out.println("Yaw: " + yaw);
-    //     System.out.println("Pitch: " + pitch);
-    //     System.out.println("Area: " + area);
-    //     System.out.println("Skew: " + skew);
-    //     System.out.println("Corners: " + corners);
-    //     System.out.println("TargetID: " + targetID);
-    //     System.out.println("Pose Ambiguity: " + poseAmbiguity);
-    //     System.out.println("Best Camera to Target: " + bestCameraToTarget);
-    //     System.out.println("Alternate Camera to Target: " + alternateCameraToTarget);
-      // }
-    // }
   }
 
   @Override

@@ -5,6 +5,9 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -46,5 +49,11 @@ public final class Constants {
         public final static IdleMode ACTIVE_MODE = IdleMode.kBrake;
         public final static IdleMode DISABLED_MODE = IdleMode.kCoast;
         public final static double SLOMODE_SCALE = 0.7;
+        public final static double TRACK_WIDTH = 1; // TODO Put correct track length here
+    }
+
+    public static final class Vision {
+        public static final String camName = "Odometry_Cam";
+        public static final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
     }
 }
