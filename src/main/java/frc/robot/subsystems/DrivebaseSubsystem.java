@@ -3,6 +3,11 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -13,44 +18,81 @@ import frc.robot.Constants.Drive;
 public class DrivebaseSubsystem extends SubsystemBase {
   private final DifferentialDrive m_drive;
 
-  private final Encoder m_leftEncoder;
-  private final Encoder m_rightEncoder;
+  private final Encoder m_leftDriveEncoder;
+  private final Encoder m_rightDriveEncoder;
 
   private double m_y = 0;
   private double m_x = 0;
 
   private double m_scale = 1;
 
+  private final PIDController m_leftDrivePID = new PIDController(Drive.kP, Drive.kI, Drive.kD);
+  private final PIDController m_rightDrivePID = new PIDController(Drive.kP, Drive.kI, Drive.kD);
+
+  private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(Drive.TRACK_WIDTH);
+
+  private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(1, 3);
+
+  MotorControllerGroup leftDriveGroup;
+  MotorControllerGroup rightDriveGroup;
+
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem(
-    int leftMotor1, int leftMotor2,
-    int rightMotor1, int rightMotor2,
-    int leftEncoder1, int leftEncoder2,
-    int rightEncoder1, int rightEncoder2
+    int leftDriveLeader, int leftDriveFollower,
+    int rightDriveLeader, int rightDriveFollower,
+    int leftDriveEncoder1, int leftDriveEncoder2,
+    int rightDriveEncoder1, int rightDriveEncoder2
   ) {
-    MotorControllerGroup leftDrive = new MotorControllerGroup(
-      new CANSparkMax(leftMotor1, MotorType.kBrushless),
-      new CANSparkMax(leftMotor2, MotorType.kBrushless)
+    leftDriveGroup = new MotorControllerGroup(
+      new CANSparkMax(leftDriveLeader, MotorType.kBrushless),
+      new CANSparkMax(leftDriveFollower, MotorType.kBrushless)
     );
-    MotorControllerGroup rightDrive = new MotorControllerGroup(
-      new CANSparkMax(rightMotor1, MotorType.kBrushless),
-      new CANSparkMax(rightMotor2, MotorType.kBrushless)
+    rightDriveGroup = new MotorControllerGroup(
+      new CANSparkMax(rightDriveLeader, MotorType.kBrushless),
+      new CANSparkMax(rightDriveFollower, MotorType.kBrushless)
     );
-    m_drive = new DifferentialDrive(leftDrive, rightDrive);
-    m_leftEncoder = new Encoder(leftEncoder1, leftEncoder2);
-    m_rightEncoder = new Encoder(rightEncoder1, rightEncoder2);
+    m_drive = new DifferentialDrive(leftDriveGroup, rightDriveGroup);
+    m_leftDriveEncoder = new Encoder(leftDriveEncoder1, leftDriveEncoder2);
+    m_rightDriveEncoder = new Encoder(rightDriveEncoder1, rightDriveEncoder2);
     // when robot goes forward, left encoder spins positive and right encoder spins negative
-    m_leftEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
-    m_rightEncoder.setDistancePerPulse(-Drive.DISTANCE_PER_ENCODER_PULSE);
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
+    m_leftDriveEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
+    m_rightDriveEncoder.setDistancePerPulse(-Drive.DISTANCE_PER_ENCODER_PULSE);
+    m_leftDriveEncoder.reset();
+    m_rightDriveEncoder.reset();
+  }
+
+  /**
+   * Sets the desired wheel speeds.
+   *
+   * @param speeds The desired wheel speeds.
+   */
+  public void setSpeeds(DifferentialDriveWheelSpeeds speeds) {
+    final double leftFeedforward = m_feedforward.calculate(speeds.leftMetersPerSecond);
+    final double rightFeedforward = m_feedforward.calculate(speeds.rightMetersPerSecond);
+
+    final double leftOutput =
+            m_leftDrivePID.calculate(m_leftDriveEncoder.getRate(), speeds.leftMetersPerSecond);
+    final double rightOutput =
+            m_rightDrivePID.calculate(m_rightDriveEncoder.getRate(), speeds.rightMetersPerSecond);
+    leftDriveGroup.setVoltage(leftOutput + leftFeedforward);
+    rightDriveGroup.setVoltage(rightOutput + rightFeedforward);
+  }
+
+  /**
+   * Drives the robot with the given linear velocity and angular velocity.
+   *
+   * @param xSpeed Linear velocity in m/s.
+   * @param rot Angular velocity in rad/s.
+   */
+  public void drive(double xSpeed, double rot) {
+    var wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rot));
+    setSpeeds(wheelSpeeds);
   }
 
   /**
    * Sets the speed of the drivebase.
    * @param y Y speed. -1 is full backwards, 1 is full forwards.
    * @param x X speed. -1 is full left, 1 is full right.
-   * @param priority Priority for this action. Only the highest priority action is run each cycle.
    */
   public void set(double y, double x) {
       m_y = y;
@@ -70,7 +112,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
    * @return Distance, in inches.
    */
   public double getLDistance() {
-    return m_leftEncoder.getDistance();
+    return m_leftDriveEncoder.getDistance();
   }
 
   /**
@@ -78,7 +120,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
    * @return Distance in inches.
    */
   public double getRDistance() {
-    return m_rightEncoder.getDistance();
+    return m_rightDriveEncoder.getDistance();
   }
 
   /**
@@ -86,7 +128,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
    * @return Speed in inches / second.
    */
   public double getLRate() {
-    return m_leftEncoder.getRate();
+    return m_leftDriveEncoder.getRate();
   }
 
   /**
@@ -94,7 +136,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
    * @return Speed in inches / second.
    */
   public double getRRate() {
-    return m_rightEncoder.getRate();
+    return m_rightDriveEncoder.getRate();
   }
 
   /**
@@ -102,13 +144,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
    * @return true if stopped, false if moving.
    */
   public boolean getStopped() {
-    return m_leftEncoder.getStopped() && m_rightEncoder.getStopped();
+    return m_leftDriveEncoder.getStopped() && m_rightDriveEncoder.getStopped();
   }
 
   /** Resets drivebase encoder distances to 0. */
   public void resetEncoders() {
-    m_leftEncoder.reset();
-    m_rightEncoder.reset();
+    m_leftDriveEncoder.reset();
+    m_rightDriveEncoder.reset();
   }
 
   @Override
