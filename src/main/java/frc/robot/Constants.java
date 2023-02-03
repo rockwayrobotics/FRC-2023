@@ -8,8 +8,6 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.*;
 
-import java.util.ArrayList;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -50,7 +48,18 @@ public final class Constants {
         public final static IdleMode ACTIVE_MODE = IdleMode.kBrake;
         public final static IdleMode DISABLED_MODE = IdleMode.kCoast;
         public final static double SLOMODE_SCALE = 0.7;
-        public final static double TRACK_WIDTH = 1; // TODO Put correct track length here
+
+        // SysID Constants
+        // TODO Update these
+        public final static double TRACK_WIDTH = 1;
+        public final static double kP = 1.0;
+        public final static double kI = 0.0;
+        public final static double kD = 0.0;
+        public final static double kS = 1;
+        public final static double kV = 3;
+
+        public final static double MAX_SPEED = 3.0; // Meters per second
+        public final static double MAX_ROTATION_SPEED = 2 * Math.PI; // One rotation per second (In radians)
     }
 
     public static final class Vision {
