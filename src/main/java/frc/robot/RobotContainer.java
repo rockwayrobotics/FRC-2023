@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.robot.commands.DriveDistance;
-
 public class RobotContainer {
 
   private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem(
@@ -46,7 +44,7 @@ public class RobotContainer {
     m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
     autoTab.add("Auto Routine", m_chooser).withSize(2, 1).withPosition(0, 0);
 
-    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
+    m_drivebase.setDefaultCommand(new PIDDriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getRightX(), m_drivebase));
 
     Shuffleboard.getTab("Subsystems").add(m_drivebase);
 

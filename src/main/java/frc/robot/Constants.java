@@ -44,14 +44,21 @@ public final class Constants {
         public final static double ENCODER_PULSES_PER_REVOLUTION = 360;
         public final static double WHEEL_DIAMETER = 6;
         public final static double DISTANCE_PER_ENCODER_PULSE = WHEEL_DIAMETER * Math.PI / ENCODER_PULSES_PER_REVOLUTION;
-        public final static double TRACK_WIDTH = Units.inchesToMeters(17); // TODO Update this with value from SysID
 
         public final static IdleMode ACTIVE_MODE = IdleMode.kBrake;
         public final static IdleMode DISABLED_MODE = IdleMode.kCoast;
         public final static double SLOMODE_SCALE = 0.7;
 
-        public final static double kP = .05; // TODO Update this with value from SysID
-        public final static double kI = 0; // TODO Update this with value from SysID
-        public final static double kD = .1; // TODO Update this with value from SysID
+        // SysID Constants
+        // TODO Update these
+        public final static double TRACK_WIDTH = 1;
+        public final static double kP = 1.0;
+        public final static double kI = 0.0;
+        public final static double kD = 0.0;
+        public final static double kS = 1;
+        public final static double kV = 3;
+
+        public final static double MAX_SPEED = 3.0; // Meters per second
+        public final static double MAX_ROTATION_SPEED = 2 * Math.PI; // One rotation per second (In radians)
     }
 }
