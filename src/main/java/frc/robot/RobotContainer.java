@@ -1,4 +1,3 @@
-// ROBOTCONTAINER
 // Copyright (c) FIRST and other WPILib contributors.
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
@@ -19,17 +18,17 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.robot.commands.DriveDistance;
 
 public class RobotContainer {
+  private final XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
-  private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem(
-    CAN.LEFT_MOTOR_1, CAN.LEFT_MOTOR_2,
-    CAN.RIGHT_MOTOR_1, CAN.RIGHT_MOTOR_2,
-    Digital.LEFT_ENCODER_1, Digital.LEFT_ENCODER_2,
-    Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2
+  private final CameraSubsystem m_CameraSubsystem = new CameraSubsystem();
+
+  private final DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem(
+          CAN.LEFT_MOTOR_1, CAN.LEFT_MOTOR_2,
+          CAN.RIGHT_MOTOR_1, CAN.RIGHT_MOTOR_2,
+          Digital.LEFT_ENCODER_1, Digital.LEFT_ENCODER_2,
+          Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2,
+          m_CameraSubsystem
   );
-
-  private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
-
-  private CameraSubsystem m_CameraSubsystem = new CameraSubsystem();
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -50,7 +49,7 @@ public class RobotContainer {
     m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
     autoTab.add("Auto Routine", m_chooser).withSize(2, 1).withPosition(0, 0);
 
-    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
+    m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getLeftX, m_drivebase));
 
     Shuffleboard.getTab("Subsystems").add(m_CameraSubsystem);
     Shuffleboard.getTab("Subsystems").add(m_drivebase);

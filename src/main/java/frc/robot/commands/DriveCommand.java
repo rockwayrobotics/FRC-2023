@@ -11,14 +11,16 @@ import frc.robot.subsystems.DrivebaseSubsystem;
 public class DriveCommand extends CommandBase {
     
     private final DrivebaseSubsystem m_DrivebaseSubsystem;
-    private DoubleSupplier m_left;
-    private DoubleSupplier m_right;
+    private final DoubleSupplier m_leftJoyYFeeder;
+    private final DoubleSupplier m_rightJoyXFeeder;
 
-    public DriveCommand(DoubleSupplier left, DoubleSupplier right, DrivebaseSubsystem subsystem) {
-        m_left = left;
-        m_right = right;
+    public DriveCommand(DoubleSupplier leftJoyYFeeder, DoubleSupplier rightJoyXFeeder, DrivebaseSubsystem subsystem) {
         m_DrivebaseSubsystem = subsystem;
-        addRequirements(m_DrivebaseSubsystem);
+        // Use addRequirements() here to declare subsystem dependencies.
+        addRequirements(subsystem);
+
+        m_leftJoyYFeeder = leftJoyYFeeder;
+        m_rightJoyXFeeder = rightJoyXFeeder;
     }
 
     // Called when the command is initially scheduled.
@@ -29,7 +31,7 @@ public class DriveCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_DrivebaseSubsystem.set(m_left.getAsDouble(), m_right.getAsDouble());
+        m_DrivebaseSubsystem.set(m_leftJoyYFeeder.getAsDouble(), m_rightJoyXFeeder.getAsDouble());
     }
 
     // Called once the command ends or is interrupted.
