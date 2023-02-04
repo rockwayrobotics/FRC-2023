@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
@@ -8,10 +7,13 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Drive;
 
@@ -26,8 +28,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   private double m_scale = 1;
 
-  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
-
   private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(Drive.TRACK_WIDTH);
   private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(Drive.kS,Drive.kV);
   private final PIDController m_leftDrivePIDController = new PIDController(Drive.kP,Drive.kI,Drive.kD);
@@ -36,6 +36,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
   MotorControllerGroup m_leftDrive;
   MotorControllerGroup m_rightDrive;
 
+  ShuffleboardTab PIDTab = Shuffleboard.getTab("PID");
+
+  SimpleWidget leftRate;
+  SimpleWidget rightRate;
+
+  GenericEntry leftRateEntry;
+  GenericEntry rightRateEntry;
 
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem(
@@ -44,8 +51,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
     int leftEncoder1, int leftEncoder2,
     int rightEncoder1, int rightEncoder2
   ) {
-    m_gyro.reset();
-
     m_leftDrive = new MotorControllerGroup(
       new CANSparkMax(leftMotor1, MotorType.kBrushless),
       new CANSparkMax(leftMotor2, MotorType.kBrushless)
@@ -65,6 +70,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
     m_rightEncoder.setDistancePerPulse(-Drive.DISTANCE_PER_ENCODER_PULSE);
     m_leftEncoder.reset();
     m_rightEncoder.reset();
+
+    leftRate = PIDTab.add("Left Rate", getLRate());
+    leftRateEntry = leftRate.getEntry();
+    rightRate = PIDTab.add("Right Rate", getLRate());
+    rightRateEntry = rightRate.getEntry();
   }
 
   /**
@@ -162,5 +172,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drive.curvatureDrive(m_x*m_scale, m_y*m_scale, true);
+
+    leftRateEntry.setDouble(getLRate());
+    rightRateEntry.setDouble(getRRate());
   }
 }

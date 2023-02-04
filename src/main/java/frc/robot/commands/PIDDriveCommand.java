@@ -49,7 +49,7 @@ public class PIDDriveCommand extends CommandBase {
     final var xSpeed = -m_speedLimiter.calculate(m_leftJoyY) * Constants.Drive.MAX_SPEED;
 
     double m_rightJoyX = m_rightJoyXFeeder.getAsDouble();
-    if (Math.abs(m_rightJoyX) < 0.0075) {
+    if (Math.abs(m_rightJoyX) < 0.075) {
       m_rightJoyX = 0;
     }
     final var rotationSpeed = -m_rotLimiter.calculate(m_rightJoyX) * Constants.Drive.MAX_ROTATION_SPEED;

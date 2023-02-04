@@ -51,12 +51,12 @@ public final class Constants {
 
         // SysID Constants
         // TODO Update these
-        public final static double TRACK_WIDTH = 1;
-        public final static double kP = 1.0;
+        public final static double TRACK_WIDTH = 1; // TODO Redefine w/ new angular data
+        public final static double kP = 0.00096996;
         public final static double kI = 0.0;
         public final static double kD = 0.0;
-        public final static double kS = 1;
-        public final static double kV = 3;
+        public final static double kS = 0.23434;
+        public final static double kV = 1.0352;
 
         public final static double MAX_SPEED = 3.0; // Meters per second
         public final static double MAX_ROTATION_SPEED = 2 * Math.PI; // One rotation per second (In radians)
