@@ -47,4 +47,8 @@ public final class Constants {
         public final static IdleMode DISABLED_MODE = IdleMode.kCoast;
         public final static double SLOMODE_SCALE = 0.7;
     }
+
+    public static final class LedConstant {
+        public final static int LED_PWM = 9;
+    }
 }

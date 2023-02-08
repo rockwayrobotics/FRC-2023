@@ -25,6 +25,8 @@ public class RobotContainer {
     Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2
   );
 
+  private LedSubsystem m_led = new LedSubsystem(LedConstant.LED_PWM, 60);
+
   private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -54,6 +56,16 @@ public class RobotContainer {
     final JoystickButton rightBumper = new JoystickButton(m_xboxController, XboxController.Button.kLeftBumper.value);
     rightBumper.onTrue(new SetDriveScaleCommand(m_drivebase, Drive.SLOMODE_SCALE));
     rightBumper.onFalse(new SetDriveScaleCommand(m_drivebase, 1));
+    final JoystickButton aButton = new JoystickButton(m_xboxController, XboxController.Button.kA.value);
+    final JoystickButton bButton = new JoystickButton(m_xboxController, XboxController.Button.kB.value);
+    final JoystickButton xButton = new JoystickButton(m_xboxController, XboxController.Button.kX.value);
+    final JoystickButton yButton = new JoystickButton(m_xboxController, XboxController.Button.kY.value);
+    final JoystickButton startButton = new JoystickButton(m_xboxController, XboxController.Button.kStart.value);
+    aButton.onTrue(new SetLedMode(m_led, 1));
+    bButton.onTrue(new SetLedMode(m_led, 2));
+    xButton.onTrue(new SetLedMode(m_led, 3));
+    yButton.onTrue(new SetLedMode(m_led, 4));
+    startButton.onTrue(new SetLedMode(m_led, 0));
   }
 
   public Command getAutonomousCommand() {
