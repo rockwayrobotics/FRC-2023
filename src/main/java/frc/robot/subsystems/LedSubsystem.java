@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import frc.robot.Constants.LedConstant.modes;
 
 public class LedSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -15,7 +16,7 @@ public class LedSubsystem extends SubsystemBase {
   private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
   private int m_rainbowFirstPixelHue;
-  public int m_mode;
+  private modes m_mode;
 
   public LedSubsystem(
     int m_ledInt,
@@ -30,7 +31,7 @@ public class LedSubsystem extends SubsystemBase {
 
     m_led.start();
 
-    m_mode = 0;
+    m_mode = modes.Rainbow;
 
   }
 
@@ -77,7 +78,7 @@ public class LedSubsystem extends SubsystemBase {
     }
   }
 
-  private void funnyProper() {
+  private void biFlag() {
     for (var i = 0; i < Math.round((m_ledBuffer.getLength()/5)*2); i++) {
         // Sets the specified LED to the HSV values for red
         m_ledBuffer.setRGB(i, 215, 0, 113);
@@ -92,10 +93,10 @@ public class LedSubsystem extends SubsystemBase {
     }
   }
 
-  private void funny2() {
+  private void transFlag() {
     for (var i = 0; i < 12; i++) {
         // Sets the specified LED to the HSV values for red
-        m_ledBuffer.setRGB(i, 61, 157, 240);
+        m_ledBuffer.setRGB(i, 51, 147, 240);
     }
     for (var i = 12; i < 24; i++) {
       // Sets the specified LED to the HSV values for red
@@ -111,12 +112,12 @@ public class LedSubsystem extends SubsystemBase {
     }
     for (var i = 48; i < m_ledBuffer.getLength(); i++) {
       // Sets the specified LED to the HSV values for red
-      m_ledBuffer.setRGB(i, 61, 157, 250);
+      m_ledBuffer.setRGB(i, 51, 147, 250);
     }
   }
 
 
-  public void setMode(int mode) {
+  public void setMode(modes mode) {
     m_mode = mode;
   }
 
@@ -124,17 +125,23 @@ public class LedSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     switch(m_mode) {
-        case 1:
+        case Green:
             green();
             break;
-        case 2:
+        case Red:
             red();
             break;
-        case 3:
-            funnyProper();
+        case Blue:
+            blue();
             break;
-        case 4:
-            funny2();
+        case Yellow:
+            yellow();
+            break;
+        case Bi:
+            biFlag();
+            break;
+        case Trans:
+            transFlag();
             break;
         default:
             rainbow();

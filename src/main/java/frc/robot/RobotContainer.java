@@ -64,11 +64,14 @@ public class RobotContainer {
     final JoystickButton xButton = new JoystickButton(m_xboxController, XboxController.Button.kX.value);
     final JoystickButton yButton = new JoystickButton(m_xboxController, XboxController.Button.kY.value);
     final JoystickButton startButton = new JoystickButton(m_xboxController, XboxController.Button.kStart.value);
-    aButton.onTrue(new SetLedMode(m_led, 1));
-    bButton.onTrue(new SetLedMode(m_led, 2));
-    xButton.onTrue(new SetLedMode(m_led, 3));
-    yButton.onTrue(new SetLedMode(m_led, 4));
-    startButton.onTrue(new SetLedMode(m_led, 0));
+    final JoystickButton backButton = new JoystickButton(m_xboxController, XboxController.Button.kBack.value);
+    aButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Green));
+    bButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Red));
+    xButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Blue));
+    yButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Yellow));
+    backButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Bi));
+    backButton.onFalse(new SetLedMode(m_led, LedConstant.modes.Trans));
+    startButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Rainbow));
   }
 
   public Command getAutonomousCommand() {

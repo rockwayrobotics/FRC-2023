@@ -6,12 +6,13 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.LedSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.LedConstant.modes;
 
 /** An example command that uses an example subsystem. */
 public class SetLedMode extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final LedSubsystem m_LedSubsystem;
-  private final int m_mode;
+  private final modes m_mode;
 
   private boolean finishedSetting = false;
 
@@ -20,7 +21,7 @@ public class SetLedMode extends CommandBase {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SetLedMode(LedSubsystem subsystem, int mode) {
+  public SetLedMode(LedSubsystem subsystem, modes mode) {
     m_LedSubsystem = subsystem;
     m_mode = mode;
     // Use addRequirements() here to declare subsystem dependencies.
