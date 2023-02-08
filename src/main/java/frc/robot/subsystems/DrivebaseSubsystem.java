@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Constants.Drive;
+import frc.robot.Constants.*;
 
 public class DrivebaseSubsystem extends SubsystemBase {
   private final DifferentialDrive m_drive;
@@ -22,26 +22,21 @@ public class DrivebaseSubsystem extends SubsystemBase {
   private double m_scale = 1;
 
   /** Creates a new DrivebaseSubsystem. */
-  public DrivebaseSubsystem(
-    int leftMotor1, int leftMotor2,
-    int rightMotor1, int rightMotor2,
-    int leftEncoder1, int leftEncoder2,
-    int rightEncoder1, int rightEncoder2
-  ) {
+  public DrivebaseSubsystem() {
     MotorControllerGroup leftDrive = new MotorControllerGroup(
-      new CANSparkMax(leftMotor1, MotorType.kBrushless),
-      new CANSparkMax(leftMotor2, MotorType.kBrushless)
+      new CANSparkMax(Drivetrain.kLeftDrive1, MotorType.kBrushless),
+      new CANSparkMax(Drivetrain.kLeftDrive2, MotorType.kBrushless)
     );
     MotorControllerGroup rightDrive = new MotorControllerGroup(
-      new CANSparkMax(rightMotor1, MotorType.kBrushless),
-      new CANSparkMax(rightMotor2, MotorType.kBrushless)
+      new CANSparkMax(Drivetrain.kRightDrive1, MotorType.kBrushless),
+      new CANSparkMax(Drivetrain.kRightDrive2, MotorType.kBrushless)
     );
     m_drive = new DifferentialDrive(leftDrive, rightDrive);
-    m_leftEncoder = new Encoder(leftEncoder1, leftEncoder2);
-    m_rightEncoder = new Encoder(rightEncoder1, rightEncoder2);
+    m_leftEncoder = new Encoder(Drivetrain.kLeftDriveEncoder1, Drivetrain.kLeftDriveEncoder2, Drivetrain.kLeftDriveEncoderInverted) ;
+    m_rightEncoder = new Encoder(Drivetrain.kRightEncoder1, Drivetrain.kRightEncoder2, Drivetrain.kRightDriveEncoderInverted);
     // when robot goes forward, left encoder spins positive and right encoder spins negative
-    m_leftEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
-    m_rightEncoder.setDistancePerPulse(-Drive.DISTANCE_PER_ENCODER_PULSE);
+    m_leftEncoder.setDistancePerPulse(Drivetrain.kDriveDistancePerRevolution);
+    m_rightEncoder.setDistancePerPulse(-Drivetrain.kDriveDistancePerRevolution);
     m_leftEncoder.reset();
     m_rightEncoder.reset();
   }
@@ -50,7 +45,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
    * Sets the speed of the drivebase.
    * @param y Y speed. -1 is full backwards, 1 is full forwards.
    * @param x X speed. -1 is full left, 1 is full right.
-   * @param priority Priority for this action. Only the highest priority action is run each cycle.
    */
   public void set(double y, double x) {
       m_y = y;

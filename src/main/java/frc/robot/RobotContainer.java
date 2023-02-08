@@ -18,14 +18,9 @@ import frc.robot.commands.DriveDistance;
 
 public class RobotContainer {
 
-  private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem(
-    CAN.LEFT_MOTOR_1, CAN.LEFT_MOTOR_2,
-    CAN.RIGHT_MOTOR_1, CAN.RIGHT_MOTOR_2,
-    Digital.LEFT_ENCODER_1, Digital.LEFT_ENCODER_2,
-    Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2
-  );
+  private final DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem();
 
-  private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
+  private final XboxController m_xboxController = new XboxController(Gamepads.kXboxControllerID);
 
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
@@ -46,7 +41,7 @@ public class RobotContainer {
     m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
     autoTab.add("Auto Routine", m_chooser).withSize(2, 1).withPosition(0, 0);
 
-    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
+    m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getRightX, m_drivebase));
 
     Shuffleboard.getTab("Subsystems").add(m_drivebase);
 
@@ -55,7 +50,7 @@ public class RobotContainer {
 
   private void configureBindings() {
     final JoystickButton rightBumper = new JoystickButton(m_xboxController, XboxController.Button.kLeftBumper.value);
-    rightBumper.onTrue(new SetDriveScaleCommand(m_drivebase, Drive.SLOMODE_SCALE));
+    rightBumper.onTrue(new SetDriveScaleCommand(m_drivebase, Drivetrain.kSlowmodeScale));
     rightBumper.onFalse(new SetDriveScaleCommand(m_drivebase, 1));
   }
 

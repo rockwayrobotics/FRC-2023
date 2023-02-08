@@ -19,32 +19,44 @@ public final class Constants {
 
     // Motor controller IDs, defined from DriverStation
     public static final class Gamepads {
-        public static final int XBOX = 0;
+        public static final int kXboxControllerID = 0;
+    }
+    
+    // Constants related to robot drivetrain
+    public static final class Drivetrain {
+        public final static double kDriveEncoderPulsePerRevolution = 360;
+        public final static double kDriveWheelDiameter = 6;
+        public final static double kDriveDistancePerRevolution = kDriveWheelDiameter * Math.PI / kDriveEncoderPulsePerRevolution;
+
+        public final static IdleMode kEnabledDriveMode = IdleMode.kBrake;
+        public final static IdleMode kDisabledDriveMode = IdleMode.kCoast;
+
+        public final static double kSlowmodeScale = 0.7;
+
+        public final static double kP = 0.80;
+        public final static double kS = 0.18984;
+        public final static double kV = 2.1543;
+        public final static double kA = 0.44479;
+
+        public static final int kRightDrive2 = 4;
+        public static final int kLeftDrive1 = 1;
+        public static final int kLeftDrive2 = 2;
+        public static final int kRightDrive1 = 3;
+
+        public static final int kLeftDriveEncoder1 = 0;
+        public static final int kLeftDriveEncoder2 = 1;
+        public static final boolean kLeftDriveEncoderInverted = false;
+        public static final int kRightEncoder1 = 2;
+        public static final int kRightEncoder2 = 3;
+        public static final boolean kRightDriveEncoderInverted = true;
     }
 
-    // CAN IDs for motor controllers
-    public static final class CAN {
-        public static final int LEFT_MOTOR_1 = 1;
-        public static final int LEFT_MOTOR_2 = 2;
-        public static final int RIGHT_MOTOR_1 = 3;
-        public static final int RIGHT_MOTOR_2 = 4;
-    }
-    
-    // Information on digital pins on RoboRio
-    public static final class Digital {
-        public static final int LEFT_ENCODER_1 = 0;
-        public static final int LEFT_ENCODER_2 = 1;
-        public static final int RIGHT_ENCODER_1 = 2;
-        public static final int RIGHT_ENCODER_2 = 3;
-    }
-    
-    // Constants related to robot driving
-    public static final class Drive {
-        public final static double ENCODER_PULSES_PER_REVOLUTION = 360;
-        public final static double WHEEL_DIAMETER = 6;
-        public final static double DISTANCE_PER_ENCODER_PULSE = WHEEL_DIAMETER * Math.PI / ENCODER_PULSES_PER_REVOLUTION;
-        public final static IdleMode ACTIVE_MODE = IdleMode.kBrake;
-        public final static IdleMode DISABLED_MODE = IdleMode.kCoast;
-        public final static double SLOMODE_SCALE = 0.7;
+    public static final class Auto {
+        public static final double kMaxSpeedMetersPerSecond = 1;
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1;
+
+        // Reasonable baseline values for a RAMSETE follower in units of meters and seconds
+        public static final double kRamseteB = 2;
+        public static final double kRamseteZeta = 0.7;
     }
 }
