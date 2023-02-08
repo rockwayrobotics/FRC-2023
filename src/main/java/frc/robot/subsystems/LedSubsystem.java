@@ -52,66 +52,54 @@ public class LedSubsystem extends SubsystemBase {
 
   private void red() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        // Sets the specified LED to the HSV values for red
-        m_ledBuffer.setRGB(i, 128, 0, 0);
+      m_ledBuffer.setRGB(i, 128, 0, 0);
     }
   }
 
   private void green() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        // Sets the specified LED to the HSV values for red
-        m_ledBuffer.setRGB(i, 0, 128, 0);
+      m_ledBuffer.setRGB(i, 0, 128, 0);
     }
   }
 
   private void blue() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        // Sets the specified LED to the HSV values for red
-        m_ledBuffer.setRGB(i, 0, 0, 128);
+      m_ledBuffer.setRGB(i, 0, 0, 128);
     }
   }
 
   private void yellow() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
-        // Sets the specified LED to the HSV values for red
-        m_ledBuffer.setRGB(i, 128, 128, 0);
+      m_ledBuffer.setRGB(i, 128, 128, 0);
     }
   }
 
   private void biFlag() {
     for (var i = 0; i < Math.round((m_ledBuffer.getLength()/5)*2); i++) {
-        // Sets the specified LED to the HSV values for red
-        m_ledBuffer.setRGB(i, 215, 0, 113);
+      m_ledBuffer.setRGB(i, 215, 0, 113);
     }
     for (var i = Math.round((m_ledBuffer.getLength()/5)*2); i < Math.round((m_ledBuffer.getLength()/5)*3); i++) {
-      // Sets the specified LED to the HSV values for red
       m_ledBuffer.setRGB(i, 156, 78, 151);
     }
     for (var i = Math.round((m_ledBuffer.getLength()/5)*3); i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the HSV values for red
       m_ledBuffer.setRGB(i, 0, 53, 196);
     }
   }
 
   private void transFlag() {
     for (var i = 0; i < 12; i++) {
-        // Sets the specified LED to the HSV values for red
-        m_ledBuffer.setRGB(i, 51, 147, 240);
+      m_ledBuffer.setRGB(i, 51, 147, 240);
     }
     for (var i = 12; i < 24; i++) {
-      // Sets the specified LED to the HSV values for red
       m_ledBuffer.setRGB(i, 215, 0, 113);
     }
     for (var i = 24; i < 36; i++) {
-      // Sets the specified LED to the HSV values for red
       m_ledBuffer.setRGB(i, 192, 192, 192);
     }
     for (var i = 36; i < 48; i++) {
-      // Sets the specified LED to the HSV values for red
       m_ledBuffer.setRGB(i, 215, 0, 113);
     }
     for (var i = 48; i < m_ledBuffer.getLength(); i++) {
-      // Sets the specified LED to the HSV values for red
       m_ledBuffer.setRGB(i, 51, 147, 250);
     }
   }
