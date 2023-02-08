@@ -38,18 +38,21 @@ public class RobotContainer {
 
 
   public RobotContainer() {
-    configureBindings();
     var autoTab = Shuffleboard.getTab("Auto");
-    autoSpeed = autoTab.addPersistent("Max Speed", 1).getEntry();
+    autoSpeed = autoTab.addPersistent("Max Speed", 1).withPosition(2, 0).getEntry();
     
     m_driveForever = new DriveDistance(m_drivebase, () -> autoSpeed.getDouble(0.5));
     m_driveForeverSlow = new DriveDistance(m_drivebase, () -> 0.1);
 
     m_chooser.setDefaultOption("Drive Forever", m_driveForever);
     m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
-    autoTab.add(m_chooser);
+    autoTab.add("Auto Routine", m_chooser).withSize(2, 1).withPosition(0, 0);
 
     m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
+
+    Shuffleboard.getTab("Subsystems").add(m_drivebase);
+
+    configureBindings();
   }
 
   private void configureBindings() {
