@@ -103,10 +103,10 @@ public class Projectile_Math {
     }
 
     //USE FOR DEBUGGING MATH
-    public static void main(String... args){
-        ShotConfig a = aim(Shooter.MID_CUBE, 2);
-        System.out.println(a);
-    }
+    // public static void main(String... args){
+    //     ShotConfig a = aim(Shooter.MID_CUBE, 2);
+    //     System.out.println(a);
+    // }
 
 
 }
