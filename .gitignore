@@ -163,3 +163,7 @@ bin/
 
 # IntelliJ Idea Files
 .idea/
+
+# Alyx vision calc
+/networktables.json
+.vscode\launch.json

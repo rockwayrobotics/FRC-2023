@@ -8,6 +8,8 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.*;
 
+import frc.robot.Target;
+import frc.robot.Target.TargetType;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -74,5 +76,29 @@ public final class Constants {
 
         public static final AprilTag tag0 = new AprilTag(0, new Pose3d(new Pose2d(length,width/2,Rotation2d.fromDegrees(0))));
         public static final AprilTag tag1 = new AprilTag(1, new Pose3d(new Pose2d(0,width/2,Rotation2d.fromDegrees(0))));
+    }
+
+
+
+    // Constants related to the shooter
+    /**
+     * Constants Regarding Targetting With The Shooter
+     */
+    public static final class Shooter {
+        public final static double OFFSET = 0.64;
+        public final static double SHOOTER_VELOCITY_LOW = 4;
+        public final static double SHOOTER_VELOCITY_HIGH = 5;
+        public final static double MID_CUBE_HEIGHT = 0.6;
+        public final static double MID_CUBE_OFFSET = 0;
+        public final static Target MID_CUBE = new Target(MID_CUBE_HEIGHT,MID_CUBE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
+        public final static double HIGH_CUBE_HEIGHT = 0.9;
+        public final static double HIGH_CUBE_OFFSET = 0;
+        public final static Target HIGH_CUBE = new Target(HIGH_CUBE_HEIGHT, HIGH_CUBE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
+        public final static double MID_CONE_HEIGHT = 0.87;
+        public final static double MID_CONE_OFFSET = 0;
+        public final static Target MID_CONE = new Target(MID_CONE_HEIGHT, MID_CONE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
+        public final static double HIGH_CONE_HEIGHT = 1.17;
+        public final static double HIGH_CONE_OFFSET = 0;
+        public final static Target HIGH_CONE = new Target(HIGH_CONE_HEIGHT, HIGH_CONE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
     }
 }
