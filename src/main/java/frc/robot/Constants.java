@@ -57,7 +57,8 @@ public final class Constants {
      */
     public static final class Shooter {
         public final static double OFFSET = 0.64;
-        public final static double SHOOTER_VELOCITY = 5;
+        public final static double SHOOTER_VELOCITY_LOW = 4;
+        public final static double SHOOTER_VELOCITY_HIGH = 5;
         public final static double MID_CUBE_HEIGHT = 0.6;
         public final static double MID_CUBE_OFFSET = 0;
         public final static Target MID_CUBE = new Target(MID_CUBE_HEIGHT,MID_CUBE_OFFSET);
