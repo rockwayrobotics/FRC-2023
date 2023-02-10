@@ -28,22 +28,37 @@ public class Projectile_Math {
 
     }
 
+    /**
+     * Gets the intial velocity in the x direction
+     */
     private static double get_x_intial(double vel, double angle){
         return vel * Math.cos(angle);
     }
 
+    /**
+     * Gets the intial velocity in the y direction
+     */
     private static double get_y_intial(double vel, double angle){
         return vel * Math.sin(angle);
     }
 
+    /**
+     * Gets the time based on the x velocity and how far it has travelled
+     */
     private static double get_time(double x, double vel, double angle){
         return x / get_x_intial(vel, angle);
     }
 
+    /**
+     * Gets the y velocity at an x coordinate
+     */
     private static double get_y_velocity(double x, double vel, double angle){
         return get_y_intial(vel, angle) + g * get_time(x, vel, angle);
     }
 
+    /**
+     * Checks if a shot is on the down path of the parabola (ie past the apex)
+     */
     private static boolean check_shot(double x, double vel, double angle) {
         return get_y_velocity(x, vel, angle) < 0;
     }
