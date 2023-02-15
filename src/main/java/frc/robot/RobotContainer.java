@@ -14,8 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.robot.commands.DriveDistance;
-
 public class RobotContainer {
 
   private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem(
@@ -69,8 +67,7 @@ public class RobotContainer {
     bButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Red));
     xButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Blue));
     yButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Yellow));
-    backButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Bi));
-    backButton.onFalse(new SetLedMode(m_led, LedConstant.modes.Trans));
+    backButton.onTrue(new AutoBalance(m_drivebase));
     startButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Rainbow));
   }
 

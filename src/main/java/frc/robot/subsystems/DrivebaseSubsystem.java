@@ -2,11 +2,14 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.kauailabs.navx.frc.AHRS;
+
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SPI;
 
 import frc.robot.Constants.Drive;
 
@@ -15,6 +18,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   private final Encoder m_leftEncoder;
   private final Encoder m_rightEncoder;
+
+  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
   private double m_y = 0;
   private double m_x = 0;
@@ -44,6 +49,26 @@ public class DrivebaseSubsystem extends SubsystemBase {
     m_rightEncoder.setDistancePerPulse(-Drive.DISTANCE_PER_ENCODER_PULSE);
     m_leftEncoder.reset();
     m_rightEncoder.reset();
+  }
+
+  public void calibrateGyro() {
+    m_gyro.calibrate();
+  }
+  public void zeroGyro() {
+    System.out.println("NavX Connected: " + m_gyro.isConnected());
+    m_gyro.reset();
+  }
+  public double getYaw() {
+    return m_gyro.getYaw();
+  }
+  public double getPitch() {
+    return m_gyro.getPitch();
+  }
+  public double getRoll() {
+    return m_gyro.getRoll();
+  }
+  public double getAngle() {
+    return m_gyro.getAngle();
   }
 
   /**
