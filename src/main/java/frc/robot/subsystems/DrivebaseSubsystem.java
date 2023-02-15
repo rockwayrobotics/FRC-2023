@@ -139,5 +139,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drive.curvatureDrive(m_x*m_scale, m_y*m_scale, true);
+    System.out.println(m_gyro.getPitch() + " pitch");
+    System.out.println(m_gyro.getRoll() + " roll");
   }
 }

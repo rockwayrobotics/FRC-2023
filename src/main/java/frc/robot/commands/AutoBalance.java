@@ -24,7 +24,7 @@ public class AutoBalance extends CommandBase {
     public void execute() {
         // Uncomment the line below this to simulate the gyroscope axis with a controller joystick
         // Double currentAngle = -1 * Robot.controller.getRawAxis(Constants.LEFT_VERTICAL_JOYSTICK_AXIS) * 45;
-        this.currentAngle = m_DrivebaseSubsystem.getPitch();
+        this.currentAngle = m_DrivebaseSubsystem.getRoll();
 
         error = Constants.Balance.GOAL_DEGREES - currentAngle;
         drivePower = -Math.min(Constants.Balance.DRIVE_KP * error, 1);
