@@ -13,8 +13,6 @@ public class SetDriveScaleCommand extends CommandBase {
   private final DrivebaseSubsystem m_DrivebaseSubsystem;
   private final double m_scale;
 
-  private boolean finishedSetting = false;
-
   /**
    * Creates a new SlowmodeCommand.
    *
@@ -35,8 +33,6 @@ public class SetDriveScaleCommand extends CommandBase {
   @Override
   public void execute() {
     m_DrivebaseSubsystem.setScale(m_scale);
-
-    finishedSetting = true;
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +42,6 @@ public class SetDriveScaleCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return finishedSetting;
+    return true;
   }
 }

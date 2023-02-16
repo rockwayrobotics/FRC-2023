@@ -6,6 +6,9 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMax.IdleMode;
 
+import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.math.util.Units;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -24,31 +27,36 @@ public final class Constants {
     
     // Constants related to robot drivetrain
     public static final class Drivetrain {
-        public final static double kDriveEncoderPulsePerRevolution = 360;
-        public final static double kDriveWheelDiameter = 6;
-        public final static double kDriveDistancePerRevolution = kDriveWheelDiameter * Math.PI / kDriveEncoderPulsePerRevolution;
-
-        public final static IdleMode kEnabledDriveMode = IdleMode.kBrake;
-        public final static IdleMode kDisabledDriveMode = IdleMode.kCoast;
-
-        public final static double kSlowmodeScale = 0.7;
-
-        public final static double kP = 0.80;
-        public final static double kS = 0.18984;
-        public final static double kV = 2.1543;
-        public final static double kA = 0.44479;
-
-        public static final int kRightDrive2 = 4;
-        public static final int kLeftDrive1 = 1;
-        public static final int kLeftDrive2 = 2;
-        public static final int kRightDrive1 = 3;
+        public static final int kLeftDriveMotor1 = 1;
+        public static final int kLeftDriveMotor2 = 2;
+        public static final int kRightDriveMotor1 = 3;
+        public static final int kRightDriveMotor2 = 4;
 
         public static final int kLeftDriveEncoder1 = 0;
         public static final int kLeftDriveEncoder2 = 1;
-        public static final boolean kLeftDriveEncoderInverted = false;
+        public static final boolean kLeftDriveInverted = false;
         public static final int kRightEncoder1 = 2;
         public static final int kRightEncoder2 = 3;
-        public static final boolean kRightDriveEncoderInverted = true;
+        public static final boolean kRightDriveInverted = true;
+
+        public static final double kDriveEncoderPulsePerRevolution = 360;
+        public static final double kDriveWheelDiameter = 6;
+        public static final double kDriveWheelDiameterMeters = Units.inchesToMeters(kDriveWheelDiameter);
+        public static final double kDriveDistancePerRevolution = kDriveWheelDiameter * Math.PI / kDriveEncoderPulsePerRevolution;
+
+        public static final IdleMode kEnabledDriveMode = IdleMode.kBrake;
+        public static final IdleMode kDisabledDriveMode = IdleMode.kCoast;
+
+        public static final double kSlowmodeScale = 0.7;
+
+        public static final double kP = 0.80;
+        public static final double kS = 0.18984;
+        public static final double kV = 2.1543;
+        public static final double kA = 0.44479;
+
+        public static final double kTrackwidthMeters = 0.44067;
+        public static final DifferentialDriveKinematics kDriveKinematics =
+            new DifferentialDriveKinematics(kTrackwidthMeters);
     }
 
     public static final class Auto {

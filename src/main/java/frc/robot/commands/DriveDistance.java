@@ -27,7 +27,7 @@ public class DriveDistance extends CommandBase {
     @Override
     public void execute() {
         // Sets the drivebase to go forward from the speed variable
-        m_drivebase.set(m_speed.getAsDouble(), 0);
+        m_drivebase.driveRobot(m_speed.getAsDouble(), 0);
     }
 
     @Override
@@ -37,6 +37,6 @@ public class DriveDistance extends CommandBase {
 
     @Override
     public void end(boolean cancelled) {
-      m_drivebase.set(0,0); // Resets the drivebase to 0, ends command
+      m_drivebase.driveRobot(0,0); // Resets the drivebase to 0, ends command
     }
 }
