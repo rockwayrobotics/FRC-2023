@@ -184,7 +184,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
               camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
     }
 
-    System.out.println("Estimated pose: " + m_poseEstimator.getEstimatedPosition());
+    // System.out.println("Estimated pose: " + m_poseEstimator.getEstimatedPosition());
   }
 
   @Override

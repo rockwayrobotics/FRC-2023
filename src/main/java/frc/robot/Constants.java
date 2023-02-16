@@ -65,7 +65,7 @@ public final class Constants {
     }
 
     public static final class Vision {
-        public static final String camName = "Odometry_Cam";
+        public static final String camName = "AprilTagCam";
         public static final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
     }
 
@@ -85,20 +85,25 @@ public final class Constants {
      * Constants Regarding Targetting With The Shooter
      */
     public static final class Shooter {
+        //Height Offsets are relative to the top of the April Tag
         public final static double OFFSET = 0.64;
         public final static double SHOOTER_VELOCITY_LOW = 4;
         public final static double SHOOTER_VELOCITY_HIGH = 5;
         public final static double MID_CUBE_HEIGHT = 0.6;
         public final static double MID_CUBE_OFFSET = 0;
+        public final static double MID_CUBE_HEIGHT_OFFSET = 0.27; //87 - 60
         public final static Target MID_CUBE = new Target(MID_CUBE_HEIGHT,MID_CUBE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
         public final static double HIGH_CUBE_HEIGHT = 0.9;
         public final static double HIGH_CUBE_OFFSET = 0;
+        public final static double HIGH_CUBE_HEIGHT_OFFSET = 0.3;//0.9 - 0.6
         public final static Target HIGH_CUBE = new Target(HIGH_CUBE_HEIGHT, HIGH_CUBE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
         public final static double MID_CONE_HEIGHT = 0.87;
         public final static double MID_CONE_OFFSET = 0;
+        public final static double MID_CONE_HEIGHT_OFFSET = 0.27; //0.87 - 0.6
         public final static Target MID_CONE = new Target(MID_CONE_HEIGHT, MID_CONE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
         public final static double HIGH_CONE_HEIGHT = 1.17;
         public final static double HIGH_CONE_OFFSET = 0;
+        public final static double HIGH_CONE_HEIGHT_OFFSET = 0.57;//1.17 - 0.6
         public final static Target HIGH_CONE = new Target(HIGH_CONE_HEIGHT, HIGH_CONE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
     }
 }

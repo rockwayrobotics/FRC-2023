@@ -40,4 +40,11 @@ public class Target {
         offset = o;
         approach_type = a;
     }
+
+    @Override
+    public String toString(){
+        String return_string = "Type: " + type + "\nHeight: " + height + "\nOffset: " + offset + "\nApproach: " + approach_type;
+        return return_string;
+    }
+
 }

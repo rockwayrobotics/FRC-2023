@@ -75,7 +75,7 @@ public class Projectile_Math {
         //x-coord of the target aimed for
         double x = target.offset + shot_distance;
         //y-coord of the target aimed for
-        double y = target.height - Shooter.OFFSET;
+        double y = (target.height - Shooter.OFFSET);//- Shooter.MID_CUBE_HEIGHT_OFFSET) - Shooter.OFFSET;
         double under_sqrt = velocity_4 - (g * ((g * Math.pow(x,2)) + (2 * y * Math.pow(vel, 2))));
         //Checks if angle is possible, if under_sqrt is -, there is no real angle from which it is possible to fire from
         if (under_sqrt < 0){
@@ -113,15 +113,19 @@ public class Projectile_Math {
         //Checks if the low velocity was possible, if it does not, shoots high
         if (angle == 0) {
             angle = find_shot_angle(target, shot_distance, Shooter.SHOOTER_VELOCITY_HIGH);
+            power = PistonPower.High;
         }
         return new ShotConfig(power, angle);
     }
 
     //USE FOR DEBUGGING MATH
-    // public static void main(String... args){
-    //     ShotConfig a = aim(Shooter.MID_CUBE, 2);
-    //     System.out.println(a);
-    // }
+    public static void main(String... args){
+        double angle = find_shot_angle(Shooter.MID_CUBE, 2, 5);
+        System.out.println(angle);
+        // System.out.println(Shooter.MID_CUBE);
+        // ShotConfig a = aim(Shooter.MID_CUBE, 2);
+        // System.out.println(a);
+    }
 
 
 }

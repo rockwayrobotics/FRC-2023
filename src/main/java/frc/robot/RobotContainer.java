@@ -15,8 +15,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.robot.commands.DriveDistance;
-
 public class RobotContainer {
   private final XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
@@ -63,8 +61,11 @@ public class RobotContainer {
     rightBumper.onFalse(new SetDriveScaleCommand(m_drivebase, 1));
 
     final JoystickButton buttonA = new JoystickButton(m_xboxController, XboxController.Button.kA.value);
-    buttonA.whileTrue(new AlignRobotToTarget(m_drivebase, m_CameraSubsystem));
-  }
+    // buttonA.whileTrue(new AlignRobotToTarget(m_drivebase, m_CameraSubsystem));
+    buttonA.whileTrue(new DrivethAlign(m_drivebase, m_CameraSubsystem));
+    final JoystickButton buttonB = new JoystickButton(m_xboxController, XboxController.Button.kB.value);
+    buttonB.whileTrue(new DrivethAlign(m_drivebase, m_CameraSubsystem));
+}
 
   public Command getAutonomousCommand() {
     // The selected command will be run in autonomous
