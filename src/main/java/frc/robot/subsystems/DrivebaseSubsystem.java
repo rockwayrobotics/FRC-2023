@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants.Drive;
 
 public class DrivebaseSubsystem extends SubsystemBase {
+  MotorControllerGroup leftDrive;
+  MotorControllerGroup rightDrive;
+
   private final DifferentialDrive m_drive;
 
   private final Encoder m_leftEncoder;
@@ -25,6 +28,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
   private double m_x = 0;
 
   private double m_scale = 1;
+  private int direction = 1; 
 
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem(
@@ -33,11 +37,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
     int leftEncoder1, int leftEncoder2,
     int rightEncoder1, int rightEncoder2
   ) {
-    MotorControllerGroup leftDrive = new MotorControllerGroup(
+    leftDrive = new MotorControllerGroup(
       new CANSparkMax(leftMotor1, MotorType.kBrushless),
       new CANSparkMax(leftMotor2, MotorType.kBrushless)
     );
-    MotorControllerGroup rightDrive = new MotorControllerGroup(
+    rightDrive = new MotorControllerGroup(
       new CANSparkMax(rightMotor1, MotorType.kBrushless),
       new CANSparkMax(rightMotor2, MotorType.kBrushless)
     );
@@ -69,6 +73,18 @@ public class DrivebaseSubsystem extends SubsystemBase {
   }
   public double getAngle() {
     return m_gyro.getAngle();
+  }
+
+  /**
+   * Drive specificed direction 
+   */
+  public void drive(double leftPercentPower, double rightPercentPower){
+    leftDrive.set(direction * leftPercentPower);
+    rightDrive.set(direction * rightPercentPower);
+  }
+
+  public void stop(){
+    drive(0,0);
   }
 
   /**
@@ -139,7 +155,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drive.curvatureDrive(m_x*m_scale, m_y*m_scale, true);
-    System.out.println(m_gyro.getPitch() + " pitch");
-    System.out.println(m_gyro.getRoll() + " roll");
+    // System.out.println(m_gyro.getPitch() + " pitch");
+    //  System.out.println(mP0_gyro.getRoll() + " roll");
   }
 }

@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -33,6 +34,7 @@ public class RobotContainer {
 
   public final Command m_driveForever;
   public final Command m_driveForeverSlow;
+  public final Command m_autoBalance = new AutoBalance(m_drivebase);
 
 
   public RobotContainer() {
@@ -44,6 +46,7 @@ public class RobotContainer {
 
     m_chooser.setDefaultOption("Drive Forever", m_driveForever);
     m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
+    m_chooser.addOption("Auto Balance", m_autoBalance);
     autoTab.add("Auto Routine", m_chooser).withSize(2, 1).withPosition(0, 0);
 
     m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
@@ -67,12 +70,16 @@ public class RobotContainer {
     bButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Red));
     xButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Blue));
     yButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Yellow));
-    backButton.onTrue(new AutoBalance(m_drivebase));
+    var balance = new AutoBalance(m_drivebase);
+    backButton.onTrue(balance);
+    //backButton.and(aButton).onTrue(new InstantCommand(balance::cancel));
     startButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Rainbow));
   }
 
   public Command getAutonomousCommand() {
     // The selected command will be run in autonomous
-    return m_chooser.getSelected();
+    // return m_chooser.getSelected();
+
+    return m_autoBalance;
   }
 }

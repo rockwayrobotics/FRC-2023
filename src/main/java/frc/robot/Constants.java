@@ -64,7 +64,7 @@ public final class Constants {
     public static final class Balance {
         public static final double DRIVE_KP = 0.015;
         public static final double GOAL_DEGREES = 0;
-        public static final double TOLERANCE_DEGREES = 1;
+        public static final double TOLERANCE_DEGREES = 5;
         public static final double BACKWARDS_POWER_MULTIPLIER = 1.35;
     }
 }
