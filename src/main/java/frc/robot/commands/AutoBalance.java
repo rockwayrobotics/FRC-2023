@@ -10,19 +10,20 @@ public class AutoBalance extends CommandBase {
     private DrivebaseSubsystem m_DrivebaseSubsystem;
 
     private double currentAngle;
-    private double drivePower;
 
-    private final PIDController pid = new PIDController(Constants.Balance.DRIVE_KP, 0.01, 0.01);
+    private final PIDController pid = new PIDController(Constants.Balance.DRIVE_KP, 0, 0.03);
 
     public AutoBalance(DrivebaseSubsystem subsystem) {
         m_DrivebaseSubsystem = subsystem;
         addRequirements(m_DrivebaseSubsystem);
         pid.setSetpoint(Constants.Balance.GOAL_DEGREES);
+        pid.setTolerance(Constants.Balance.TOLERANCE_DEGREES);
     }
 
     @Override
     public void initialize() {
         System.out.println("Init balance");
+        pid.reset();
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -35,26 +36,20 @@ public class AutoBalance extends CommandBase {
         double drivePower = -pid.calculate(currentAngle);
         System.out.println("Raw Drive Power " + drivePower);
 
-        drivePower = MathUtil.clamp(drivePower, -0.1, 0.1);
+        drivePower = MathUtil.clamp(drivePower, -0.2, 0.2);
 
         m_DrivebaseSubsystem.set(drivePower, 0);
-        
-        // Debugging Print Statments
-        System.out.println("Current Angle: " + currentAngle);
-        System.out.println("Clamped Drive Power: " + drivePower);
     }
 
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        System.out.println("Final Angle: " + currentAngle);
         m_DrivebaseSubsystem.set(0,0);
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        double error = Math.abs(Constants.Balance.GOAL_DEGREES - this.currentAngle);
-        return error < Constants.Balance.TOLERANCE_DEGREES; // End the command when we are within the specified threshold of being 'flat' (gyroscope pitch of 0 degrees)
+        return pid.atSetpoint();
     }
 }
