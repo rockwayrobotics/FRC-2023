@@ -7,6 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import java.util.Map;
+import java.util.List;
 
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.DrivebaseSubsystem;
@@ -15,7 +16,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+
 import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import edu.wpi.first.math.util.Units;
 
 import frc.robot.Projectile_Math.ShotConfig;
@@ -83,25 +88,40 @@ public class DrivethAlign extends CommandBase {
 
   }
 
+  private PhotonTrackedTarget get_desired_target(List<PhotonTrackedTarget> target_list, int id){
+    for (PhotonTrackedTarget target : target_list ){
+      System.out.println("ID: " + target.getFiducialId());
+      if (target.getFiducialId() == id){
+        return target;
+      }
+    }
+    return null;
+  }
+
   /**
    * Using the camera and April Tag finds the directions needed to complete a shot.
    * If no April Tags are found, the Direction.ok will be False.
    * @return Direction
    */
   private Direction get_directions(){
-    var result = m_CameraSubsystem.camera.getLatestResult();
+    //Eventaully will be given dynamically
+    int id = 9;
+    PhotonPipelineResult result = m_CameraSubsystem.camera.getLatestResult();
     double angle_thresh = 0.1; //in radians
     double x = 0;
     double y = 0;
     double angle = 0;
     boolean ok = result.hasTargets();
     if (ok){
-      var target = result.getBestTarget();
-      Transform3d three_d = target.getBestCameraToTarget();
-      x = three_d.getX();
-      y = three_d.getY();
-      angle = Math.atan(y/x);
-      System.out.println("xyz: " + x + " " + y + " " + Units.radiansToDegrees(angle));
+      PhotonTrackedTarget target = get_desired_target(result.getTargets(), id);
+      if (target != null){
+        Transform3d three_d = target.getBestCameraToTarget();
+        x = three_d.getX();
+        y = three_d.getY();
+        angle = Math.atan(y/x);
+        System.out.println("xyz: " + x + " " + y + " " + Units.radiansToDegrees(angle));
+      }
+
     }
     if (angle < angle_thresh){
       angle = 0;
