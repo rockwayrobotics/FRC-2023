@@ -21,6 +21,7 @@ import edu.wpi.first.math.util.Units;
 import frc.robot.Projectile_Math.ShotConfig;
 import frc.robot.Projectile_Math;
 import frc.robot.Constants.Shooter;
+import frc.robot.Target;
 
 public class DrivethAlign extends CommandBase {
   /** Creates a new DrivethAlign. */
@@ -29,6 +30,7 @@ public class DrivethAlign extends CommandBase {
   private final Projectile_Math m_ProjectileMath;
 
   private PIDController turnController;
+  private PIDController driveController;
 
   private SimpleWidget colorWidget;
 
@@ -37,8 +39,11 @@ public class DrivethAlign extends CommandBase {
   private boolean finishedRunning;
 
   double rotationSpeed;
+  double driveSpeed;
 
-  double previousTimestamp;
+  double previousDistance;
+  double desiredDistance;
+
 
   public DrivethAlign(DrivebaseSubsystem DrivebaseSubsystem, CameraSubsystem CameraSubsystem) {
     m_DrivebaseSubsystem = DrivebaseSubsystem;
@@ -52,6 +57,7 @@ public class DrivethAlign extends CommandBase {
     final double ANGULAR_D = 0.0;
 
     turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
+    driveController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
   }
 
   /**
@@ -84,6 +90,7 @@ public class DrivethAlign extends CommandBase {
    */
   private Direction get_directions(){
     var result = m_CameraSubsystem.camera.getLatestResult();
+    double angle_thresh = 0.1; //in radians
     double x = 0;
     double y = 0;
     double angle = 0;
@@ -96,6 +103,9 @@ public class DrivethAlign extends CommandBase {
       angle = Math.atan(y/x);
       System.out.println("xyz: " + x + " " + y + " " + Units.radiansToDegrees(angle));
     }
+    if (angle < angle_thresh){
+      angle = 0;
+    }
     return new Direction(x, y, angle, ok);
   }
 
@@ -104,34 +114,43 @@ public class DrivethAlign extends CommandBase {
   public void initialize() {
     System.out.println("bean");
     turnController.reset();
+    driveController.reset();
+    previousDistance = 10;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    //Needs to get dynamically passed at some point
+    Target target = Shooter.MID_CUBE;
     Direction direction = get_directions();
-    // System.out.println(direction);
-    // var result = m_CameraSubsystem.camera.getLatestResult();
-    // if (result.hasTargets()){
-    // var target = result.getBestTarget();
-    // Transform3d three_d = target.getBestCameraToTarget();
-    // double x = three_d.getX();
-    // double y = three_d.getY();
-    // double z = three_d.getZ();
-    // ShotConfig a = m_ProjectileMath.aim(Shooter.MID_CUBE, x);
-    // System.out.println(x);
-    // System.out.println(a);
-    // // System.out.println("The Pose is: " + three_d);
-    // double range = PhotonUtils.calculateDistanceToTargetMeters(
-    // Units.inchesToMeters(7),
-    // Units.inchesToMeters(23),
-    // 0,
-    // Units.degreesToRadians(result.getBestTarget().getPitch()));
-    // System.out.println("The Range is: " + range);
-    // System.out.println(three_d.getX());
-    // System.out.println(three_d.getY());
-    // System.out.println(three_d.getZ());
+    //Threshold in meters of the y distance driven (must be able to hit a target within this tolerance side to side)
+    double distanceThresh = 0.05;
+    double currentDistance;
+    //Checks if a target is visible
+    if (direction.ok){
+      //checks if the angle is 0, if it has not, continues its rotation
+      if (direction.angle != 0){
+        rotationSpeed = turnController.calculate(direction.angle, 0);
+        m_DrivebaseSubsystem.set(0, rotationSpeed);
+      }
+      //checks if the robot has arrived at its destination, if it has not, continues driving
+      else if (previousDistance == 0){
+        currentDistance = direction.y + target.side_offset;
+        driveSpeed = turnController.calculate(currentDistance, 0);
+        m_DrivebaseSubsystem.set(driveSpeed,0);
+        previousDistance = currentDistance;
+        if (previousDistance <= distanceThresh){
+          previousDistance = 0;
+        }
+      }
+    }
+    else{
+      System.out.println("No Target Has Been Spotted!");
+    }
 
+
+    //Code that deals with aiming
   }
 
   // Called once the command ends or is interrupted.

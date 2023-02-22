@@ -31,13 +31,15 @@ public class Target {
 
     public double offset;
     public double height;
+    public double side_offset;
     public TargetType type;
     public Approach approach_type;
     
-    public Target(double h, double o, TargetType t, Approach a){
+    public Target(double h, double o, double s, TargetType t, Approach a){
         type = t;
         height = h;
         offset = o;
+        side_offset = s;
         approach_type = a;
     }
 
