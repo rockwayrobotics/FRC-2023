@@ -9,11 +9,19 @@ public class DriveDistance extends CommandBase {
     
     private DrivebaseSubsystem m_drivebase;
     private DoubleSupplier m_speed;
+    private DoubleSupplier m_distance;
 
-    public DriveDistance(DrivebaseSubsystem subsystem, DoubleSupplier speed) {
+    /**
+     * A command that spins the wheels for a certain distance
+     * @param subsystem Set this to m_drivebase
+     * @param distance Set to distance in inches
+     * @param speed Set to speed from -1 to 1 (must match sign of distance)
+     */
+    public DriveDistance(DrivebaseSubsystem subsystem, DoubleSupplier distance, DoubleSupplier speed) {
 
         m_drivebase = subsystem;
         m_speed = speed;
+        m_distance = distance;
     
         addRequirements(m_drivebase);
     }
@@ -32,7 +40,15 @@ public class DriveDistance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return false;
+        // This takes the values from encoder L and R and averages them out
+        double averageDistance = (m_drivebase.getLDistance() + m_drivebase.getRDistance()) / 2; 
+        // This will say to end when the encoders are equal with the distance we want
+
+        if (m_speed.getAsDouble() < 0) {
+        return averageDistance <= m_distance.getAsDouble();
+        } else {
+        return averageDistance >= m_distance.getAsDouble();  
+        }
     }
 
     @Override

@@ -14,7 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
-import frc.robot.commands.DriveDistance;
+import frc.robot.commands.AutoCommandList1;
+// import frc.robot.commands.AutoCommandList2;
 
 public class RobotContainer {
 
@@ -33,19 +34,19 @@ public class RobotContainer {
 
   public final GenericEntry autoSpeed;
 
-  public final Command m_driveForever;
-  public final Command m_driveForeverSlow;
+  public final Command m_autoNum1;
+  // public final Command m_autoNum2;
 
 
   public RobotContainer() {
     var autoTab = Shuffleboard.getTab("Auto");
     autoSpeed = autoTab.addPersistent("Max Speed", 1).withPosition(2, 0).getEntry();
-    
-    m_driveForever = new DriveDistance(m_drivebase, () -> autoSpeed.getDouble(0.5));
-    m_driveForeverSlow = new DriveDistance(m_drivebase, () -> 0.1);
 
-    m_chooser.setDefaultOption("Drive Forever", m_driveForever);
-    m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
+    m_autoNum1 = new AutoCommandList1(m_drivebase, () -> 10);
+    // m_autoNum2 = new AutoCommandList2(m_drivebase, () -> 10);
+
+    m_chooser.setDefaultOption("Auto Number 1", m_autoNum1);
+    // m_chooser.setDefaultOption("Auto Number 2", m_autoNum2);
     autoTab.add("Auto Routine", m_chooser).withSize(2, 1).withPosition(0, 0);
 
     m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
