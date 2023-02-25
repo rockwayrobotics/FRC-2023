@@ -24,10 +24,10 @@ public final class Constants {
 
     // CAN IDs for motor controllers
     public static final class CAN {
-        public static final int LEFT_MOTOR_1 = 1;
-        public static final int LEFT_MOTOR_2 = 2;
-        public static final int RIGHT_MOTOR_1 = 3;
-        public static final int RIGHT_MOTOR_2 = 4;
+        public static final int LEFT_MOTOR_1 = 2;
+        public static final int LEFT_MOTOR_2 = 3;
+        public static final int RIGHT_MOTOR_1 = 4;
+        public static final int RIGHT_MOTOR_2 = 5;
     }
     
     // Information on digital pins on RoboRio
@@ -66,5 +66,12 @@ public final class Constants {
         public static final double GOAL_DEGREES = 0;
         public static final double TOLERANCE_DEGREES = 3;
         public static final double BACKWARDS_POWER_MULTIPLIER = 1.35;
+    }
+
+    public static final class Pneumatics {
+        public static final int bucketForwards1 = 8;
+        public static final int bucketForwards2 = 9;
+        public static final int bucketReverse1 = 1;
+        public static final int bucketReverse2 = 3;
     }
 }
