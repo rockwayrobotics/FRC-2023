@@ -60,4 +60,11 @@ public final class Constants {
             Rainbow
           }
     }
+
+    public static final class Balance {
+        public static final double DRIVE_KP = 0.04;
+        public static final double GOAL_DEGREES = 0;
+        public static final double TOLERANCE_DEGREES = 3;
+        public static final double BACKWARDS_POWER_MULTIPLIER = 1.35;
+    }
 }

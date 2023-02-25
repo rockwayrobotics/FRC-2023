@@ -2,24 +2,33 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.kauailabs.navx.frc.AHRS;
+
 
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.SPI;
 
 import frc.robot.Constants.Drive;
 
 public class DrivebaseSubsystem extends SubsystemBase {
+  MotorControllerGroup leftDrive;
+  MotorControllerGroup rightDrive;
+
   private final DifferentialDrive m_drive;
 
   private final Encoder m_leftEncoder;
   private final Encoder m_rightEncoder;
 
+  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+
   private double m_y = 0;
   private double m_x = 0;
 
   private double m_scale = 1;
+  private int direction = 1; 
 
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem(
@@ -28,11 +37,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
     int leftEncoder1, int leftEncoder2,
     int rightEncoder1, int rightEncoder2
   ) {
-    MotorControllerGroup leftDrive = new MotorControllerGroup(
+    leftDrive = new MotorControllerGroup(
       new CANSparkMax(leftMotor1, MotorType.kBrushless),
       new CANSparkMax(leftMotor2, MotorType.kBrushless)
     );
-    MotorControllerGroup rightDrive = new MotorControllerGroup(
+    rightDrive = new MotorControllerGroup(
       new CANSparkMax(rightMotor1, MotorType.kBrushless),
       new CANSparkMax(rightMotor2, MotorType.kBrushless)
     );
@@ -44,6 +53,38 @@ public class DrivebaseSubsystem extends SubsystemBase {
     m_rightEncoder.setDistancePerPulse(-Drive.DISTANCE_PER_ENCODER_PULSE);
     m_leftEncoder.reset();
     m_rightEncoder.reset();
+  }
+
+  public void calibrateGyro() {
+    m_gyro.calibrate();
+  }
+  public void zeroGyro() {
+    System.out.println("NavX Connected: " + m_gyro.isConnected());
+    m_gyro.reset();
+  }
+  public double getYaw() {
+    return m_gyro.getYaw();
+  }
+  public double getPitch() {
+    return m_gyro.getPitch();
+  }
+  public double getRoll() {
+    return m_gyro.getRoll();
+  }
+  public double getAngle() {
+    return m_gyro.getAngle();
+  }
+
+  /**
+   * Drive specificed direction 
+   */
+  public void drive(double leftPercentPower, double rightPercentPower){
+    leftDrive.set(direction * leftPercentPower);
+    rightDrive.set(direction * rightPercentPower);
+  }
+
+  public void stop(){
+    drive(0,0);
   }
 
   /**
@@ -114,5 +155,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     m_drive.curvatureDrive(m_x*m_scale, m_y*m_scale, true);
+    // System.out.println(m_gyro.getPitch() + " pitch");
+    //  System.out.println(mP0_gyro.getRoll() + " roll");
   }
 }
