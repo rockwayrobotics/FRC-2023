@@ -18,12 +18,12 @@ public class BalanceRoutine extends SequentialCommandGroup {
         super();
         m_drivebase = drivebase;
 
-        this.addCommands(new DriveUntilTipped(drivebase, 8, 0.5));
-        this.addCommands(new DriveUntilTipped(drivebase, -8, 0.5));
-        this.addCommands(new DriveUntilTipped(drivebase, 0, 0.5));
-        this.addCommands(new DriveDistance(drivebase, 0.5, 10));
+        this.addCommands(new DriveUntilTipped(drivebase, -8, 0.2));
+        this.addCommands(new DriveUntilTipped(drivebase, 8, 0.2));
+        this.addCommands(new DriveUntilTipped(drivebase, 0, 0.2));
+        this.addCommands(new DriveDistance(drivebase, 0.2, 20));
         this.addCommands(new WaitCommand(0.5));
-        this.addCommands(new DriveUntilTipped(drivebase, -8, -0.5));
+        this.addCommands(new DriveUntilTipped(drivebase, 8, -0.2));
         this.addCommands(new AutoBalance(drivebase));
     }
 }

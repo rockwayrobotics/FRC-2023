@@ -32,11 +32,12 @@ public class DriveDistance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (m_drivebase.getRDistance() >= m_distance);
+        return (Math.abs(m_drivebase.getRDistance()) >= m_distance);
     }
 
     @Override
     public void end(boolean cancelled) {
-      m_drivebase.stop(); // Resets the drivebase to 0, ends command
+        System.out.println("Drove for " + m_distance + " inches");
+        m_drivebase.stop(); // Resets the drivebase to 0, ends command
     }
 }

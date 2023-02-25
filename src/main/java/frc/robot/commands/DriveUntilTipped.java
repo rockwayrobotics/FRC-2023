@@ -13,6 +13,7 @@ public class DriveUntilTipped extends CommandBase {
   private final DrivebaseSubsystem m_DrivebaseSubsystem;
 
   private final double m_setpoint;
+  private final double m_speed;
 
   /**
    * Creates a new DriveUntilTipped command.
@@ -24,6 +25,7 @@ public class DriveUntilTipped extends CommandBase {
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
     m_setpoint = setpoint;
+    m_speed = speed;
   }
 
   // Called when the command is initially scheduled.
@@ -33,16 +35,18 @@ public class DriveUntilTipped extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_DrivebaseSubsystem.set(0.5, 0);
+    m_DrivebaseSubsystem.set(m_speed, 0);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    System.out.println("Hit setpoint of " + m_setpoint + " roll.");
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_setpoint - Math.abs(m_DrivebaseSubsystem.getRoll()) >= 0.2;
+    return Math.abs(m_setpoint - m_DrivebaseSubsystem.getRoll()) <= 3;
   }
 }

@@ -8,6 +8,7 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 
@@ -45,12 +46,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
       new CANSparkMax(rightMotor1, MotorType.kBrushless),
       new CANSparkMax(rightMotor2, MotorType.kBrushless)
     );
+    rightDrive.setInverted(true);
     m_drive = new DifferentialDrive(leftDrive, rightDrive);
     m_leftEncoder = new Encoder(leftEncoder1, leftEncoder2);
     m_rightEncoder = new Encoder(rightEncoder1, rightEncoder2);
     // when robot goes forward, left encoder spins positive and right encoder spins negative
     m_leftEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
-    m_rightEncoder.setDistancePerPulse(-Drive.DISTANCE_PER_ENCODER_PULSE);
+    m_rightEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
+    m_rightEncoder.setReverseDirection(true);
     m_leftEncoder.reset();
     m_rightEncoder.reset();
   }
@@ -84,7 +87,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
   }
 
   public void stop(){
-    drive(0,0);
+    set(0,0);
   }
 
   /**
@@ -156,5 +159,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     m_drive.curvatureDrive(m_speed*m_scale, m_rotation*m_scale, true);
     // System.out.println(m_gyro.getPitch() + " pitch");
     //  System.out.println(mP0_gyro.getRoll() + " roll");
+
+    SmartDashboard.putNumber("Gyro roll", m_gyro.getRoll());
   }
 }

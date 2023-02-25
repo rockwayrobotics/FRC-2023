@@ -33,8 +33,8 @@ public class AutoBalance extends CommandBase {
         // Double currentAngle = -1 * Robot.controller.getRawAxis(Constants.LEFT_VERTICAL_JOYSTICK_AXIS) * 45;
         this.currentAngle = m_DrivebaseSubsystem.getRoll();
 
-        double drivePower = -pid.calculate(currentAngle);
-        System.out.println("Raw Drive Power " + drivePower);
+        double drivePower = pid.calculate(currentAngle);
+        // System.out.println("Raw Drive Power " + drivePower);
 
         drivePower = MathUtil.clamp(drivePower, -0.2, 0.2);
 

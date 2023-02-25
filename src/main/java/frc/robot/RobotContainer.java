@@ -51,7 +51,7 @@ public class RobotContainer {
     m_autoChooser.addOption("Auto Balance", m_balanceRoutine);
     autoTab.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(0, 0);
 
-    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
+    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getRightX(), m_drivebase));
 
     Shuffleboard.getTab("Subsystems").add(m_drivebase);
 
