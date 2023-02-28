@@ -71,7 +71,7 @@ public final class Constants {
     public static final class Pneumatics {
         public static final int bucketForwards1 = 8;
         public static final int bucketForwards2 = 9;
-        public static final int bucketReverse1 = 1;
-        public static final int bucketReverse2 = 3;
+        public static final int bucketReverse1 = 10;
+        public static final int bucketReverse2 = 11;
     }
 }
