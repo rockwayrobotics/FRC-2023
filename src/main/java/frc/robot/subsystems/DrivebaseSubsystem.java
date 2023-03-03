@@ -15,18 +15,29 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants.Drive;
 
 public class DrivebaseSubsystem extends SubsystemBase {
+  MotorControllerGroup leftDrive;
+  MotorControllerGroup rightDrive;
+
   private final DifferentialDrive m_drive;
 
   private final Encoder m_leftEncoder;
   private final Encoder m_rightEncoder;
 
-  private double m_y = 0;
-  private double m_x = 0;
+  private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+
+  private double m_rotation = 0;
+  private double m_speed = 0;
 
   private double m_scale = 1;
+  private int direction = 1;
+
+  private double yawOffset;
 
   private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(Drive.TRACK_WIDTH);
   private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(Drive.kS,Drive.kV);
@@ -67,7 +78,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
     m_rightEncoder = new Encoder(rightEncoder1, rightEncoder2);
     // when robot goes forward, left encoder spins positive and right encoder spins negative
     m_leftEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
-    m_rightEncoder.setDistancePerPulse(-Drive.DISTANCE_PER_ENCODER_PULSE);
+    m_rightEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
+    m_rightEncoder.setReverseDirection(true);
     m_leftEncoder.reset();
     m_rightEncoder.reset();
 
@@ -77,14 +89,41 @@ public class DrivebaseSubsystem extends SubsystemBase {
     rightRateEntry = rightRate.getEntry();
   }
 
+  public void calibrateGyro() {
+    m_gyro.calibrate();
+  }
+  public void zeroGyro() {
+    System.out.println("NavX Connected: " + m_gyro.isConnected());
+    m_gyro.reset();
+  }
+  public void setAutoOffset(double autoOffset) {
+    yawOffset = autoOffset;
+  }
+  public double getYaw() {
+    return m_gyro.getYaw() + yawOffset;
+  }
+  public double getPitch() {
+    return m_gyro.getPitch();
+  }
+  public double getRoll() {
+    return m_gyro.getRoll();
+  }
+  public double getAngle() {
+    return m_gyro.getAngle();
+  }
+
+  public void stop(){
+    set(0,0);
+  }
+
   /**
    * Sets the speed of the drivebase.
-   * @param y Y speed. -1 is full backwards, 1 is full forwards.
-   * @param x X speed. -1 is full left, 1 is full right.
+   * @param speed Linear speed of drivetrain. -1 is full backwards, 1 is full forwards.
+   * @param rotation Rotation speed. -1 is full left, 1 is full right.
    */
-  public void set(double y, double x) {
-      m_y = y;
-      m_x = x;
+  public void set(double speed, double rotation) {
+    m_speed = speed;
+    m_rotation = rotation;
   }
 
   /**
@@ -171,8 +210,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_drive.curvatureDrive(m_x*m_scale, m_y*m_scale, true);
+    m_drive.curvatureDrive(m_speed*m_scale, m_rotation*m_scale, true);
+    // System.out.println(m_gyro.getPitch() + " pitch");
+    //  System.out.println(mP0_gyro.getRoll() + " roll");
 
+    SmartDashboard.putNumber("Gyro roll", getRoll());
+    SmartDashboard.putNumber("Gyro Yaw", getYaw());
     leftRateEntry.setDouble(getLRate());
     rightRateEntry.setDouble(getRRate());
   }

@@ -25,10 +25,10 @@ public final class Constants {
 
     // CAN IDs for motor controllers
     public static final class CAN {
-        public static final int LEFT_MOTOR_1 = 1;
-        public static final int LEFT_MOTOR_2 = 2;
-        public static final int RIGHT_MOTOR_1 = 3;
-        public static final int RIGHT_MOTOR_2 = 4;
+        public static final int LEFT_MOTOR_1 = 2;
+        public static final int LEFT_MOTOR_2 = 3;
+        public static final int RIGHT_MOTOR_1 = 4;
+        public static final int RIGHT_MOTOR_2 = 5;
     }
     
     // Information on digital pins on RoboRio
@@ -60,5 +60,26 @@ public final class Constants {
 
         public final static double MAX_SPEED = 3.0; // Meters per second
         public final static double MAX_ROTATION_SPEED = 2 * Math.PI; // One rotation per second (In radians)
+        public final static double rotation_kP = 0.3;
+    }
+
+    public static final class LedConstant {
+        public final static int LED_PWM = 9;
+        public static enum modes {
+            Green,
+            Red,
+            Blue,
+            Yellow,
+            Bi,
+            Trans,
+            Rainbow
+          }
+    }
+
+    public static final class Balance {
+        public static final double DRIVE_KP = 0.04;
+        public static final double GOAL_DEGREES = 0;
+        public static final double TOLERANCE_DEGREES = 3;
+        public static final double BACKWARDS_POWER_MULTIPLIER = 1.35;
     }
 }

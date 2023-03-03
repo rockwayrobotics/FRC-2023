@@ -162,4 +162,4 @@ bin/
 *-window.json
 
 # IntelliJ Idea Files
-.idea/
+/.idea/
