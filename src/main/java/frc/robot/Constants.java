@@ -24,10 +24,10 @@ public final class Constants {
 
     // CAN IDs for motor controllers
     public static final class CAN {
-        public static final int LEFT_MOTOR_1 = 1;
-        public static final int LEFT_MOTOR_2 = 2;
-        public static final int RIGHT_MOTOR_1 = 3;
-        public static final int RIGHT_MOTOR_2 = 4;
+        public static final int LEFT_MOTOR_1 = 2;
+        public static final int LEFT_MOTOR_2 = 3;
+        public static final int RIGHT_MOTOR_1 = 4;
+        public static final int RIGHT_MOTOR_2 = 5;
     }
     
     // Information on digital pins on RoboRio
@@ -46,6 +46,7 @@ public final class Constants {
         public final static IdleMode ACTIVE_MODE = IdleMode.kBrake;
         public final static IdleMode DISABLED_MODE = IdleMode.kCoast;
         public final static double SLOMODE_SCALE = 0.7;
+        public final static double rotation_kP = 0.3;
     }
 
     public static final class LedConstant {

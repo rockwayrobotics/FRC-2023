@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -28,28 +27,31 @@ public class RobotContainer {
 
   private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  SendableChooser<Command> m_autoChooser = new SendableChooser<>();
 
   public final GenericEntry autoSpeed;
 
   public final Command m_driveForever;
   public final Command m_driveForeverSlow;
-  public final Command m_autoBalance = new AutoBalance(m_drivebase);
+  public final Command m_balanceRoutine;
 
 
   public RobotContainer() {
     var autoTab = Shuffleboard.getTab("Auto");
     autoSpeed = autoTab.addPersistent("Max Speed", 1).withPosition(2, 0).getEntry();
+
+    m_balanceRoutine = new BalanceRoutine(m_drivebase);
     
-    m_driveForever = new DriveDistance(m_drivebase, () -> autoSpeed.getDouble(0.5));
-    m_driveForeverSlow = new DriveDistance(m_drivebase, () -> 0.1);
+    m_driveForever = new DriveDistance(m_drivebase, autoSpeed.getDouble(0.5), 100000000);
+    m_driveForeverSlow = new DriveDistance(m_drivebase, 0.1, 100000000);
 
-    m_chooser.setDefaultOption("Drive Forever", m_driveForever);
-    m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
-    m_chooser.addOption("Auto Balance", m_autoBalance);
-    autoTab.add("Auto Routine", m_chooser).withSize(2, 1).withPosition(0, 0);
+    m_autoChooser.setDefaultOption("Drive Forever", m_driveForever);
+    m_autoChooser.addOption("Drive Forever Slow", m_driveForeverSlow);
+    // m_autoChooser.addOption("Auto Balance", m_autoBalance);
+    m_autoChooser.addOption("Auto Balance", m_balanceRoutine);
+    autoTab.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(0, 0);
 
-    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getLeftX(), m_drivebase));
+    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getRightX(), m_drivebase));
 
     Shuffleboard.getTab("Subsystems").add(m_drivebase);
 
@@ -70,16 +72,15 @@ public class RobotContainer {
     bButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Red));
     xButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Blue));
     yButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Yellow));
-    var balance = new AutoBalance(m_drivebase);
-    backButton.onTrue(balance);
+    backButton.onTrue(new AutoBalance(m_drivebase));
     //backButton.and(aButton).onTrue(new InstantCommand(balance::cancel));
     startButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Rainbow));
   }
 
   public Command getAutonomousCommand() {
-    // The selected command will be run in autonomous
-    // return m_chooser.getSelected();
+    m_drivebase.zeroGyro();
 
-    return m_autoBalance;
+    // The selected command will be run in autonomous
+    return m_autoChooser.getSelected();
   }
 }
