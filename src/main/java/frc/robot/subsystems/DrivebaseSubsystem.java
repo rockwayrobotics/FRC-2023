@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.Drive;
 import org.photonvision.EstimatedRobotPose;
@@ -42,10 +44,16 @@ public class DrivebaseSubsystem extends SubsystemBase {
   private final PIDController m_leftDrivePIDController = new PIDController(Drive.kP,Drive.kI,Drive.kD);
   private final PIDController m_rightDrivePIDController = new PIDController(Drive.kP,Drive.kI,Drive.kD);
 
+  private final CANSparkMax m_testMotor;
+
   MotorControllerGroup m_leftDrive;
   MotorControllerGroup m_rightDrive;
 
   private final CameraSubsystem m_CameraSubsystem;
+
+  private double m_testMotorSpeed;
+
+  RelativeEncoder m_testEncoder;
 
 
   /** Creates a new DrivebaseSubsystem. */
@@ -68,6 +76,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
     );
 
     m_rightDrive.setInverted(true);
+
+    m_testMotor = new CANSparkMax(6, MotorType.kBrushless);
+
+    m_testEncoder = m_testMotor.getEncoder();
 
     m_drive = new DifferentialDrive(m_leftDrive, m_rightDrive);
     m_leftEncoder = new Encoder(leftEncoder1, leftEncoder2);
@@ -106,6 +118,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
             m_rightDrivePIDController.calculate(m_rightEncoder.getRate(), speeds.rightMetersPerSecond);
     m_leftDrive.setVoltage(leftOutput + leftFeedforward);
     m_rightDrive.setVoltage(rightOutput + rightFeedforward);
+  }
+
+  public void setTestSpeed(double speed){
+    m_testMotorSpeed = speed;
   }
 
   /**
@@ -190,6 +206,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     updateOdometry(m_CameraSubsystem);
-    m_drive.curvatureDrive(m_x*m_scale, m_y*m_scale, true);
+    m_drive.curvatureDrive(m_y*m_scale, m_x*m_scale, true);
+    SmartDashboard.putNumber("Right rate", getRRate());
+    SmartDashboard.putNumber("Left rate", getLRate());
+    // SmartDashboard.putNumber("Yaw", )
+
+    m_testMotor.set(m_testMotorSpeed);
+    SmartDashboard.putNumber("Angle encoder", m_testEncoder.getPosition());
   }
 }

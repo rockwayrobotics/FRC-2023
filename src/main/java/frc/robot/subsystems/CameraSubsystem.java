@@ -8,12 +8,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import frc.robot.commands.DrivethAlign;
+
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
@@ -57,9 +63,13 @@ public class CameraSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-
+    // PhotonPipelineResult result = camera.getLatestResult();
+    // if(result.hasTargets()) {
+    //   SmartDashboard.putNumber("X", result.getBestTarget().getBestCameraToTarget().getX());
+    //   SmartDashboard.putNumber("Y", result.getBestTarget().getBestCameraToTarget().getY());
+      
+    // }
   }
-
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation

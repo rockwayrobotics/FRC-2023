@@ -28,10 +28,10 @@ public final class Constants {
 
     // CAN IDs for motor controllers
     public static final class CAN {
-        public static final int LEFT_MOTOR_1 = 1;
-        public static final int LEFT_MOTOR_2 = 2;
-        public static final int RIGHT_MOTOR_1 = 3;
-        public static final int RIGHT_MOTOR_2 = 4;
+        public static final int LEFT_MOTOR_1 = 2;
+        public static final int LEFT_MOTOR_2 = 3;
+        public static final int RIGHT_MOTOR_1 = 4;
+        public static final int RIGHT_MOTOR_2 = 5;
     }
     
     // Information on digital pins on RoboRio
@@ -103,7 +103,7 @@ public final class Constants {
         public final static Target HIGH_CUBE = new Target(HIGH_CUBE_HEIGHT, HIGH_CUBE_OFFSET, HIGH_CUBE_SIDE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
         public final static double MID_CONE_HEIGHT = 0.87;
         public final static double MID_CONE_OFFSET = 0;
-        public final static double MID_CONE_SIDE_OFFSET = 0;
+        public final static double MID_CONE_SIDE_OFFSET = 0.67;
         public final static double MID_CONE_HEIGHT_OFFSET = 0.27; //0.87 - 0.6
         public final static Target MID_CONE = new Target(MID_CONE_HEIGHT, MID_CONE_OFFSET, MID_CONE_SIDE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
         public final static double HIGH_CONE_HEIGHT = 1.17;

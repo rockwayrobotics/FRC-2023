@@ -58,7 +58,7 @@ public class DrivethAlign extends CommandBase {
     addRequirements(DrivebaseSubsystem);
     addRequirements(CameraSubsystem);
 
-    final double ANGULAR_P = 0.1;
+    final double ANGULAR_P = 0.75;
     final double ANGULAR_D = 0.0;
 
     turnController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
@@ -90,7 +90,7 @@ public class DrivethAlign extends CommandBase {
 
   private PhotonTrackedTarget get_desired_target(List<PhotonTrackedTarget> target_list, int id){
     for (PhotonTrackedTarget target : target_list ){
-      System.out.println("ID: " + target.getFiducialId());
+      // System.out.println("ID: " + target.getFiducialId());
       if (target.getFiducialId() == id){
         return target;
       }
@@ -105,7 +105,7 @@ public class DrivethAlign extends CommandBase {
    */
   private Direction get_directions(){
     //Eventaully will be given dynamically
-    int id = 9;
+    int id = 0;
     PhotonPipelineResult result = m_CameraSubsystem.camera.getLatestResult();
     double angle_thresh = 0.1; //in radians
     double x = 0;
@@ -142,25 +142,27 @@ public class DrivethAlign extends CommandBase {
   @Override
   public void execute() {
     //Needs to get dynamically passed at some point
-    Target target = Shooter.MID_CUBE;
+    Target target = Shooter.MID_CONE;
+    System.out.println("The target is being sus: " + target.side_offset);
     Direction direction = get_directions();
     //Threshold in meters of the y distance driven (must be able to hit a target within this tolerance side to side)
-    double distanceThresh = 0.05;
+    double distanceThresh = 0.0;
     double currentDistance;
     //Checks if a target is visible
     if (direction.ok){
       //checks if the angle is 0, if it has not, continues its rotation
-      if (direction.angle != 0){
-        rotationSpeed = turnController.calculate(direction.angle, 0);
-        m_DrivebaseSubsystem.set(0, rotationSpeed);
-      }
+      // if (direction.angle != 0){
+      //   rotationSpeed = turnController.calculate(direction.angle, 0);
+      //   m_DrivebaseSubsystem.set(0, rotationSpeed);
+      // }
       //checks if the robot has arrived at its destination, if it has not, continues driving
-      else if (previousDistance == 0){
+      if (previousDistance != 0){
         currentDistance = direction.y + target.side_offset;
-        driveSpeed = turnController.calculate(currentDistance, 0);
+        driveSpeed = -turnController.calculate(currentDistance, 0);
+        System.out.println("Lets go just this amount more: " + currentDistance);
         m_DrivebaseSubsystem.set(driveSpeed,0);
         previousDistance = currentDistance;
-        if (previousDistance <= distanceThresh){
+        if (Math.abs(previousDistance) <= distanceThresh){
           previousDistance = 0;
         }
       }

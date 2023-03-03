@@ -47,7 +47,7 @@ public class RobotContainer {
     m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
     autoTab.add("Auto Routine", m_chooser).withSize(2, 1).withPosition(0, 0);
 
-    m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getLeftX, m_drivebase));
+    m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getRightX, m_drivebase));
 
     Shuffleboard.getTab("Subsystems").add(m_CameraSubsystem);
     Shuffleboard.getTab("Subsystems").add(m_drivebase);
@@ -65,6 +65,9 @@ public class RobotContainer {
     buttonA.whileTrue(new DrivethAlign(m_drivebase, m_CameraSubsystem));
     final JoystickButton buttonB = new JoystickButton(m_xboxController, XboxController.Button.kB.value);
     buttonB.whileTrue(new DrivethAlign(m_drivebase, m_CameraSubsystem));
+
+    final JoystickButton buttonX = new JoystickButton(m_xboxController, XboxController.Button.kX.value);
+    buttonX.whileTrue(new TestMotorSpin(m_drivebase));
 }
 
   public Command getAutonomousCommand() {
