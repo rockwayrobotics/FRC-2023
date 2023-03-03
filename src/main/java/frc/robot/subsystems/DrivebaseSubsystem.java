@@ -29,7 +29,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
   private double m_speed = 0;
 
   private double m_scale = 1;
-  private int direction = 1; 
+  private int direction = 1;
+
+  private double yawOffset;
 
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem(
@@ -65,8 +67,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
     System.out.println("NavX Connected: " + m_gyro.isConnected());
     m_gyro.reset();
   }
+  public void setAutoOffset(double autoOffset) {
+    yawOffset = autoOffset;
+  }
   public double getYaw() {
-    return m_gyro.getYaw();
+    return m_gyro.getYaw() + yawOffset;
   }
   public double getPitch() {
     return m_gyro.getPitch();
@@ -160,6 +165,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     // System.out.println(m_gyro.getPitch() + " pitch");
     //  System.out.println(mP0_gyro.getRoll() + " roll");
 
-    SmartDashboard.putNumber("Gyro roll", m_gyro.getRoll());
+    SmartDashboard.putNumber("Gyro roll", getRoll());
+    SmartDashboard.putNumber("Gyro Yaw", getYaw());
   }
 }

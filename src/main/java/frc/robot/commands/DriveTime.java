@@ -13,8 +13,7 @@ public class DriveTime extends CommandBase {
     public DriveTime(DrivebaseSubsystem subsystem, double speed, double time) {
         m_drivebase = subsystem;
         m_speed = speed;
-        m_time = time;
-    
+        m_time = time;    
         addRequirements(m_drivebase);
     }
 
@@ -26,9 +25,7 @@ public class DriveTime extends CommandBase {
 
     @Override
     public void execute() {
-        // Sets the drivebase to go forward from the speed variable
         m_drivebase.set(m_speed, 0);
-
         m_timeElapsed++;
     }
 
@@ -39,6 +36,6 @@ public class DriveTime extends CommandBase {
 
     @Override
     public void end(boolean cancelled) {
-      m_drivebase.stop(); // Resets the drivebase to 0, ends command
+        m_drivebase.stop(); // Resets the drivebase to 0, ends command
     }
 }

@@ -22,8 +22,8 @@ public class DriveUntilTipped extends CommandBase {
    */
   public DriveUntilTipped(DrivebaseSubsystem subsystem, double setpoint, double speed) {
     m_DrivebaseSubsystem = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+
     m_setpoint = setpoint;
     m_speed = speed;
   }
@@ -41,7 +41,6 @@ public class DriveUntilTipped extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Hit setpoint of " + m_setpoint + " roll.");
   }
 
   // Returns true when the command should end.

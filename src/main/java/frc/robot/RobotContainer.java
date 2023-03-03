@@ -78,6 +78,8 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
+    m_drivebase.zeroGyro();
+
     // The selected command will be run in autonomous
     return m_autoChooser.getSelected();
   }

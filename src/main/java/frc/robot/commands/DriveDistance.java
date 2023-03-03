@@ -26,7 +26,6 @@ public class DriveDistance extends CommandBase {
 
     @Override
     public void execute() {
-        // Sets the drivebase to go forward from the speed variable
         m_drivebase.set(m_speed, 0);
     }
 
@@ -37,7 +36,6 @@ public class DriveDistance extends CommandBase {
 
     @Override
     public void end(boolean cancelled) {
-        System.out.println("Drove for " + m_distance + " inches");
         m_drivebase.stop(); // Resets the drivebase to 0, ends command
     }
 }
