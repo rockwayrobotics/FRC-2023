@@ -45,10 +45,9 @@ public class RobotContainer {
     m_driveForever = new DriveDistance(m_drivebase, autoSpeed.getDouble(0.5), 100000000);
     m_driveForeverSlow = new DriveDistance(m_drivebase, 0.1, 100000000);
 
-    m_autoChooser.setDefaultOption("Drive Forever", m_driveForever);
+    m_autoChooser.setDefaultOption("Auto Balance", m_balanceRoutine);
+    m_autoChooser.addOption("Drive Forever", m_driveForever);
     m_autoChooser.addOption("Drive Forever Slow", m_driveForeverSlow);
-    // m_autoChooser.addOption("Auto Balance", m_autoBalance);
-    m_autoChooser.addOption("Auto Balance", m_balanceRoutine);
     autoTab.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(0, 0);
 
     m_drivebase.setDefaultCommand(new PIDDriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getRightX(), m_drivebase));

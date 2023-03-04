@@ -7,6 +7,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.DifferentialDriveKinematics;
 import edu.wpi.first.math.kinematics.DifferentialDriveWheelSpeeds;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -135,10 +136,22 @@ public class DrivebaseSubsystem extends SubsystemBase {
     final double leftFeedforward = m_feedforward.calculate(speeds.leftMetersPerSecond);
     final double rightFeedforward = m_feedforward.calculate(speeds.rightMetersPerSecond);
 
+    SmartDashboard.putNumber("Left FeedForward", leftFeedforward);
+    SmartDashboard.putNumber("Right FeedForward", rightFeedforward);
+
+    SmartDashboard.putNumber("Left Speed Setpoint (m/s)", speeds.leftMetersPerSecond);
+    SmartDashboard.putNumber("Right Speed Setpoint (m/s)", speeds.rightMetersPerSecond);
+
+    SmartDashboard.putNumber("Left speed (m/s)", Units.inchesToMeters(m_leftEncoder.getRate()));
+    SmartDashboard.putNumber("Right speed (m/s)", Units.inchesToMeters(m_rightEncoder.getRate()));
+
     final double leftOutput =
-            m_leftDrivePIDController.calculate(m_leftEncoder.getRate(), speeds.leftMetersPerSecond);
+            m_leftDrivePIDController.calculate(Units.inchesToMeters(m_leftEncoder.getRate()), speeds.leftMetersPerSecond);
     final double rightOutput =
-            m_rightDrivePIDController.calculate(m_rightEncoder.getRate(), speeds.rightMetersPerSecond);
+            m_rightDrivePIDController.calculate(Units.inchesToMeters(m_rightEncoder.getRate()), speeds.rightMetersPerSecond);
+
+    SmartDashboard.putNumber("Left Output:", leftOutput);
+    SmartDashboard.putNumber("Right output", rightOutput);
     m_leftDrive.setVoltage(leftOutput + leftFeedforward);
     m_rightDrive.setVoltage(rightOutput + rightFeedforward);
   }
@@ -152,6 +165,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
   public void drive(double xSpeed, double rot) {
     var wheelSpeeds = m_kinematics.toWheelSpeeds(new ChassisSpeeds(xSpeed, 0.0, rot));
     setSpeeds(wheelSpeeds);
+    System.out.println(wheelSpeeds);
+    // SmartDashboard.putData("WheelSpeeds", wheelSpeeds);
   }
 
   /**
