@@ -1,5 +1,10 @@
 package frc.robot.commands;
 
+import java.util.Map;
+
+import java.util.Map;
+
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.subsystems.DrivebaseSubsystem;
@@ -17,17 +22,24 @@ public class BalanceRoutine extends SequentialCommandGroup {
 
     public BalanceRoutine(DrivebaseSubsystem drivebase) {
         m_drivebase = drivebase;
-        m_drivebase.setAutoOffset(-90);
+        m_drivebase.setAutoOffset(90);
+
+        var AutoFailedWidget = Shuffleboard.getTab("Auto").add("Auto status", false);
+        AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "grey"));
+        // var colorWidget = Shuffleboard.getTab("Vision").add("Vision status", false);
+        // colorWidget.withProperties(Map.of("colorWhenFalse", "grey"));
       
         this.addCommands(
           new FailFastTimeoutGroup()
             .thenWithTimeout(new RotateToAngle(drivebase, 0, 3, .2), 15)
-            .thenWithTimeout(new DriveUntilTipped(drivebase, -8, 0.2), 3)
-            .thenWithTimeout(new DriveUntilTipped(drivebase, 8, 0.2), 5)
-            .thenWithTimeout(new DriveUntilTipped(drivebase, 0, 0.2), 5)
-            .thenWithTimeout(new DriveDistance(drivebase, 0.2, 20), 5)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.4), 15)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, 12, 0.2), 15)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, 0, 0.2), 15)
+            .thenWithTimeout(new DriveDistance(drivebase, 0.2, 30), 15)
             .then(new WaitCommand(0.5))
-            .thenWithTimeout(new DriveUntilTipped(drivebase, 8, -0.2), 5)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, 14, -0.4), 15)
+            .then(new AutoBalance(drivebase))
+            .then(new WaitCommand(0.5))
             .then(new AutoBalance(drivebase))
         );
     }
