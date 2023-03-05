@@ -3,18 +3,17 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
-public class DriveDistance extends CommandBase {
+public class DriveTime extends CommandBase {
     
     private DrivebaseSubsystem m_drivebase;
     private double m_speed;
-    private double m_distance;
+    private double m_time;
+    private double m_timeElapsed;
 
-    public DriveDistance(DrivebaseSubsystem subsystem, double speed, double distance) {
-
+    public DriveTime(DrivebaseSubsystem subsystem, double speed, double time) {
         m_drivebase = subsystem;
         m_speed = speed;
-        m_distance = distance;
-    
+        m_time = time;    
         addRequirements(m_drivebase);
     }
 
@@ -27,11 +26,12 @@ public class DriveDistance extends CommandBase {
     @Override
     public void execute() {
         m_drivebase.set(m_speed, 0);
+        m_timeElapsed++;
     }
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(m_drivebase.getRDistance()) >= m_distance);
+        return (m_timeElapsed >= m_time);
     }
 
     @Override

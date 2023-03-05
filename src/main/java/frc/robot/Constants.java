@@ -46,6 +46,7 @@ public final class Constants {
         public final static IdleMode ACTIVE_MODE = IdleMode.kBrake;
         public final static IdleMode DISABLED_MODE = IdleMode.kCoast;
         public final static double SLOMODE_SCALE = 0.7;
+        public final static double rotation_kP = 0.3;
     }
 
     public static final class LedConstant {
