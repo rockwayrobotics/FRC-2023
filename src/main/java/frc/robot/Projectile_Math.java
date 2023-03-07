@@ -75,7 +75,7 @@ public class Projectile_Math {
         //x-coord of the target aimed for
         double x = target.offset + shot_distance;
         //y-coord of the target aimed for
-        double y = (target.height - Shooter.OFFSET);//- Shooter.MID_CUBE_HEIGHT_OFFSET) - Shooter.OFFSET;
+        double y = (target.height - Shooter.SHOOTER_HEIGHT);//- Shooter.MID_CUBE_HEIGHT_OFFSET) - Shooter.OFFSET;
         double under_sqrt = velocity_4 - (g * ((g * Math.pow(x,2)) + (2 * y * Math.pow(vel, 2))));
         //Checks if angle is possible, if under_sqrt is -, there is no real angle from which it is possible to fire from
         if (under_sqrt < 0){
