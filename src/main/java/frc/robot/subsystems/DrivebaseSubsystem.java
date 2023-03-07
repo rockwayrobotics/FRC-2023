@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -33,6 +34,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   private double yawOffset;
 
+  CANSparkMax m_leftMotor1;
+  CANSparkMax m_leftMotor2;
+  CANSparkMax m_rightMotor1;
+  CANSparkMax m_rightMotor2;
+
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem(
     int leftMotor1, int leftMotor2,
@@ -40,16 +46,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
     int leftEncoder1, int leftEncoder2,
     int rightEncoder1, int rightEncoder2
   ) {
+    m_leftMotor1 = new CANSparkMax(leftMotor1, MotorType.kBrushless);
+    m_leftMotor2 = new CANSparkMax(leftMotor2, MotorType.kBrushless);
     leftDrive = new MotorControllerGroup(
-      new CANSparkMax(leftMotor1, MotorType.kBrushless),
-      new CANSparkMax(leftMotor2, MotorType.kBrushless)
+      m_leftMotor1,m_leftMotor2
     );
+    m_rightMotor1 = new CANSparkMax(rightMotor1, MotorType.kBrushless);
+    m_rightMotor2 = new CANSparkMax(rightMotor2, MotorType.kBrushless);
     rightDrive = new MotorControllerGroup(
-      new CANSparkMax(rightMotor1, MotorType.kBrushless),
-      new CANSparkMax(rightMotor2, MotorType.kBrushless)
+      m_rightMotor1, m_rightMotor2
     );
     rightDrive.setInverted(true);
     m_drive = new DifferentialDrive(leftDrive, rightDrive);
+    setDrivebaseIdle(IdleMode.kBrake);
     m_leftEncoder = new Encoder(leftEncoder1, leftEncoder2);
     m_rightEncoder = new Encoder(rightEncoder1, rightEncoder2);
     // when robot goes forward, left encoder spins positive and right encoder spins negative
@@ -81,6 +90,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
   }
   public double getAngle() {
     return m_gyro.getAngle();
+  }
+
+  public void setDrivebaseIdle(IdleMode setting) {
+    m_rightMotor1.setIdleMode(setting);
+    m_rightMotor2.setIdleMode(setting);
+    m_leftMotor1.setIdleMode(setting);
+    m_leftMotor2.setIdleMode(setting);
   }
 
   /**

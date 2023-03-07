@@ -2,6 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.DrivebaseSubsystem;
@@ -11,7 +12,7 @@ public class AutoBalance extends CommandBase {
 
     private double currentAngle;
 
-    private final PIDController pid = new PIDController(Constants.Balance.DRIVE_KP, 0, 0.03);
+    private final PIDController pid = new PIDController(Constants.Balance.kP, 0, Constants.Balance.kD);
 
     public AutoBalance(DrivebaseSubsystem subsystem) {
         m_DrivebaseSubsystem = subsystem;
@@ -34,9 +35,9 @@ public class AutoBalance extends CommandBase {
         this.currentAngle = m_DrivebaseSubsystem.getRoll();
 
         double drivePower = pid.calculate(currentAngle);
-        // System.out.println("Raw Drive Power " + drivePower);
+        SmartDashboard.putNumber("Raw Drive Power (Auto Balance)", drivePower);
 
-        drivePower = MathUtil.clamp(drivePower, -0.2, 0.2);
+        drivePower = MathUtil.clamp(drivePower, -0.15, 0.15);
 
         m_DrivebaseSubsystem.set(drivePower, 0);
     }

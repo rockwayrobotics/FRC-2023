@@ -44,7 +44,10 @@ public class RotateToAngle extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double drivePower = pid.calculate(m_DrivebaseSubsystem.getYaw());
+    // PID Returns a positive result when setpoint is higher than the measurement. This results in the drivetrain turning
+    // clockwise, which causes the yaw angle to decrease. Because we want a positive PID value to correspond to an 
+    // increase in yaw here, we invert the PID result.
+    double drivePower = -pid.calculate(m_DrivebaseSubsystem.getYaw());
 
     drivePower = MathUtil.clamp(drivePower, -m_maxRotationPower, m_maxRotationPower);
 

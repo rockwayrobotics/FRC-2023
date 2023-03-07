@@ -3,6 +3,7 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import java.util.function.DoubleSupplier;
 
@@ -29,7 +30,12 @@ public class DriveCommand extends CommandBase {
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {
-        m_DrivebaseSubsystem.set(m_left_y.getAsDouble(), m_right_x.getAsDouble());
+        // Up is negative on joystick. When we push the stick up, we want the robot to move in a positive direction, so we invert it here.
+        // Right is positive on the joystick. When we push the stick right, we want the robot to rotate clockwise (a negative direction), so we invert it here. 
+        m_DrivebaseSubsystem.set(-m_left_y.getAsDouble(), -m_right_x.getAsDouble()*0.76);
+
+        SmartDashboard.putNumber("Y", m_left_y.getAsDouble());
+        SmartDashboard.putNumber("X", m_right_x.getAsDouble());
     }
 
     // Called once the command ends or is interrupted.

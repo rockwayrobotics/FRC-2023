@@ -5,27 +5,29 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.DrivebaseSubsystem;
+
+import com.revrobotics.CANSparkMax.IdleMode;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 /** An example command that uses an example subsystem. */
-public class DriveUntilTipped extends CommandBase {
+public class ToggleCoast extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final DrivebaseSubsystem m_DrivebaseSubsystem;
+  private final DrivebaseSubsystem m_subsystem;
 
-  private final double m_setpoint;
-  private final double m_speed;
+  private final boolean m_coast;
 
   /**
-   * Creates a new DriveUntilTipped command.
+   * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public DriveUntilTipped(DrivebaseSubsystem subsystem, double setpoint, double speed) {
-    m_DrivebaseSubsystem = subsystem;
+  public ToggleCoast(DrivebaseSubsystem subsystem, boolean coast) {
+    m_subsystem = subsystem;
+    // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
 
-    m_setpoint = setpoint;
-    m_speed = speed;
+    m_coast = coast;
   }
 
   // Called when the command is initially scheduled.
@@ -35,18 +37,22 @@ public class DriveUntilTipped extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_DrivebaseSubsystem.set(m_speed, 0);
+    if(m_coast){
+      m_subsystem.setDrivebaseIdle(IdleMode.kCoast);
+      System.out.println("Set drivebase to coast");
+    } else {
+      m_subsystem.setDrivebaseIdle(IdleMode.kBrake);
+      System.out.println("Set drivebase to brake");
+    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    System.out.println("Reached tip setpoint of "+ m_setpoint + " degrees");
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_setpoint - m_DrivebaseSubsystem.getRoll()) <= 3;
+    return true;
   }
 }
