@@ -39,15 +39,14 @@ public class DrivethAlign extends CommandBase {
 
   private SimpleWidget colorWidget;
 
-  private boolean foundTarget;
-  private int cyclesEmpty;
-  private boolean finishedRunning;
-
   double rotationSpeed;
   double driveSpeed;
 
   double previousDistance;
+  double startingDistance;
   double desiredDistance;
+
+  Direction direction;
 
 
   public DrivethAlign(DrivebaseSubsystem DrivebaseSubsystem, CameraSubsystem CameraSubsystem) {
@@ -58,6 +57,7 @@ public class DrivethAlign extends CommandBase {
     addRequirements(DrivebaseSubsystem);
     addRequirements(CameraSubsystem);
 
+    //these are likely too high, you will need to tune them likely
     final double ANGULAR_P = 0.75;
     final double ANGULAR_D = 0.0;
 
@@ -136,6 +136,8 @@ public class DrivethAlign extends CommandBase {
     turnController.reset();
     driveController.reset();
     previousDistance = 10;
+    direction = get_directions();
+    m_DrivebaseSubsystem.resetEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -143,10 +145,8 @@ public class DrivethAlign extends CommandBase {
   public void execute() {
     //Needs to get dynamically passed at some point
     Target target = Shooter.MID_CONE;
-    System.out.println("The target is being sus: " + target.side_offset);
-    Direction direction = get_directions();
     //Threshold in meters of the y distance driven (must be able to hit a target within this tolerance side to side)
-    double distanceThresh = 0.0;
+    double distanceThresh = 0.0; //may need to make this larger
     double currentDistance;
     //Checks if a target is visible
     if (direction.ok){
@@ -157,14 +157,14 @@ public class DrivethAlign extends CommandBase {
       // }
       //checks if the robot has arrived at its destination, if it has not, continues driving
       if (previousDistance != 0){
-        currentDistance = direction.y + target.side_offset;
-        driveSpeed = -turnController.calculate(currentDistance, 0);
+        // currentDistance = direction.y + target.side_offset;
+
+        //must be square for this to make any sense
+        currentDistance = direction.y + m_DrivebaseSubsystem.getAverageDistance();
+        driveSpeed = -turnController.calculate(currentDistance, target.side_offset);
         System.out.println("Lets go just this amount more: " + currentDistance);
         m_DrivebaseSubsystem.set(driveSpeed,0);
         previousDistance = currentDistance;
-        if (Math.abs(previousDistance) <= distanceThresh){
-          previousDistance = 0;
-        }
       }
     }
     else{

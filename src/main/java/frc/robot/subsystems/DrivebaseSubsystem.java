@@ -160,6 +160,14 @@ public class DrivebaseSubsystem extends SubsystemBase {
   }
 
   /**
+   * Gets the average distance travelled between the two encoders since last reset
+   * @return
+   */
+  public double getAverageDistance(){
+    return (getRDistance() + getLDistance()) / 2;
+  }
+
+  /**
    * Gets the speed of the left-side wheels of the drivebase.
    * @return Speed in inches / second.
    */
