@@ -88,28 +88,28 @@ public final class Constants {
         //Height Offsets are relative to the top of the April Tag
         //Normal Offset is the depth offset relative to the April Tag
         //Side Offsets is the how far to the side a target is
-        public final static double OFFSET = 0.64;
+        public final static double SHOOTER_HEIGHT = 0.64; // Relative to drivetrain
         public final static double SHOOTER_VELOCITY_LOW = 4;
         public final static double SHOOTER_VELOCITY_HIGH = 5;
-        public final static double MID_CUBE_HEIGHT = 0.6;
-        public final static double MID_CUBE_OFFSET = 0;
-        public final static double MID_CUBE_SIDE_OFFSET = 0;
-        public final static double MID_CUBE_HEIGHT_OFFSET = 0.27; //87 - 60
-        public final static Target MID_CUBE = new Target(MID_CUBE_HEIGHT,MID_CUBE_OFFSET, MID_CUBE_SIDE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
-        public final static double HIGH_CUBE_HEIGHT = 0.9;
-        public final static double HIGH_CUBE_OFFSET = 0;
-        public final static double HIGH_CUBE_SIDE_OFFSET = 0;
-        public final static double HIGH_CUBE_HEIGHT_OFFSET = 0.3;//0.9 - 0.6
-        public final static Target HIGH_CUBE = new Target(HIGH_CUBE_HEIGHT, HIGH_CUBE_OFFSET, HIGH_CUBE_SIDE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
-        public final static double MID_CONE_HEIGHT = 0.87;
-        public final static double MID_CONE_OFFSET = 0;
-        public final static double MID_CONE_SIDE_OFFSET = -0.67;
-        public final static double MID_CONE_HEIGHT_OFFSET = 0.27; //0.87 - 0.6
-        public final static Target MID_CONE = new Target(MID_CONE_HEIGHT, MID_CONE_OFFSET, MID_CONE_SIDE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
-        public final static double HIGH_CONE_HEIGHT = 1.17;
-        public final static double HIGH_CONE_OFFSET = 0;
-        public final static double HIGH_CONE_SIDE_OFFSET = 0;
-        public final static double HIGH_CONE_HEIGHT_OFFSET = 0.57;//1.17 - 0.6
-        public final static Target HIGH_CONE = new Target(HIGH_CONE_HEIGHT, HIGH_CONE_OFFSET, HIGH_CONE_SIDE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
+        public final static double MID_CUBE_HEIGHT = 0.6; // Relative to drivetrain
+        public final static double MID_CUBE_DEPTH_OFFSET = 0; // Relative to AprilTag
+        public final static double MID_CUBE_SIDE_OFFSET = 0; // Relative to AprilTag
+        public final static double MID_CUBE_HEIGHT_OFFSET = 0.27; // Relative to AprilTag, .87 - .60
+        public final static Target MID_CUBE = new Target(MID_CUBE_HEIGHT,MID_CUBE_DEPTH_OFFSET, MID_CUBE_SIDE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
+        public final static double HIGH_CUBE_HEIGHT = 0.9; // Relative to drivetrain
+        public final static double HIGH_CUBE_DEPTH_OFFSET = 0; // Relative to AprilTag
+        public final static double HIGH_CUBE_SIDE_OFFSET = 0; // Relative to AprilTag
+        public final static double HIGH_CUBE_HEIGHT_OFFSET = 0.3; // Relative to AprilTag, 0.9 - 0.6
+        public final static Target HIGH_CUBE = new Target(HIGH_CUBE_HEIGHT, HIGH_CUBE_DEPTH_OFFSET, HIGH_CUBE_SIDE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
+        public final static double MID_CONE_HEIGHT = 0.87; // Relative to drivetrain
+        public final static double MID_CONE_DEPTH_OFFSET = 0; // Relative to AprilTag
+        public final static double MID_CONE_SIDE_OFFSET = 0.67; // Relative to AprilTag
+        public final static double MID_CONE_HEIGHT_OFFSET = 0.27; // Relative to AprilTag 0.87 - 0.6
+        public final static Target MID_CONE = new Target(MID_CONE_HEIGHT, MID_CONE_DEPTH_OFFSET, MID_CONE_SIDE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
+        public final static double HIGH_CONE_HEIGHT = 1.17; // Relative to drivetrain
+        public final static double HIGH_CONE_DEPTH_OFFSET = 0; // Relative to AprilTag
+        public final static double HIGH_CONE_SIDE_OFFSET = 0; // Relative to AprilTag
+        public final static double HIGH_CONE_HEIGHT_OFFSET = 0.57; // Relative to AprilTag 1.17 - 0.6
+        public final static Target HIGH_CONE = new Target(HIGH_CONE_HEIGHT, HIGH_CONE_DEPTH_OFFSET, HIGH_CONE_SIDE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
     }
 }
