@@ -70,23 +70,21 @@ public class CameraSubsystem extends SubsystemBase {
     double x;
     public double y;
     double angle;
-    public boolean ok;
 
-    public Direction(double x1, double y1, double angle1, boolean ok1) {
+    public Direction(double x1, double y1, double angle1) {
       x = x1;
       y = y1;
       angle = angle1;
-      ok = ok1;
     }
 
     @Override
     public String toString(){
-        return "X: " + x + " Y: " + y + "\nAngle: " + angle + " OK: " + ok;
+        return "X: " + x + " Y: " + y + "\nAngle: " + angle;
     }
 
   }
 
-  private static PhotonTrackedTarget get_desired_target(List<PhotonTrackedTarget> target_list, int id){
+  public static PhotonTrackedTarget get_desired_target(List<PhotonTrackedTarget> target_list, int id){
     for (PhotonTrackedTarget target : target_list ){
       // System.out.println("ID: " + target.getFiducialId());
       if (target.getFiducialId() == id){
@@ -101,30 +99,15 @@ public class CameraSubsystem extends SubsystemBase {
    * If no April Tags are found, the Direction.ok will be False.
    * @return Direction
    */
-  public static Direction get_directions(){
+  public static Direction get_directions(PhotonTrackedTarget target){
     //Eventaully will be given dynamically
-    int id = 0;
-    PhotonPipelineResult result = camera.getLatestResult();
-    double angle_thresh = 0.1; //in radians
-    double x = 0;
-    double y = 0;
-    double angle = 0;
-    boolean ok = result.hasTargets();
-    if (ok){
-      PhotonTrackedTarget target = get_desired_target(result.getTargets(), id);
-      if (target != null){
-        Transform3d three_d = target.getBestCameraToTarget();
-        x = three_d.getX();
-        y = three_d.getY();
-        angle = Math.atan(y/x);
-        System.out.println("xyz: " + x + " " + y + " " + Units.radiansToDegrees(angle));
-      }
+    Transform3d three_d = target.getBestCameraToTarget();
+    double x = three_d.getX();
+    double y = three_d.getY();
+    double angle = Math.atan(y/x);
+    System.out.println("xyz: " + x + " " + y + " " + Units.radiansToDegrees(angle));
 
-    }
-    if (angle < angle_thresh){
-      angle = 0;
-    }
-    return new Direction(x, y, angle, ok);
+    return new Direction(x, y, angle);
   }
 
   @Override
