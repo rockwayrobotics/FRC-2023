@@ -17,15 +17,15 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
-  Compressor m_compressor = new Compressor(1, PneumaticsModuleType.REVPH);
+  Compressor m_compressor = new Compressor(Constants.CAN.PNEUMATIC_HUB, PneumaticsModuleType.REVPH);
 
   DoubleSolenoid m_bucket1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Pneumatics.bucketForwards1, Constants.Pneumatics.bucketReverse1);
   DoubleSolenoid m_bucket2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Pneumatics.bucketForwards2, Constants.Pneumatics.bucketReverse2);
 
-  CANSparkMax m_angleMotor = new CANSparkMax(Constants.CAN.ANGLE_MOTOR, MotorType.kBrushless);
+  CANSparkMax m_angleMotor = new CANSparkMax(Constants.CAN.SHOOTER_ANGLE_MOTOR, MotorType.kBrushless);
   RelativeEncoder m_angleEncoder = m_angleMotor.getEncoder();
   
-  DigitalInput m_angleSwitch = new DigitalInput(Constants.Digital.ANGLE_SWITCH);
+  DigitalInput m_bottomLimit = new DigitalInput(Constants.Digital.SHOOTER_BOTTOM_LIMIT);
   
   boolean angleLimitPressed = false; 
 
@@ -37,7 +37,7 @@ public class ShooterSubsystem extends SubsystemBase {
     m_bucket2.set(cylinder2State);
   }
 
-  public void spinAngleMotor(double speed){
+  public void spinAngleMotor(double speed) {
     if (angleLimitPressed){
       m_angleMotor.set(0);
     } else {
@@ -45,18 +45,18 @@ public class ShooterSubsystem extends SubsystemBase {
     }
   }
 
-  public double getAngleEncoder(){
+  public double getAngleEncoder() {
     return m_angleEncoder.getPosition();
   }
 
-  public void setAngleEncoderPosition(double position){
+  public void setAngleEncoderPosition(double position) {
     m_angleEncoder.setPosition(position);
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    angleLimitPressed = m_angleSwitch.get();
+    angleLimitPressed = m_bottomLimit.get();
     if (angleLimitPressed){
       setAngleEncoderPosition(0);
     }

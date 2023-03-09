@@ -24,6 +24,7 @@ public final class Constants {
 
     // CAN IDs for motor controllers
     public static final class CAN {
+        public static final int PNEUMATIC_HUB = 1;
         public static final int LEFT_DRIVE_MOTOR_1 = 2;
         public static final int LEFT_DRIVE_MOTOR_2 = 3;
         public static final int RIGHT_DRIVE_MOTOR_1 = 4;
@@ -35,6 +36,7 @@ public final class Constants {
     public static final class Digital {
         public static final int[] LEFT_DRIVE_ENCODER = {0,1};
         public static final int[] RIGHT_DRIVE_ENCODER = {2,3};
+        public static final int SHOOTER_BOTTOM_LIMIT = 4;
     }
     
     // Constants related to robot driving
