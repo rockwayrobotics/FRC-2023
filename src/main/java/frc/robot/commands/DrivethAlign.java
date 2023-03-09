@@ -28,6 +28,9 @@ import frc.robot.Projectile_Math;
 import frc.robot.Constants.Shooter;
 import frc.robot.Target;
 
+import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.CameraSubsystem.Direction;
+
 public class DrivethAlign extends CommandBase {
   /** Creates a new DrivethAlign. */
   private final DrivebaseSubsystem m_DrivebaseSubsystem;
@@ -48,7 +51,6 @@ public class DrivethAlign extends CommandBase {
 
   Direction direction;
 
-
   public DrivethAlign(DrivebaseSubsystem DrivebaseSubsystem, CameraSubsystem CameraSubsystem) {
     m_DrivebaseSubsystem = DrivebaseSubsystem;
     m_CameraSubsystem = CameraSubsystem;
@@ -65,70 +67,6 @@ public class DrivethAlign extends CommandBase {
     driveController = new PIDController(ANGULAR_P, 0, ANGULAR_D);
   }
 
-  /**
-   * Class that holds the directions that need to be followed to complete a shot.
-   */
-  private static class Direction {
-    double x;
-    double y;
-    double angle;
-    boolean ok;
-
-    public Direction(double x1, double y1, double angle1, boolean ok1) {
-      x = x1;
-      y = y1;
-      angle = angle1;
-      ok = ok1;
-    }
-
-    @Override
-    public String toString(){
-        return "X: " + x + " Y: " + y + "\nAngle: " + angle + " OK: " + ok;
-    }
-
-  }
-
-  private PhotonTrackedTarget get_desired_target(List<PhotonTrackedTarget> target_list, int id){
-    for (PhotonTrackedTarget target : target_list ){
-      // System.out.println("ID: " + target.getFiducialId());
-      if (target.getFiducialId() == id){
-        return target;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Using the camera and April Tag finds the directions needed to complete a shot.
-   * If no April Tags are found, the Direction.ok will be False.
-   * @return Direction
-   */
-  private Direction get_directions(){
-    //Eventaully will be given dynamically
-    int id = 0;
-    PhotonPipelineResult result = m_CameraSubsystem.camera.getLatestResult();
-    double angle_thresh = 0.1; //in radians
-    double x = 0;
-    double y = 0;
-    double angle = 0;
-    boolean ok = result.hasTargets();
-    if (ok){
-      PhotonTrackedTarget target = get_desired_target(result.getTargets(), id);
-      if (target != null){
-        Transform3d three_d = target.getBestCameraToTarget();
-        x = three_d.getX();
-        y = three_d.getY();
-        angle = Math.atan(y/x);
-        System.out.println("xyz: " + x + " " + y + " " + Units.radiansToDegrees(angle));
-      }
-
-    }
-    if (angle < angle_thresh){
-      angle = 0;
-    }
-    return new Direction(x, y, angle, ok);
-  }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
@@ -136,7 +74,7 @@ public class DrivethAlign extends CommandBase {
     turnController.reset();
     driveController.reset();
     previousDistance = 10;
-    direction = get_directions();
+    direction = CameraSubsystem.get_directions();
     m_DrivebaseSubsystem.resetEncoders();
   }
 

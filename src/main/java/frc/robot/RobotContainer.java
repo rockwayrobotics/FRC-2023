@@ -71,9 +71,6 @@ public class RobotContainer {
     buttonA.whileTrue(new DrivethAlign(m_drivebase, m_CameraSubsystem));
     final JoystickButton buttonB = new JoystickButton(m_xboxController, XboxController.Button.kB.value);
     buttonB.whileTrue(new DrivethAlign(m_drivebase, m_CameraSubsystem));
-
-    final JoystickButton buttonX = new JoystickButton(m_xboxController, XboxController.Button.kX.value);
-    buttonX.whileTrue(new TestMotorSpin(m_drivebase));
     final JoystickButton backButton = new JoystickButton(m_xboxController, XboxController.Button.kBack.value);
     backButton.onTrue(new AutoBalance(m_drivebase));
   }
