@@ -8,46 +8,52 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
 
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity;
+
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
-  private final XboxController m_xboxController = new XboxController(Gamepads.XBOX);
-
   private final CameraSubsystem m_CameraSubsystem = new CameraSubsystem();
 
-  private final DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem(
-          CAN.LEFT_MOTOR_1, CAN.LEFT_MOTOR_2,
-          CAN.RIGHT_MOTOR_1, CAN.RIGHT_MOTOR_2,
-          Digital.LEFT_ENCODER_1, Digital.LEFT_ENCODER_2,
-          Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2,
-          m_CameraSubsystem
-  );
+  private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem(m_CameraSubsystem);
 
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+  private LedSubsystem m_led = new LedSubsystem(LED.LED_PWM, 60);
+
+  private ShooterSubsystem m_shooter = new ShooterSubsystem();
+
+  private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
+
+  SendableChooser<Command> m_autoChooser = new SendableChooser<>();
 
   public final GenericEntry autoSpeed;
 
   public final Command m_driveForever;
   public final Command m_driveForeverSlow;
+  public final Command m_balanceRoutine;
 
 
   public RobotContainer() {
     var autoTab = Shuffleboard.getTab("Auto");
     autoSpeed = autoTab.addPersistent("Max Speed", 1).withPosition(2, 0).getEntry();
+
+    m_balanceRoutine = new BalanceRoutine(m_drivebase);
     
-    m_driveForever = new DriveDistance(m_drivebase, () -> autoSpeed.getDouble(0.5));
-    m_driveForeverSlow = new DriveDistance(m_drivebase, () -> 0.1);
+    m_driveForever = new DriveDistance(m_drivebase, autoSpeed.getDouble(0.5), 100000000);
+    m_driveForeverSlow = new DriveDistance(m_drivebase, 0.1, 100000000);
 
-    m_chooser.setDefaultOption("Drive Forever", m_driveForever);
-    m_chooser.addOption("Drive Forever Slow", m_driveForeverSlow);
-    autoTab.add("Auto Routine", m_chooser).withSize(2, 1).withPosition(0, 0);
+    m_autoChooser.setDefaultOption("Drive Forever", m_driveForever);
+    m_autoChooser.addOption("Drive Forever Slow", m_driveForeverSlow);
+    // m_autoChooser.addOption("Auto Balance", m_autoBalance);
+    m_autoChooser.addOption("Auto Balance", m_balanceRoutine);
+    autoTab.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(0, 0);
 
-    m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getRightX, m_drivebase));
+    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getRightX(), m_drivebase));
 
     Shuffleboard.getTab("Subsystems").add(m_CameraSubsystem);
     Shuffleboard.getTab("Subsystems").add(m_drivebase);
@@ -68,10 +74,14 @@ public class RobotContainer {
 
     final JoystickButton buttonX = new JoystickButton(m_xboxController, XboxController.Button.kX.value);
     buttonX.whileTrue(new TestMotorSpin(m_drivebase));
-}
+    final JoystickButton backButton = new JoystickButton(m_xboxController, XboxController.Button.kBack.value);
+    backButton.onTrue(new AutoBalance(m_drivebase));
+  }
 
   public Command getAutonomousCommand() {
+    m_drivebase.zeroGyro();
+
     // The selected command will be run in autonomous
-    return m_chooser.getSelected();
+    return m_autoChooser.getSelected();
   }
 }
