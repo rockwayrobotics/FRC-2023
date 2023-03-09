@@ -4,28 +4,32 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.LedSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.LED.modes;
 
 /** An example command that uses an example subsystem. */
-public class SetLedMode extends CommandBase {
+public class SetBucket extends CommandBase {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final LedSubsystem m_LedSubsystem;
-  private final modes m_mode;
+  private final ShooterSubsystem m_ShooterSubsystem;
 
   private boolean finishedSetting = false;
 
+  private final DoubleSolenoid.Value m_cylinder1State;
+  private final DoubleSolenoid.Value m_cylinder2State;
+
   /**
-   * Creates a new SlowmodeCommand.
+   * Creates a new SetBucket.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SetLedMode(LedSubsystem subsystem, modes mode) {
-    m_LedSubsystem = subsystem;
-    m_mode = mode;
+  public SetBucket(ShooterSubsystem subsystem, DoubleSolenoid.Value cylinder1State, DoubleSolenoid.Value cylinder2State) {
+    m_ShooterSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
+
+    m_cylinder1State = cylinder1State;
+    m_cylinder2State = cylinder2State;
   }
 
   // Called when the command is initially scheduled.
@@ -35,7 +39,7 @@ public class SetLedMode extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_LedSubsystem.setMode(m_mode);
+    m_ShooterSubsystem.setBucketCylinders(m_cylinder1State, m_cylinder2State);
 
     finishedSetting = true;
   }

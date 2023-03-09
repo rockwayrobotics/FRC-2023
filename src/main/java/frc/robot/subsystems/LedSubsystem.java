@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
-import frc.robot.Constants.LedConstant.modes;
+import frc.robot.Constants.LED.modes;
 
 public class LedSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
