@@ -24,18 +24,17 @@ public final class Constants {
 
     // CAN IDs for motor controllers
     public static final class CAN {
-        public static final int LEFT_MOTOR_1 = 2;
-        public static final int LEFT_MOTOR_2 = 3;
-        public static final int RIGHT_MOTOR_1 = 4;
-        public static final int RIGHT_MOTOR_2 = 5;
+        public static final int LEFT_DRIVE_MOTOR_1 = 2;
+        public static final int LEFT_DRIVE_MOTOR_2 = 3;
+        public static final int RIGHT_DRIVE_MOTOR_1 = 4;
+        public static final int RIGHT_DRIVE_MOTOR_2 = 5;
+        public static final int SHOOTER_ANGLE_MOTOR = 6;
     }
     
     // Information on digital pins on RoboRio
     public static final class Digital {
-        public static final int LEFT_ENCODER_1 = 0;
-        public static final int LEFT_ENCODER_2 = 1;
-        public static final int RIGHT_ENCODER_1 = 2;
-        public static final int RIGHT_ENCODER_2 = 3;
+        public static final int[] LEFT_DRIVE_ENCODER = {0,1};
+        public static final int[] RIGHT_DRIVE_ENCODER = {2,3};
     }
     
     // Constants related to robot driving
@@ -43,13 +42,14 @@ public final class Constants {
         public final static double ENCODER_PULSES_PER_REVOLUTION = 360;
         public final static double WHEEL_DIAMETER = 6;
         public final static double DISTANCE_PER_ENCODER_PULSE = WHEEL_DIAMETER * Math.PI / ENCODER_PULSES_PER_REVOLUTION;
-        public final static IdleMode ACTIVE_MODE = IdleMode.kBrake;
-        public final static IdleMode DISABLED_MODE = IdleMode.kCoast;
         public final static double SLOMODE_SCALE = 0.7;
         public final static double rotation_kP = 0.3;
+
+        public final static boolean LEFT_DRIVE_INVERTED = false;
+        public final static boolean RIGHT_DRIVE_INVERTED = true;
     }
 
-    public static final class LedConstant {
+    public static final class LED {
         public final static int LED_PWM = 9;
         public static enum modes {
             Green,

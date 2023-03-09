@@ -6,7 +6,7 @@ package frc.robot.commands;
 
 import frc.robot.subsystems.LedSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.Constants.LedConstant.modes;
+import frc.robot.Constants.LED.modes;
 
 /** An example command that uses an example subsystem. */
 public class SetLedMode extends CommandBase {

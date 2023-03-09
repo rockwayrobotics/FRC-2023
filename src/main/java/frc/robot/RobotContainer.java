@@ -20,14 +20,9 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
 
-  private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem(
-    CAN.LEFT_MOTOR_1, CAN.LEFT_MOTOR_2,
-    CAN.RIGHT_MOTOR_1, CAN.RIGHT_MOTOR_2,
-    Digital.LEFT_ENCODER_1, Digital.LEFT_ENCODER_2,
-    Digital.RIGHT_ENCODER_1, Digital.RIGHT_ENCODER_2
-  );
+  private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem();
 
-  private LedSubsystem m_led = new LedSubsystem(LedConstant.LED_PWM, 60);
+  private LedSubsystem m_led = new LedSubsystem(LED.LED_PWM, 60);
 
   private ShooterSubsystem m_shooter = new ShooterSubsystem();
 
@@ -85,7 +80,7 @@ public class RobotContainer {
     var balance = new AutoBalance(m_drivebase);
     backButton.onTrue(balance);
     //backButton.and(aButton).onTrue(new InstantCommand(balance::cancel));
-    startButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Rainbow));
+    startButton.onTrue(new SetLedMode(m_led, LED.modes.Rainbow));
   }
 
   public Command getAutonomousCommand() {
