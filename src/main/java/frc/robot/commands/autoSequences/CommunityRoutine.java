@@ -1,9 +1,13 @@
-package frc.robot.commands;
+package frc.robot.commands.autoSequences;
 
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.DriveDistance;
+import frc.robot.commands.DriveUntilTipped;
+import frc.robot.commands.FailFastTimeoutGroup;
+import frc.robot.commands.RotateToAngle;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
 
