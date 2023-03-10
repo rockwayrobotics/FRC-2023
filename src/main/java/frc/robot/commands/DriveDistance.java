@@ -9,6 +9,8 @@ public class DriveDistance extends CommandBase {
     private double m_speed;
     private double m_distance;
 
+    private double m_offset;
+
     public DriveDistance(DrivebaseSubsystem subsystem, double speed, double distance) {
 
         m_drivebase = subsystem;
@@ -21,7 +23,7 @@ public class DriveDistance extends CommandBase {
     @Override
     public void initialize() {
         // Resets encoder values to default
-        m_drivebase.resetEncoders();
+        m_offset = m_drivebase.getAverageDistance();
     }
 
     @Override
@@ -31,7 +33,7 @@ public class DriveDistance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return (Math.abs(m_drivebase.getRDistance()) >= m_distance);
+        return (Math.abs(m_drivebase.getAverageDistance() - m_offset) >= m_distance);
     }
 
     @Override

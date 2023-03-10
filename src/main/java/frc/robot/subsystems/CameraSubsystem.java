@@ -100,11 +100,10 @@ public class CameraSubsystem extends SubsystemBase {
    * @return Direction
    */
   public static Direction get_directions(PhotonTrackedTarget target){
-    //Eventaully will be given dynamically
     Transform3d three_d = target.getBestCameraToTarget();
     double x = three_d.getX();
     double y = three_d.getY();
-    double angle = Math.atan(y/x);
+    double angle = Math.atan2(y, x);
     System.out.println("xyz: " + x + " " + y + " " + Units.radiansToDegrees(angle));
 
     return new Direction(x, y, angle);

@@ -7,7 +7,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax.IdleMode;
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.*;
-
+import edu.wpi.first.math.util.Units;
 import frc.robot.Target;
 import frc.robot.Target.TargetType;
 /**
@@ -46,8 +46,8 @@ public final class Constants {
     // Constants related to robot driving
     public static final class Drive {
         public final static double ENCODER_PULSES_PER_REVOLUTION = 360;
-        public final static double WHEEL_DIAMETER = 6;
-        public final static double DISTANCE_PER_ENCODER_PULSE = WHEEL_DIAMETER * Math.PI / ENCODER_PULSES_PER_REVOLUTION;
+        public final static double WHEEL_DIAMETER_METERS = Units.inchesToMeters(6);
+        public final static double DISTANCE_PER_ENCODER_PULSE_METERS = WHEEL_DIAMETER_METERS * Math.PI / ENCODER_PULSES_PER_REVOLUTION;
         public final static double SLOMODE_SCALE = 0.7;
         public final static double rotation_kP = 0.3;
 
@@ -77,11 +77,9 @@ public final class Constants {
         public static final double length = 5; // 5m field length
         public static final double width = 5; // 5m field width
 
-        public static final AprilTag tag0 = new AprilTag(0, new Pose3d(new Pose2d(length,width/2,Rotation2d.fromDegrees(0))));
-        public static final AprilTag tag1 = new AprilTag(1, new Pose3d(new Pose2d(0,width/2,Rotation2d.fromDegrees(0))));
+        public static final AprilTag tag0 = new AprilTag(0, new Pose3d(length, width/2, 0, new Rotation3d(0, 0, 180)));
+        public static final AprilTag tag1 = new AprilTag(1, new Pose3d(0, width/2, 0, new Rotation3d(0, 0, 0)));
     }
-
-
 
     // Constants related to the shooter
     /**
@@ -94,26 +92,31 @@ public final class Constants {
         public final static double SHOOTER_HEIGHT = 0.64; // Relative to drivetrain
         public final static double SHOOTER_VELOCITY_LOW = 4;
         public final static double SHOOTER_VELOCITY_HIGH = 5;
+        
         public final static double MID_CUBE_HEIGHT = 0.6; // Relative to drivetrain
         public final static double MID_CUBE_DEPTH_OFFSET = 0; // Relative to AprilTag
         public final static double MID_CUBE_SIDE_OFFSET = 0; // Relative to AprilTag
         public final static double MID_CUBE_HEIGHT_OFFSET = 0.27; // Relative to AprilTag, .87 - .60
         public final static Target MID_CUBE = new Target(MID_CUBE_HEIGHT,MID_CUBE_DEPTH_OFFSET, MID_CUBE_SIDE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
+        
         public final static double HIGH_CUBE_HEIGHT = 0.9; // Relative to drivetrain
         public final static double HIGH_CUBE_DEPTH_OFFSET = 0; // Relative to AprilTag
         public final static double HIGH_CUBE_SIDE_OFFSET = 0; // Relative to AprilTag
         public final static double HIGH_CUBE_HEIGHT_OFFSET = 0.3; // Relative to AprilTag, 0.9 - 0.6
         public final static Target HIGH_CUBE = new Target(HIGH_CUBE_HEIGHT, HIGH_CUBE_DEPTH_OFFSET, HIGH_CUBE_SIDE_OFFSET, Target.TargetType.Cube, Target.Approach.Low);
+        
         public final static double MID_CONE_HEIGHT = 0.87; // Relative to drivetrain
         public final static double MID_CONE_DEPTH_OFFSET = 0; // Relative to AprilTag
         public final static double MID_CONE_SIDE_OFFSET = 0.67; // Relative to AprilTag
         public final static double MID_CONE_HEIGHT_OFFSET = 0.27; // Relative to AprilTag 0.87 - 0.6
         public final static Target MID_CONE = new Target(MID_CONE_HEIGHT, MID_CONE_DEPTH_OFFSET, MID_CONE_SIDE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
+        
         public final static double HIGH_CONE_HEIGHT = 1.17; // Relative to drivetrain
         public final static double HIGH_CONE_DEPTH_OFFSET = 0; // Relative to AprilTag
         public final static double HIGH_CONE_SIDE_OFFSET = 0; // Relative to AprilTag
         public final static double HIGH_CONE_HEIGHT_OFFSET = 0.57; // Relative to AprilTag 1.17 - 0.6
         public final static Target HIGH_CONE = new Target(HIGH_CONE_HEIGHT, HIGH_CONE_DEPTH_OFFSET, HIGH_CONE_SIDE_OFFSET, Target.TargetType.Cone, Target.Approach.High);
+        
         public final static double rotation_kP = 0.3;
 
         public final static boolean LEFT_DRIVE_INVERTED = false;
@@ -138,7 +141,6 @@ public final class Constants {
         public static final double kD = 0.025;
         public static final double GOAL_DEGREES = 0;
         public static final double TOLERANCE_DEGREES = 3;
-        public static final double BACKWARDS_POWER_MULTIPLIER = 1.35;
     }
 
     public static final class Pneumatics {

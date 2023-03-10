@@ -33,68 +33,56 @@ import java.util.Optional;
 
 
 public class DrivebaseSubsystem extends SubsystemBase {
-  MotorControllerGroup leftDrive;
-  MotorControllerGroup rightDrive;
-
-  private final DifferentialDrive m_drive;
-
-  private final Encoder m_leftDriveEncoder;
-  private final Encoder m_rightDriveEncoder;
-
-  private double m_rotation = 0;
-  private double m_speed = 0;
-
   private double m_scale = 1;
-  private int direction = 1;
 
   private double yawOffset;
 
-  CANSparkMax m_leftDriveMotor1;
-  CANSparkMax m_leftDriveMotor2;
-  CANSparkMax m_rightDriveMotor1;
-  CANSparkMax m_rightDriveMotor2;
-
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
+  
+  private final CANSparkMax m_leftDriveMotor1 = new CANSparkMax(Constants.CAN.LEFT_DRIVE_MOTOR_1, MotorType.kBrushless);
+  private final CANSparkMax m_leftDriveMotor2 = new CANSparkMax(Constants.CAN.LEFT_DRIVE_MOTOR_2, MotorType.kBrushless);
+
+  private final CANSparkMax m_rightDriveMotor1 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_1, MotorType.kBrushless);
+  private final CANSparkMax m_rightDriveMotor2 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_2, MotorType.kBrushless);
+
+  private final MotorControllerGroup m_leftDrive = new MotorControllerGroup(m_leftDriveMotor1, m_leftDriveMotor2);
+  private final MotorControllerGroup m_rightDrive = new MotorControllerGroup(m_rightDriveMotor1, m_rightDriveMotor2);
+
+  private final Encoder m_leftDriveEncoder = new Encoder(Constants.Digital.LEFT_DRIVE_ENCODER[0], Constants.Digital.LEFT_DRIVE_ENCODER[1]);
+  private final Encoder m_rightDriveEncoder = new Encoder(Constants.Digital.RIGHT_DRIVE_ENCODER[0], Constants.Digital.RIGHT_DRIVE_ENCODER[1]);
+
+  private final DifferentialDrive m_drive = new DifferentialDrive(m_leftDrive, m_rightDrive);
 
   private final DifferentialDriveKinematics m_kinematics = new DifferentialDriveKinematics(Drive.TRACK_WIDTH);
-  private final DifferentialDrivePoseEstimator m_poseEstimator = new DifferentialDrivePoseEstimator(m_kinematics, m_gyro.getRotation2d(),0.0, 0.0, new Pose2d());
   private final SimpleMotorFeedforward m_feedforward = new SimpleMotorFeedforward(Drive.kS,Drive.kV);
   private final PIDController m_leftDrivePIDController = new PIDController(Drive.kP,Drive.kI,Drive.kD);
   private final PIDController m_rightDrivePIDController = new PIDController(Drive.kP,Drive.kI,Drive.kD);
 
-  MotorControllerGroup m_leftDrive;
-  MotorControllerGroup m_rightDrive;
-
   private final CameraSubsystem m_CameraSubsystem;
 
-  RelativeEncoder m_testEncoder;
-
+  private final DifferentialDrivePoseEstimator m_poseEstimator;
 
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem(
     CameraSubsystem cameraSubsystem
   ) {
     m_CameraSubsystem = cameraSubsystem;
-    m_leftDriveMotor1 = new CANSparkMax(Constants.CAN.LEFT_DRIVE_MOTOR_1, MotorType.kBrushless);
-    m_leftDriveMotor2 = new CANSparkMax(Constants.CAN.LEFT_DRIVE_MOTOR_2, MotorType.kBrushless);
-    leftDrive = new MotorControllerGroup(m_leftDriveMotor1,m_leftDriveMotor2);
-    leftDrive.setInverted(Constants.Drive.LEFT_DRIVE_INVERTED);
 
-    m_rightDriveMotor1 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_1, MotorType.kBrushless);
-    m_rightDriveMotor2 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_2, MotorType.kBrushless);
-    rightDrive = new MotorControllerGroup(m_rightDriveMotor1, m_rightDriveMotor2);
-    rightDrive.setInverted(Constants.Drive.RIGHT_DRIVE_INVERTED);
+    m_leftDrive.setInverted(Constants.Drive.LEFT_DRIVE_INVERTED);
+    m_rightDrive.setInverted(Constants.Drive.RIGHT_DRIVE_INVERTED);
 
-    m_drive = new DifferentialDrive(leftDrive, rightDrive);
     setDrivebaseIdle(IdleMode.kBrake);
-    m_leftDriveEncoder = new Encoder(Constants.Digital.LEFT_DRIVE_ENCODER[0], Constants.Digital.LEFT_DRIVE_ENCODER[1]);
-    m_rightDriveEncoder = new Encoder(Constants.Digital.RIGHT_DRIVE_ENCODER[0], Constants.Digital.RIGHT_DRIVE_ENCODER[1]);
+
     // when robot goes forward, left encoder spins positive and right encoder spins negative
-    m_leftDriveEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
-    m_rightDriveEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
-    m_rightDriveEncoder.setReverseDirection(true);
+    m_leftDriveEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE_METERS);
+    m_rightDriveEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE_METERS);
+    m_leftDriveEncoder.setReverseDirection(Constants.Drive.LEFT_DRIVE_INVERTED);
+    m_rightDriveEncoder.setReverseDirection(Constants.Drive.RIGHT_DRIVE_INVERTED);
+
     m_leftDriveEncoder.reset();
     m_rightDriveEncoder.reset();
+    
+    m_poseEstimator = new DifferentialDrivePoseEstimator(m_kinematics, m_gyro.getRotation2d(), m_leftDriveEncoder.getDistance(), m_leftDriveEncoder.getDistance(), new Pose2d());
   }
 
   public void calibrateGyro() {
@@ -107,6 +95,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
   public void setAutoOffset(double autoOffset) {
     yawOffset = autoOffset;
   }
+  // Returns yaw value from -180 to 180
   public double getYaw() {
     return m_gyro.getYaw() + yawOffset;
   }
@@ -116,6 +105,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
   public double getRoll() {
     return m_gyro.getRoll();
   }
+  // Returns continuous yaw value
   public double getAngle() {
     return m_gyro.getAngle();
   }
@@ -137,8 +127,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
    * @param rotation Rotation speed. -1 is full left, 1 is full right.
    */
   public void set(double speed, double rotation) {
-    m_speed = speed;
-    m_rotation = rotation;
+    m_drive.curvatureDrive(speed*m_scale, speed*m_scale, true);
   }
 
   /**
@@ -226,10 +215,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
   }
 
   /** Resets drivebase encoder distances to 0. */
-  public void resetEncoders() {
-    m_leftDriveEncoder.reset();
-    m_rightDriveEncoder.reset();
-  }
+  // public void resetEncoders() {
+  //   m_leftDriveEncoder.reset();
+  //   m_rightDriveEncoder.reset();
+  // }
 
   public void updateOdometry(CameraSubsystem m_CameraSubsystem) {
     m_poseEstimator.update(m_gyro.getRotation2d(), m_leftDriveEncoder.getDistance(), m_rightDriveEncoder.getDistance());
@@ -238,8 +227,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
     if (result.isPresent()) {
       EstimatedRobotPose camPose = result.get();
-      m_poseEstimator.addVisionMeasurement(
-              camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
+      m_poseEstimator.addVisionMeasurement(camPose.estimatedPose.toPose2d(), camPose.timestampSeconds);
     }
 
     // System.out.println("Estimated pose: " + m_poseEstimator.getEstimatedPosition());
@@ -247,7 +235,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_drive.curvatureDrive(m_speed*m_scale, m_rotation*m_scale, true);
+    updateOdometry(m_CameraSubsystem);
+
+    System.out.println(m_poseEstimator.getEstimatedPosition());
 
     SmartDashboard.putNumber("Right rate", getRRate());
     SmartDashboard.putNumber("Left rate", getLRate());

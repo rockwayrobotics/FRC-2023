@@ -74,8 +74,8 @@ public class DrivethAlign extends CommandBase {
     turnController.reset();
     driveController.reset();
     previousDistance = 10;
-    direction = CameraSubsystem.get_directions();
-    m_DrivebaseSubsystem.resetEncoders();
+    // direction = CameraSubsystem.get_directions();
+    // m_DrivebaseSubsystem.resetEncoders();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -87,7 +87,7 @@ public class DrivethAlign extends CommandBase {
     double distanceThresh = 0.0; //may need to make this larger
     double currentDistance;
     //Checks if a target is visible
-    if (direction.ok){
+    if (/*direction.ok*/true){
       //checks if the angle is 0, if it has not, continues its rotation
       // if (direction.angle != 0){
       //   rotationSpeed = turnController.calculate(direction.angle, 0);

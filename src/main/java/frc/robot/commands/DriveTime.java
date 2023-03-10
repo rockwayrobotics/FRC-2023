@@ -19,8 +19,6 @@ public class DriveTime extends CommandBase {
 
     @Override
     public void initialize() {
-        // Resets encoder values to default
-        m_drivebase.resetEncoders();
     }
 
     @Override
