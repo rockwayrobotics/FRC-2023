@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.*;
+import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
 
@@ -31,24 +32,15 @@ public class RobotContainer {
 
   public final GenericEntry autoSpeed;
 
-  public final Command m_driveForever;
-  public final Command m_driveForeverSlow;
-  public final Command m_balanceRoutine;
-
-
   public RobotContainer() {
     var autoTab = Shuffleboard.getTab("Auto");
     autoSpeed = autoTab.addPersistent("Max Speed", 1).withPosition(2, 0).getEntry();
 
-    m_balanceRoutine = new BalanceRoutine(m_drivebase);
-    
-    m_driveForever = new DriveDistance(m_drivebase, autoSpeed.getDouble(0.5), 100000000);
-    m_driveForeverSlow = new DriveDistance(m_drivebase, 0.1, 100000000);
-
-    m_autoChooser.setDefaultOption("Drive Forever", m_driveForever);
-    m_autoChooser.addOption("Drive Forever Slow", m_driveForeverSlow);
-    // m_autoChooser.addOption("Auto Balance", m_autoBalance);
-    m_autoChooser.addOption("Auto Balance", m_balanceRoutine);
+    m_autoChooser.setDefaultOption("Auto Balance", new BalanceRoutine(m_drivebase));
+    m_autoChooser.addOption("Auto Balance - No Return", new CommunityRoutine(m_drivebase));
+    m_autoChooser.addOption("Drive forward", new DriveForwardAutoRoutine(m_drivebase));
+    m_autoChooser.addOption("Auto Balance - No Turn", new NoTurnBalanceRoutine(m_drivebase));
+    m_autoChooser.addOption("Auto Balance - No Turn - No Return", new NoTurnCommunityRoutine(m_drivebase));
     autoTab.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(0, 0);
 
     m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getRightX(), m_drivebase));

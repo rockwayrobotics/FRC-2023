@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 public class FailFastTimeoutGroup extends SequentialCommandGroup {
     boolean m_timedOut = false;
 
-    FailFastTimeoutGroup() {
+    public FailFastTimeoutGroup() {
         this.addCommands(new InstantCommand(() -> {m_timedOut = false;}));
     }
 

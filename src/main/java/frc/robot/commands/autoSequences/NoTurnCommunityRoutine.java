@@ -1,10 +1,12 @@
-package frc.robot.commands;
+package frc.robot.commands.autoSequences;
 
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.DriveDistance;
+import frc.robot.commands.DriveUntilTipped;
+import frc.robot.commands.FailFastTimeoutGroup;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
 
@@ -14,11 +16,11 @@ import frc.robot.subsystems.DrivebaseSubsystem;
  * <p><strong>END:</strong> The robot is balanced on top of the charge station
  * <p><strong>SCORES:</strong> Auto mobility, auto engaged
  */
-public class BalanceRoutine extends SequentialCommandGroup {
+public class NoTurnCommunityRoutine extends SequentialCommandGroup {
     DrivebaseSubsystem m_drivebase;
     boolean m_timedOut = true;
 
-    public BalanceRoutine(DrivebaseSubsystem drivebase) {
+    public NoTurnCommunityRoutine(DrivebaseSubsystem drivebase) {
         m_drivebase = drivebase;
         m_drivebase.setAutoOffset(90);
 
@@ -29,16 +31,10 @@ public class BalanceRoutine extends SequentialCommandGroup {
       
         this.addCommands(
           new FailFastTimeoutGroup()
-            .thenWithTimeout(new RotateToAngle(drivebase, 0, 3, .2), 15)
             .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.4), 15)
             .thenWithTimeout(new DriveUntilTipped(drivebase, 12, 0.2), 15)
             .thenWithTimeout(new DriveUntilTipped(drivebase, 0, 0.2), 15)
             .thenWithTimeout(new DriveDistance(drivebase, 0.2, 30), 15)
-            .then(new WaitCommand(0.5))
-            .thenWithTimeout(new DriveUntilTipped(drivebase, 14, -0.4), 15)
-            .then(new AutoBalance(drivebase))
-            .then(new WaitCommand(0.5))
-            .then(new AutoBalance(drivebase))
         );
     }
 }
