@@ -8,14 +8,13 @@ import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import frc.robot.Constants.*;
 
-import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator.Validity;
-
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 public class RobotContainer {
@@ -73,10 +72,10 @@ public class RobotContainer {
     // bButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Red));
     // xButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Blue));
     // yButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Yellow));
-    aButton.onTrue(new SetBucket(m_shooter, Value.kForward, Value.kForward));
-    xButton.onTrue(new SetBucket(m_shooter, Value.kForward, Value.kOff));
-    yButton.onTrue(new SetBucket(m_shooter, Value.kOff, Value.kForward));
-    bButton.onTrue(new SetBucket(m_shooter, Value.kReverse, Value.kReverse));
+    aButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
+    bButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
+    xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
+    yButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
     var balance = new AutoBalance(m_drivebase);
     backButton.onTrue(balance);
     //backButton.and(aButton).onTrue(new InstantCommand(balance::cancel));
