@@ -78,4 +78,8 @@ public final class Constants {
         public static final int flapReverse = 12;
         public static final int flapForwards = 13;
     }
+
+    public static final class Vision {
+        public static final String camName = "AprilTagCam";
+    }
 }

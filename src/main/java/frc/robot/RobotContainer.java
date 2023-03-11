@@ -28,13 +28,15 @@ enum AutoOption {
 
 public class RobotContainer {
 
-  private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem();
+  private final DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem();
 
-  private LedSubsystem m_led = new LedSubsystem(LED.LED_PWM, 60);
+  private final LedSubsystem m_led = new LedSubsystem(LED.LED_PWM, 60);
 
-  private ShooterSubsystem m_shooter = new ShooterSubsystem();
+  private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
-  private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
+  private final XboxController m_xboxController = new XboxController(Gamepads.XBOX);
+
+  private final CameraSubsystem m_camera = new CameraSubsystem();
 
   SendableChooser<AutoOption> m_autoChooser = new SendableChooser<>();
 
