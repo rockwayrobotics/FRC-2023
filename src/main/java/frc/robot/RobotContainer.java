@@ -7,6 +7,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
 import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
@@ -82,6 +83,12 @@ public class RobotContainer {
     bButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
     xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
     yButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
+
+    SmartDashboard.putData("Bucket Forward", new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
+    SmartDashboard.putData("Bucket Reverse", new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
+    SmartDashboard.putData("Flap Forward", new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
+    SmartDashboard.putData("Flap Reverse", new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
+
     backButton.whileTrue(new AutoBalance(m_drivebase));
     startButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));
   }
