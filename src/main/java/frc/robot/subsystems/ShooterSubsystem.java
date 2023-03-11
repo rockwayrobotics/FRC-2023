@@ -94,24 +94,16 @@ public class ShooterSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     angleLimitPressed = !m_bottomLimit.get();
-    if(!m_alternateLimit.get()) {
-      System.out.println("Alternate limit press");
-    }
     if (angleLimitPressed){
-      System.out.println("Angle limit");
       setAngleEncoderPosition(0);
     }
 
-    
     if(m_XboxController.getRightTriggerAxis() > 0) {
       spinAngleMotor(m_XboxController.getRightTriggerAxis());
-      System.out.println("Right trigger");
     } else if(m_XboxController.getLeftTriggerAxis() > 0) {
       spinAngleMotor(-m_XboxController.getLeftTriggerAxis());
-      System.out.println("Left trigger");
     } else {
       spinAngleMotor(0);
-      System.out.println("Bucket stopped");
     }
   }
   
