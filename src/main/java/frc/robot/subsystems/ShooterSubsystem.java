@@ -24,11 +24,13 @@ public class ShooterSubsystem extends SubsystemBase {
 
   DoubleSolenoid m_bucket1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Pneumatics.bucketForwards1, Constants.Pneumatics.bucketReverse1);
   DoubleSolenoid m_bucket2 = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Pneumatics.bucketForwards2, Constants.Pneumatics.bucketReverse2);
+  DoubleSolenoid m_flap = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Pneumatics.flapForwards, Constants.Pneumatics.flapReverse);
 
   CANSparkMax m_angleMotor = new CANSparkMax(Constants.CAN.SHOOTER_ANGLE_MOTOR, MotorType.kBrushless);
   RelativeEncoder m_angleEncoder = m_angleMotor.getEncoder();
   
   DigitalInput m_bottomLimit = new DigitalInput(Constants.Digital.SHOOTER_BOTTOM_LIMIT);
+  DigitalInput m_alternateLimit = new DigitalInput(5);
   
   boolean angleLimitPressed = false; 
 
@@ -38,6 +40,10 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setBucketCylinders(Value cylinder1State, Value cylinder2State) {
     m_bucket1.set(cylinder1State);
     m_bucket2.set(cylinder2State);
+  }
+
+  public void setFlap(Value flapDirection) {
+    m_flap.set(flapDirection);
   }
 
   public void spinAngleMotor(double speed) {
@@ -61,6 +67,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // Switch is wired to default closed, so when the switch is pressed the value is negative
     angleLimitPressed = !m_bottomLimit.get();
     if (angleLimitPressed){
+      System.out.println("Angle limit");
       setAngleEncoderPosition(0);
     }
 

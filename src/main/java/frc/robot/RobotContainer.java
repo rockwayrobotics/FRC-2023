@@ -15,7 +15,16 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+
+enum AutoOption {
+  AutoBalance,
+  AutoBalanceNoReturn,
+  DriveForward,
+  AutoBalanceNoTurn,
+  AutoBalanceNoTurnNoReturn,
+}
 
 public class RobotContainer {
 
@@ -27,7 +36,7 @@ public class RobotContainer {
 
   private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
-  SendableChooser<Command> m_autoChooser = new SendableChooser<>();
+  SendableChooser<AutoOption> m_autoChooser = new SendableChooser<>();
 
   public final GenericEntry autoSpeed;
 
@@ -35,11 +44,11 @@ public class RobotContainer {
     var autoTab = Shuffleboard.getTab("Auto");
     autoSpeed = autoTab.addPersistent("Max Speed", 1).withPosition(2, 0).getEntry();
 
-    m_autoChooser.setDefaultOption("Auto Balance", new BalanceRoutine(m_drivebase));
-    m_autoChooser.addOption("Auto Balance - No Return", new CommunityRoutine(m_drivebase));
-    m_autoChooser.addOption("Drive forward", new DriveForwardAutoRoutine(m_drivebase));
-    m_autoChooser.addOption("Auto Balance - No Turn", new NoTurnBalanceRoutine(m_drivebase));
-    m_autoChooser.addOption("Auto Balance - No Turn - No Return", new NoTurnCommunityRoutine(m_drivebase));
+    m_autoChooser.setDefaultOption("Auto Balance", AutoOption.AutoBalance);
+    m_autoChooser.addOption("Auto Balance - No Return", AutoOption.AutoBalanceNoReturn);
+    m_autoChooser.addOption("Drive forward", AutoOption.DriveForward);
+    m_autoChooser.addOption("Auto Balance - No Turn", AutoOption.AutoBalanceNoTurn);
+    m_autoChooser.addOption("Auto Balance - No Turn - No Return", AutoOption.AutoBalanceNoTurnNoReturn);
     autoTab.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(0, 0);
 
     m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getRightX(), m_drivebase));
@@ -63,10 +72,10 @@ public class RobotContainer {
     // bButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Red));
     // xButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Blue));
     // yButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Yellow));
-    aButton.onTrue(new SetBucket(m_shooter, Value.kForward, Value.kForward));
-    xButton.onTrue(new SetBucket(m_shooter, Value.kForward, Value.kOff));
-    yButton.onTrue(new SetBucket(m_shooter, Value.kOff, Value.kForward));
-    bButton.onTrue(new SetBucket(m_shooter, Value.kReverse, Value.kReverse));
+    aButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
+    bButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
+    xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
+    yButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
     var balance = new AutoBalance(m_drivebase);
     backButton.onTrue(balance);
     //backButton.and(aButton).onTrue(new InstantCommand(balance::cancel));
@@ -77,6 +86,12 @@ public class RobotContainer {
     m_drivebase.zeroGyro();
 
     // The selected command will be run in autonomous
-    return m_autoChooser.getSelected();
+    return switch (m_autoChooser.getSelected()) {
+      case AutoBalance -> new BalanceRoutine(m_drivebase);
+      case AutoBalanceNoReturn -> new CommunityRoutine(m_drivebase);
+      case DriveForward -> new DriveForwardAutoRoutine(m_drivebase);
+      case AutoBalanceNoTurn -> new NoTurnBalanceRoutine(m_drivebase);
+      case AutoBalanceNoTurnNoReturn -> new NoTurnCommunityRoutine(m_drivebase);
+    };
   }
 }

@@ -4,8 +4,6 @@
 
 package frc.robot;
 
-import com.revrobotics.CANSparkMax.IdleMode;
-
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -77,5 +75,7 @@ public final class Constants {
         public static final int bucketForwards2 = 9;
         public static final int bucketReverse1 = 10;
         public static final int bucketReverse2 = 11;
+        public static final int flapReverse = 12;
+        public static final int flapForwards = 13;
     }
 }
