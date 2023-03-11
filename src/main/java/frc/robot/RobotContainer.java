@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMax;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import frc.robot.commands.*;
 import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
@@ -18,6 +20,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+import java.util.Map;
+
 enum AutoOption {
   AutoBalance,
   AutoBalanceNoReturn,
@@ -27,6 +31,7 @@ enum AutoOption {
 }
 
 public class RobotContainer {
+  ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
 
   private final DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem();
 
@@ -40,22 +45,21 @@ public class RobotContainer {
 
   SendableChooser<AutoOption> m_autoChooser = new SendableChooser<>();
 
-  public final GenericEntry autoSpeed;
+  SimpleWidget AutoFailedWidget = dashboard.add("Auto status", false).withPosition(10, 0);
 
   public RobotContainer() {
-    var autoTab = Shuffleboard.getTab("Auto");
-    autoSpeed = autoTab.addPersistent("Max Speed", 1).withPosition(2, 0).getEntry();
-
     m_autoChooser.setDefaultOption("Auto Balance", AutoOption.AutoBalance);
     m_autoChooser.addOption("Auto Balance - No Return", AutoOption.AutoBalanceNoReturn);
     m_autoChooser.addOption("Drive forward", AutoOption.DriveForward);
     m_autoChooser.addOption("Auto Balance - No Turn", AutoOption.AutoBalanceNoTurn);
     m_autoChooser.addOption("Auto Balance - No Turn - No Return", AutoOption.AutoBalanceNoTurnNoReturn);
-    autoTab.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(0, 0);
+    dashboard.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(11, 0);
 
     m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getRightX, m_drivebase));
 
-    Shuffleboard.getTab("Subsystems").add(m_drivebase);
+    dashboard.add(m_drivebase).withPosition(0, 5);
+
+    AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "grey"));
 
     configureBindings();
   }
@@ -87,7 +91,7 @@ public class RobotContainer {
 
     // The selected command will be run in autonomous
     return switch (m_autoChooser.getSelected()) {
-      case AutoBalance -> new BalanceRoutine(m_drivebase);
+      case AutoBalance -> new BalanceRoutine(m_drivebase, AutoFailedWidget);
       case AutoBalanceNoReturn -> new CommunityRoutine(m_drivebase);
       case DriveForward -> new DriveForwardAutoRoutine(m_drivebase);
       case AutoBalanceNoTurn -> new NoTurnBalanceRoutine(m_drivebase);

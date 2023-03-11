@@ -3,6 +3,8 @@ package frc.robot.commands.autoSequences;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.AutoBalance;
@@ -21,20 +23,23 @@ import frc.robot.subsystems.DrivebaseSubsystem;
  */
 public class BalanceRoutine extends SequentialCommandGroup {
     DrivebaseSubsystem m_drivebase;
-    boolean m_timedOut = true;
 
-    public BalanceRoutine(DrivebaseSubsystem drivebase) {
+    public void setStatusWidget(SimpleWidget AutoFailedWidget, FailFastTimeoutGroup sequence) {
+        if(sequence.timedOut()) {
+            AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "red"));
+        } else {
+            AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "green"));
+        }
+    }
+
+    public BalanceRoutine(DrivebaseSubsystem drivebase, SimpleWidget AutoFailedWidget) {
         m_drivebase = drivebase;
         m_drivebase.setAutoOffset(90);
 
-        var AutoFailedWidget = Shuffleboard.getTab("Auto").add("Auto status", false);
-        AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "grey"));
-        // var colorWidget = Shuffleboard.getTab("Vision").add("Vision status", false);
-        // colorWidget.withProperties(Map.of("colorWhenFalse", "grey"));
-      
-        this.addCommands(
-          new FailFastTimeoutGroup()
-            .thenWithTimeout(new RotateToAngle(drivebase, 0, 3, .2), 15)
+        AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "yellow"));
+
+        FailFastTimeoutGroup sequence = new FailFastTimeoutGroup()
+            .thenWithTimeout(new RotateToAngle(drivebase, 0, 3, .2), 5)
             .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.4), 15)
             .thenWithTimeout(new DriveUntilTipped(drivebase, 12, 0.2), 15)
             .thenWithTimeout(new DriveUntilTipped(drivebase, 0, 0.2), 15)
@@ -43,7 +48,10 @@ public class BalanceRoutine extends SequentialCommandGroup {
             .thenWithTimeout(new DriveUntilTipped(drivebase, 14, -0.4), 15)
             .then(new AutoBalance(drivebase))
             .then(new WaitCommand(0.5))
-            .then(new AutoBalance(drivebase))
-        );
+            .then(new AutoBalance(drivebase));
+
+
+        this.addCommands(sequence);
+        this.addCommands(new InstantCommand(() -> setStatusWidget(AutoFailedWidget, sequence)));
     }
 }

@@ -82,4 +82,10 @@ public final class Constants {
     public static final class Vision {
         public static final String camName = "AprilTagCam";
     }
+
+    public enum ScoringTarget {
+        MID_CUBE,
+        HIGH_CUBE,
+        MID_CONE,
+    }
 }

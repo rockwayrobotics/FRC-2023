@@ -9,6 +9,8 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
@@ -33,6 +35,9 @@ public class DrivebaseSubsystem extends SubsystemBase {
   private int direction = 1;
 
   private double yawOffset;
+
+  public double balance_kP = Constants.Balance.kP;
+  public double balance_kD = Constants.Balance.kD;
 
   CANSparkMax m_leftDriveMotor1;
   CANSparkMax m_leftDriveMotor2;
@@ -61,6 +66,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
     m_rightDriveEncoder.setReverseDirection(true);
     m_leftDriveEncoder.reset();
     m_rightDriveEncoder.reset();
+
+    ShuffleboardTab tuningTab = Shuffleboard.getTab("Tuning");
+
+    tuningTab.addPersistent("Balance kP", balance_kP).withPosition(0,0);
+    tuningTab.addPersistent("Balance kD", balance_kD).withPosition(1,0);
   }
 
   public void calibrateGyro() {

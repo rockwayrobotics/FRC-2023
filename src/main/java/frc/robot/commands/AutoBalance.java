@@ -8,15 +8,16 @@ import frc.robot.Constants;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
 public class AutoBalance extends CommandBase {
-    private DrivebaseSubsystem m_DrivebaseSubsystem;
+    private final DrivebaseSubsystem m_DrivebaseSubsystem;
 
-    private double currentAngle;
-
-    private final PIDController pid = new PIDController(Constants.Balance.kP, 0, Constants.Balance.kD);
+    private final PIDController pid;
 
     public AutoBalance(DrivebaseSubsystem subsystem) {
         m_DrivebaseSubsystem = subsystem;
         addRequirements(m_DrivebaseSubsystem);
+
+        pid = new PIDController(m_DrivebaseSubsystem.balance_kP, 0, m_DrivebaseSubsystem.balance_kD);
+
         pid.setSetpoint(Constants.Balance.GOAL_DEGREES);
         pid.setTolerance(Constants.Balance.TOLERANCE_DEGREES);
     }
@@ -32,7 +33,7 @@ public class AutoBalance extends CommandBase {
     public void execute() {
         // Uncomment the line below this to simulate the gyroscope axis with a controller joystick
         // Double currentAngle = -1 * Robot.controller.getRawAxis(Constants.LEFT_VERTICAL_JOYSTICK_AXIS) * 45;
-        this.currentAngle = m_DrivebaseSubsystem.getRoll();
+        double currentAngle = m_DrivebaseSubsystem.getRoll();
 
         double drivePower = pid.calculate(currentAngle);
         SmartDashboard.putNumber("Raw Drive Power (Auto Balance)", drivePower);

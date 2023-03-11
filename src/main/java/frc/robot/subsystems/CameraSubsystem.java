@@ -20,12 +20,13 @@ import java.util.Map;
 public class CameraSubsystem extends SubsystemBase {
   public static PhotonCamera camera;
 
-  SuppliedValueWidget<Boolean> m_distanceWidget = Shuffleboard.getTab("Subsystems").addBoolean("TURN", this::getInDistance)
+  // TODO Rewrite to be more variable
+  SuppliedValueWidget<Boolean> m_distanceWidget = Shuffleboard.getTab("Dashboard").addBoolean("TURN", this::getInDistance)
           .withWidget(BuiltInWidgets.kBooleanBox)
           .withProperties(Map.of("colorWhenFalse", "red", "colorWhenTrue", "green"));
 
   boolean getInDistance() {
-    System.out.println("Updating");
+//    System.out.println("Updating");
 
     var vision = CameraSubsystem.camera.getLatestResult();
     if (!vision.hasTargets()) {
