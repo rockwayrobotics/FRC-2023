@@ -11,12 +11,15 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
+  XboxController m_XboxController = new XboxController(0);
+
   Compressor m_compressor = new Compressor(Constants.CAN.PNEUMATIC_HUB, PneumaticsModuleType.REVPH);
 
   DoubleSolenoid m_bucket1 = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.Pneumatics.bucketForwards1, Constants.Pneumatics.bucketReverse1);
@@ -38,7 +41,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void spinAngleMotor(double speed) {
-    if (angleLimitPressed){
+    if (angleLimitPressed && speed > 0){
       m_angleMotor.set(0);
     } else {
       m_angleMotor.set(speed);
@@ -55,10 +58,18 @@ public class ShooterSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-    angleLimitPressed = m_bottomLimit.get();
+    // Switch is wired to default closed, so when the switch is pressed the value is negative
+    angleLimitPressed = !m_bottomLimit.get();
     if (angleLimitPressed){
       setAngleEncoderPosition(0);
+    }
+
+    if(m_XboxController.getRightTriggerAxis() > 0) {
+      spinAngleMotor(m_XboxController.getRightTriggerAxis());
+    } else if(m_XboxController.getLeftTriggerAxis() > 0) {
+      spinAngleMotor(-m_XboxController.getLeftTriggerAxis());
+    } else {
+      spinAngleMotor(0);
     }
   }
   
