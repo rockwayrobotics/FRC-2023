@@ -17,6 +17,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
+enum AutoOption {
+  AutoBalance,
+  AutoBalanceNoReturn,
+  DriveForward,
+  AutoBalanceNoTurn,
+  AutoBalanceNoTurnNoReturn,
+}
+
 public class RobotContainer {
 
   private DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem();
@@ -27,7 +35,7 @@ public class RobotContainer {
 
   private XboxController m_xboxController = new XboxController(Gamepads.XBOX);
 
-  SendableChooser<Command> m_autoChooser = new SendableChooser<>();
+  SendableChooser<AutoOption> m_autoChooser = new SendableChooser<>();
 
   public final GenericEntry autoSpeed;
 
@@ -35,11 +43,11 @@ public class RobotContainer {
     var autoTab = Shuffleboard.getTab("Auto");
     autoSpeed = autoTab.addPersistent("Max Speed", 1).withPosition(2, 0).getEntry();
 
-    m_autoChooser.setDefaultOption("Auto Balance", new BalanceRoutine(m_drivebase));
-    m_autoChooser.addOption("Auto Balance - No Return", new CommunityRoutine(m_drivebase));
-    m_autoChooser.addOption("Drive forward", new DriveForwardAutoRoutine(m_drivebase));
-    m_autoChooser.addOption("Auto Balance - No Turn", new NoTurnBalanceRoutine(m_drivebase));
-    m_autoChooser.addOption("Auto Balance - No Turn - No Return", new NoTurnCommunityRoutine(m_drivebase));
+    m_autoChooser.setDefaultOption("Auto Balance", AutoOption.AutoBalance);
+    m_autoChooser.addOption("Auto Balance - No Return", AutoOption.AutoBalanceNoReturn);
+    m_autoChooser.addOption("Drive forward", AutoOption.DriveForward);
+    m_autoChooser.addOption("Auto Balance - No Turn", AutoOption.AutoBalanceNoTurn);
+    m_autoChooser.addOption("Auto Balance - No Turn - No Return", AutoOption.AutoBalanceNoTurnNoReturn);
     autoTab.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(0, 0);
 
     m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getRightX(), m_drivebase));
@@ -77,6 +85,12 @@ public class RobotContainer {
     m_drivebase.zeroGyro();
 
     // The selected command will be run in autonomous
-    return m_autoChooser.getSelected();
+    return switch (m_autoChooser.getSelected()) {
+      case AutoBalance -> new BalanceRoutine(m_drivebase);
+      case AutoBalanceNoReturn -> new CommunityRoutine(m_drivebase);
+      case DriveForward -> new DriveForwardAutoRoutine(m_drivebase);
+      case AutoBalanceNoTurn -> new NoTurnBalanceRoutine(m_drivebase);
+      case AutoBalanceNoTurnNoReturn -> new NoTurnCommunityRoutine(m_drivebase);
+    };
   }
 }
