@@ -13,9 +13,21 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
+
+enum ShooterHeight {
+  MID,
+  HIGH,
+}
+
+enum GamePiece {
+  CUBE,
+  CONE,
+}
 
 public class ShooterSubsystem extends SubsystemBase {
   XboxController m_XboxController = new XboxController(0);
@@ -31,11 +43,27 @@ public class ShooterSubsystem extends SubsystemBase {
   
   DigitalInput m_bottomLimit = new DigitalInput(Constants.Digital.SHOOTER_BOTTOM_LIMIT);
   DigitalInput m_alternateLimit = new DigitalInput(5);
+
+  ShooterHeight m_height = ShooterHeight.MID;
+  GamePiece m_piece = GamePiece.CUBE;
+
+  SendableChooser<GamePiece> m_pieceSelector;
+  SendableChooser<ShooterHeight> m_heightSelector;
   
   boolean angleLimitPressed = false; 
 
   /** Creates a new ShooterSubsystem. */
-  public ShooterSubsystem() {}
+  public ShooterSubsystem() {
+    m_pieceSelector = new SendableChooser<GamePiece>();
+    m_pieceSelector.setDefaultOption("Cube", GamePiece.CUBE);
+    m_pieceSelector.addOption("Cone", GamePiece.CONE);
+    Shuffleboard.getTab("Subsystems").add(m_pieceSelector);
+
+    m_heightSelector = new SendableChooser<ShooterHeight>();
+    m_heightSelector.setDefaultOption("Mid", ShooterHeight.MID);
+    m_heightSelector.addOption("High", ShooterHeight.HIGH);
+    Shuffleboard.getTab("Subsystems").add(m_heightSelector);
+  }
 
   public void setBucketCylinders(Value cylinder1State, Value cylinder2State) {
     m_bucket1.set(cylinder1State);
