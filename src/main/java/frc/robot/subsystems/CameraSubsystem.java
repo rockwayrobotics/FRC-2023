@@ -7,20 +7,20 @@ package frc.robot.subsystems;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
-import frc.robot.commands.DrivethAlign;
 
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -34,6 +34,18 @@ public class CameraSubsystem extends SubsystemBase {
   public static PhotonCamera camera;
 
   public PhotonPoseEstimator photonPoseEstimator;
+
+  SuppliedValueWidget<Boolean> m_distanceWidget = Shuffleboard.getTab("Subsystems").addBoolean("TURN", this::getInDistance)
+    .withWidget(BuiltInWidgets.kBooleanBox)
+    .withProperties(Map.of("colorWhenFalse", "red", "colorWhenTrue", "green"));
+
+  boolean getInDistance() {
+    var vision = CameraSubsystem.camera.getLatestResult();
+    if (!vision.hasTargets()) {
+      return false;
+    }
+    return vision.getBestTarget().getBestCameraToTarget().getX() < 5;
+  }
 
   /** Creates a new CameraSubsystem. */
   public CameraSubsystem() {
