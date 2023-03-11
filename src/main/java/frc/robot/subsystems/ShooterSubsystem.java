@@ -39,11 +39,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   SendableChooser<Constants.ScoringTarget> m_scoringSelector;
   
-  boolean angleLimitPressed = false;
+  public boolean angleLimitPressed = false;
 
   public double highCubeBackupDistanceInches = 0;
   public double midCubeBackupDistanceInches = 15;
   public double midConeBackupDistanceInches = 12;
+  public double loadBackupDistanceInches = 3;
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
@@ -58,6 +59,7 @@ public class ShooterSubsystem extends SubsystemBase {
     dashboardTab.addPersistent("High Cube Distance (inch)", highCubeBackupDistanceInches).withPosition(2, 0).withSize(2, 1);
     dashboardTab.addPersistent("Mid Cube Distance (inch)", midCubeBackupDistanceInches).withPosition(0, 1).withSize(2, 1);
     dashboardTab.addPersistent("Mid Cone Distance (inch)", midConeBackupDistanceInches).withPosition(2, 1).withSize(2, 1);
+    dashboardTab.addPersistent("Pickup Distance (inch)", loadBackupDistanceInches).withPosition(0,3).withSize(2,1);
   }
 
   public void setBucketCylinders(Value cylinder1State, Value cylinder2State) {

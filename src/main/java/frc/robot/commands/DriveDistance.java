@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
@@ -31,6 +32,7 @@ public class DriveDistance extends CommandBase {
 
     @Override
     public boolean isFinished() {
+        SmartDashboard.putNumber("Auto Command Distance Travelled", m_drivebase.getRDistance());
         return (Math.abs(m_drivebase.getRDistance()) >= m_distance);
     }
 

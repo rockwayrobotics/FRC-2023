@@ -17,12 +17,12 @@ import frc.robot.subsystems.ShooterSubsystem;
  * <p><strong>END:</strong> The robot is balanced on top of the charge station
  * <p><strong>SCORES:</strong> Auto mobility, auto engaged
  */
-public class ShootSequence extends SequentialCommandGroup {
+public class LoadPieceSequence extends SequentialCommandGroup {
     DrivebaseSubsystem m_drivebase;
     ShooterSubsystem m_shooter;
     LedSubsystem m_led;
 
-    public ShootSequence(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, LedSubsystem led) {
+    public LoadPieceSequence(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, LedSubsystem led) {
         m_drivebase = drivebase;
         m_shooter = shooter;
         m_led = led;
@@ -30,21 +30,12 @@ public class ShootSequence extends SequentialCommandGroup {
         this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
 
         System.out.println("Moving distance");
-        // Take over drivebase
-        switch (m_shooter.m_scoringTarget) {
-            case HIGH_CUBE -> this.addCommands(new DriveDistance(m_drivebase,.2, -Units.inchesToMeters(m_shooter.highCubeBackupDistanceInches)));
-            case MID_CUBE -> this.addCommands(new DriveDistance(m_drivebase,.2, -Units.inchesToMeters(m_shooter.midCubeBackupDistanceInches)));
-            case MID_CONE -> this.addCommands(new DriveDistance(m_drivebase,.2, -Units.inchesToMeters(m_shooter.midConeBackupDistanceInches)));
-        };
+        this.addCommands(new DriveDistance(m_drivebase,.2, -Units.inchesToMeters(m_shooter.loadBackupDistanceInches)));
         System.out.println("Moved distance");
 
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kForward)));
-        this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kForward, DoubleSolenoid.Value.kForward)));
-        // Start driving here
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Green)));
-        this.addCommands(new WaitCommand(.5));
         this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kReverse, DoubleSolenoid.Value.kReverse)));
-        this.addCommands(new WaitCommand(1));
-        this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kReverse)));
+
+        this.addCommands(new BucketToZero(m_shooter, 0.5));
     }
 }

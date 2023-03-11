@@ -12,7 +12,6 @@ import frc.robot.commands.*;
 import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
 
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -26,9 +25,8 @@ import java.util.Map;
 enum AutoOption {
   AutoBalance,
   AutoBalanceNoReturn,
-  DriveForward,
-  AutoBalanceNoTurn,
-  AutoBalanceNoTurnNoReturn,
+  ShortDriveForward,
+  LongDriveForward,
 }
 
 public class RobotContainer {
@@ -49,11 +47,12 @@ public class RobotContainer {
   SimpleWidget AutoFailedWidget = dashboard.add("Auto status", false).withPosition(10, 0);
 
   public RobotContainer() {
+    m_led.setMode(Constants.LED.modes.Rainbow);
+
     m_autoChooser.setDefaultOption("Auto Balance", AutoOption.AutoBalance);
     m_autoChooser.addOption("Auto Balance - No Return", AutoOption.AutoBalanceNoReturn);
-    m_autoChooser.addOption("Drive forward", AutoOption.DriveForward);
-    m_autoChooser.addOption("Auto Balance - No Turn", AutoOption.AutoBalanceNoTurn);
-    m_autoChooser.addOption("Auto Balance - No Turn - No Return", AutoOption.AutoBalanceNoTurnNoReturn);
+    m_autoChooser.addOption("Drive forward - Short", AutoOption.ShortDriveForward);
+    m_autoChooser.addOption("Drive forward - Long", AutoOption.LongDriveForward);
     dashboard.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(11, 0);
 
     m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getRightX, m_drivebase));
@@ -98,11 +97,10 @@ public class RobotContainer {
 
     // The selected command will be run in autonomous
     return switch (m_autoChooser.getSelected()) {
-      case AutoBalance -> new BalanceRoutine(m_drivebase, AutoFailedWidget);
-      case AutoBalanceNoReturn -> new CommunityRoutine(m_drivebase);
-      case DriveForward -> new DriveForwardAutoRoutine(m_drivebase);
-      case AutoBalanceNoTurn -> new NoTurnBalanceRoutine(m_drivebase);
-      case AutoBalanceNoTurnNoReturn -> new NoTurnCommunityRoutine(m_drivebase);
+      case AutoBalance -> new BalanceRoutine(m_drivebase, m_shooter, m_led, AutoFailedWidget);
+      case AutoBalanceNoReturn -> new CommunityRoutine(m_drivebase, m_shooter, m_led, AutoFailedWidget);
+      case ShortDriveForward -> new ShortDriveForwardAutoRoutine(m_drivebase, m_shooter, m_led, AutoFailedWidget);
+      case LongDriveForward -> new LongDriveForwardAutoRoutine(m_drivebase, m_shooter, m_led, AutoFailedWidget);
     };
   }
 }
