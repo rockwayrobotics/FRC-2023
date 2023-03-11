@@ -4,10 +4,10 @@
 
 package frc.robot;
 
+import com.revrobotics.CANSparkMax;
 import frc.robot.commands.*;
 import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
-import frc.robot.Constants.*;
 
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
@@ -30,11 +30,11 @@ public class RobotContainer {
 
   private final DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem();
 
-  private final LedSubsystem m_led = new LedSubsystem(LED.LED_PWM, 60);
+  private final LedSubsystem m_led = new LedSubsystem(Constants.LED.LED_PWM, 60);
 
   private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
-  private final XboxController m_xboxController = new XboxController(Gamepads.XBOX);
+  private final XboxController m_xboxController = new XboxController(Constants.Gamepads.XBOX);
 
   private final CameraSubsystem m_camera = new CameraSubsystem();
 
@@ -53,7 +53,7 @@ public class RobotContainer {
     m_autoChooser.addOption("Auto Balance - No Turn - No Return", AutoOption.AutoBalanceNoTurnNoReturn);
     autoTab.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(0, 0);
 
-    m_drivebase.setDefaultCommand(new DriveCommand(() -> m_xboxController.getLeftY(), () -> m_xboxController.getRightX(), m_drivebase));
+    m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getRightX, m_drivebase));
 
     Shuffleboard.getTab("Subsystems").add(m_drivebase);
 
@@ -62,26 +62,24 @@ public class RobotContainer {
 
   private void configureBindings() {
     final JoystickButton rightBumper = new JoystickButton(m_xboxController, XboxController.Button.kLeftBumper.value);
-    rightBumper.onTrue(new SetDriveScaleCommand(m_drivebase, Drive.SLOMODE_SCALE));
-    rightBumper.onFalse(new SetDriveScaleCommand(m_drivebase, 1));
+    final JoystickButton leftBumper = new JoystickButton(m_xboxController, XboxController.Button.kLeftBumper.value);
     final JoystickButton aButton = new JoystickButton(m_xboxController, XboxController.Button.kA.value);
     final JoystickButton bButton = new JoystickButton(m_xboxController, XboxController.Button.kB.value);
     final JoystickButton xButton = new JoystickButton(m_xboxController, XboxController.Button.kX.value);
     final JoystickButton yButton = new JoystickButton(m_xboxController, XboxController.Button.kY.value);
     final JoystickButton startButton = new JoystickButton(m_xboxController, XboxController.Button.kStart.value);
     final JoystickButton backButton = new JoystickButton(m_xboxController, XboxController.Button.kBack.value);
-    // aButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Green));
-    // bButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Red));
-    // xButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Blue));
-    // yButton.onTrue(new SetLedMode(m_led, LedConstant.modes.Yellow));
+
+    rightBumper.onTrue(new InstantCommand(() -> m_drivebase.setScale(Constants.Drive.SLOMODE_SCALE)));
+    rightBumper.onFalse(new InstantCommand(() -> m_drivebase.setScale(1)));
+    leftBumper.onTrue(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kCoast)));
+    leftBumper.onFalse(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kBrake)));
     aButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
     bButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
     xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
     yButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
-    var balance = new AutoBalance(m_drivebase);
-    backButton.onTrue(balance);
-    //backButton.and(aButton).onTrue(new InstantCommand(balance::cancel));
-    startButton.onTrue(new SetLedMode(m_led, LED.modes.Rainbow));
+    backButton.whileTrue(new AutoBalance(m_drivebase));
+    startButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));
   }
 
   public Command getAutonomousCommand() {
