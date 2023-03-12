@@ -27,19 +27,16 @@ public class ShootSequence extends SequentialCommandGroup {
         m_shooter = shooter;
         m_led = led;
 
+        double m_distanceToMove;
+
         this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
 
-        System.out.println("Moving distance");
         // Take over drivebase
-        switch (m_shooter.m_scoringTarget) {
-            case HIGH_CUBE -> this.addCommands(new DriveDistance(m_drivebase,.2, -Units.inchesToMeters(m_shooter.highCubeBackupDistanceInches)));
-            case MID_CUBE -> this.addCommands(new DriveDistance(m_drivebase,.2, -Units.inchesToMeters(m_shooter.midCubeBackupDistanceInches)));
-            case MID_CONE -> this.addCommands(new DriveDistance(m_drivebase,.2, -Units.inchesToMeters(m_shooter.midConeBackupDistanceInches)));
-        };
-        System.out.println("Moved distance");
+        this.addCommands(new ShotMoveDistance(drivebase, .2));
 
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kForward)));
-        this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kForward, DoubleSolenoid.Value.kForward)));
+        this.addCommands(new WaitCommand(0.4));
+        // this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kForward, DoubleSolenoid.Value.kForward)));
         // Start driving here
         this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Green)));
         this.addCommands(new WaitCommand(.5));

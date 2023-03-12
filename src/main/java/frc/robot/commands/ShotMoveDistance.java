@@ -4,17 +4,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
-public class DriveDistance extends CommandBase {
+public class ShotMoveDistance extends CommandBase {
     
     private DrivebaseSubsystem m_drivebase;
     private double m_speed;
-    private double m_distance;
+    private double m_distance = 100;
 
-    public DriveDistance(DrivebaseSubsystem subsystem, double speed, double distance) {
+    public ShotMoveDistance(DrivebaseSubsystem subsystem, double speed) {
 
         m_drivebase = subsystem;
         m_speed = speed;
-        m_distance = distance;
     
         addRequirements(m_drivebase);
     }
@@ -23,6 +22,12 @@ public class DriveDistance extends CommandBase {
     public void initialize() {
         // Resets encoder values to default
         m_drivebase.resetEncoders();
+        
+        switch (m_drivebase.m_scoringTarget) {
+            case HIGH_CUBE -> m_distance = m_drivebase.highCubeBackupDistanceInches;
+            case MID_CUBE -> m_distance = m_drivebase.midCubeBackupDistanceInches;
+            case MID_CONE -> m_distance = m_drivebase.midConeBackupDistanceInches;
+        };
 
         System.out.println("Moving: " + m_distance);
     }

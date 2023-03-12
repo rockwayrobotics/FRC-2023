@@ -75,8 +75,8 @@ public final class Constants {
         public static final int bucketForwards2 = 9;
         public static final int bucketReverse1 = 10;
         public static final int bucketReverse2 = 11;
-        public static final int flapReverse = 12;
-        public static final int flapForwards = 13;
+        public static final int flapReverse = 13;
+        public static final int flapForwards = 12;
     }
 
     public static final class Vision {

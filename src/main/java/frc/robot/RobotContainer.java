@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.*;
 import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
-
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -44,7 +44,7 @@ public class RobotContainer {
 
   SendableChooser<AutoOption> m_autoChooser = new SendableChooser<>();
 
-  SimpleWidget AutoFailedWidget = dashboard.add("Auto status", false).withPosition(10, 0);
+  SimpleWidget AutoFailedWidget = dashboard.add("Auto status", false).withPosition(7, 0);
 
   public RobotContainer() {
     m_led.setMode(Constants.LED.modes.Rainbow);
@@ -53,7 +53,7 @@ public class RobotContainer {
     m_autoChooser.addOption("Auto Balance - No Return", AutoOption.AutoBalanceNoReturn);
     m_autoChooser.addOption("Drive forward - Short", AutoOption.ShortDriveForward);
     m_autoChooser.addOption("Drive forward - Long", AutoOption.LongDriveForward);
-    dashboard.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(11, 0);
+    dashboard.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(8, 0);
 
     m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getRightX, m_drivebase));
 
@@ -78,15 +78,24 @@ public class RobotContainer {
     rightBumper.onFalse(new InstantCommand(() -> m_drivebase.setScale(1)));
     leftBumper.onTrue(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kCoast)));
     leftBumper.onFalse(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kBrake)));
-    aButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
-    bButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
-    xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
-    yButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
+    // aButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
+    // bButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
+    // xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
+    // yButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
+
+    // TODO Write eject sequence
+    // TODO Write angle to 45 code
+    aButton.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
+    xButton.onTrue(new LoadPieceSequence(m_drivebase, m_shooter, m_led));
+    xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
+    yButton.whileTrue(new BucketToZero(m_shooter, 0.2));
 
     SmartDashboard.putData("Bucket Forward", new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
     SmartDashboard.putData("Bucket Reverse", new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
     SmartDashboard.putData("Flap Forward", new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
     SmartDashboard.putData("Flap Reverse", new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
+
+    SmartDashboard.putData("Shoot Sequence", new ShootSequence(m_drivebase, m_shooter, m_led));
 
     backButton.whileTrue(new AutoBalance(m_drivebase));
     startButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));

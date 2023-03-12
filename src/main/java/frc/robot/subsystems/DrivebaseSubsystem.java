@@ -5,12 +5,13 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
 
-
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
@@ -42,7 +43,21 @@ public class DrivebaseSubsystem extends SubsystemBase {
   CANSparkMax m_leftDriveMotor1;
   CANSparkMax m_leftDriveMotor2;
   CANSparkMax m_rightDriveMotor1;
-  CANSparkMax m_rightDriveMotor2;
+  CANSparkMax m_rightDriveMotor2;  
+
+  public double highCubeBackupDistanceInches = 0;
+  public double midCubeBackupDistanceInches;
+  public double midConeBackupDistanceInches = 12;
+  public double loadBackupDistanceInches = 3;
+
+  GenericEntry highCubeDistanceWidget;
+  GenericEntry midCubeDistanceWidget;
+  GenericEntry midConeDistanceWidget;
+  GenericEntry loadBackupDistanceWidget;
+
+  public Constants.ScoringTarget m_scoringTarget;
+
+  SendableChooser<Constants.ScoringTarget> m_scoringSelector;
 
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem() {
@@ -71,6 +86,19 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
     tuningTab.addPersistent("Balance kP", balance_kP).withPosition(0,0);
     tuningTab.addPersistent("Balance kD", balance_kD).withPosition(1,0);
+
+    m_scoringSelector = new SendableChooser<Constants.ScoringTarget>();
+    m_scoringSelector.setDefaultOption("High Cube", Constants.ScoringTarget.HIGH_CUBE);
+    m_scoringSelector.addOption("Mid Cube", Constants.ScoringTarget.MID_CUBE);
+    m_scoringSelector.addOption("Mid Cone", Constants.ScoringTarget.MID_CONE);
+
+    ShuffleboardTab dashboardTab = Shuffleboard.getTab("Dashboard");
+
+    dashboardTab.add("Scoring selector", m_scoringSelector).withSize(2,1).withPosition(0, 0);
+    highCubeDistanceWidget = dashboardTab.addPersistent("High Cube Distance (inch)", 0).withPosition(2, 0).withSize(2, 1).getEntry();
+    midCubeDistanceWidget =  dashboardTab.addPersistent("Mid Cube Distance (inch)", 15).withPosition(0, 1).withSize(2, 1).getEntry();
+    midConeDistanceWidget = dashboardTab.addPersistent("Mid Cone Distance (inch)", 12).withPosition(2, 1).withSize(2, 1).getEntry();
+    loadBackupDistanceWidget = dashboardTab.addPersistent("Pickup Distance (inch)", 3).withPosition(0,3).withSize(2,1).getEntry();
   }
 
   public void calibrateGyro() {
@@ -187,5 +215,12 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
     SmartDashboard.putNumber("Gyro roll", getRoll());
     SmartDashboard.putNumber("Gyro Yaw", getYaw());
+
+    m_scoringTarget = m_scoringSelector.getSelected();
+
+    highCubeBackupDistanceInches = highCubeDistanceWidget.getDouble(0);
+    midCubeBackupDistanceInches = midCubeDistanceWidget.getDouble(15);
+    midConeBackupDistanceInches = midCubeDistanceWidget.getDouble(12);
+    loadBackupDistanceInches = loadBackupDistanceWidget.getDouble(3);
   }
 }

@@ -29,9 +29,7 @@ public class LoadPieceSequence extends SequentialCommandGroup {
 
         this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
 
-        System.out.println("Moving distance");
-        this.addCommands(new DriveDistance(m_drivebase,.2, -Units.inchesToMeters(m_shooter.loadBackupDistanceInches)));
-        System.out.println("Moved distance");
+        this.addCommands(new LoadMoveDistance(m_drivebase,.2));
 
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kForward)));
         this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kReverse, DoubleSolenoid.Value.kReverse)));
