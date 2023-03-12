@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
@@ -36,7 +37,6 @@ public class ShooterSubsystem extends SubsystemBase {
   RelativeEncoder m_angleEncoder = m_angleMotor.getEncoder();
   
   DigitalInput m_bottomLimit = new DigitalInput(Constants.Digital.SHOOTER_BOTTOM_LIMIT);
-  DigitalInput m_alternateLimit = new DigitalInput(4);
   
   public boolean angleLimitPressed = false;
 
@@ -55,7 +55,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void spinAngleMotor(double speed) {
-    if (angleLimitPressed && speed > 0){
+    if (angleLimitPressed && speed < 0){
       m_angleMotor.set(0);
     } else {
       m_angleMotor.set(speed);
@@ -85,6 +85,8 @@ public class ShooterSubsystem extends SubsystemBase {
     } else {
       spinAngleMotor(0);
     }
+
+    SmartDashboard.putNumber("Encoder revolutions", getAngleEncoder());
   }
   
   @Override

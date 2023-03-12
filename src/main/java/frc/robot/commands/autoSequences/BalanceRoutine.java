@@ -48,12 +48,12 @@ public class BalanceRoutine extends SequentialCommandGroup {
 
         FailFastTimeoutGroup sequence = new FailFastTimeoutGroup()
             .thenWithTimeout(new ShootSequence(m_drivebase, m_shooter, m_led), 15)
-            .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.4), 15)
-            .thenWithTimeout(new DriveUntilTipped(drivebase, 12, 0.2), 15)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.7), 15)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, 12, 0.35), 15)
             .thenWithTimeout(new DriveUntilTipped(drivebase, 0, 0.2), 15)
-            .thenWithTimeout(new DriveDistance(drivebase, 0.2, Units.inchesToMeters(30)), 15)
+            .thenWithTimeout(new DriveDistance(drivebase, 0.2, 30), 15)
             .then(new WaitCommand(0.5))
-            .thenWithTimeout(new DriveUntilTipped(drivebase, 14, -0.4), 15)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, 14, -0.7), 15)
             .then(new AutoBalance(drivebase))
             .then(new WaitCommand(0.5))
             .then(new AutoBalance(drivebase));

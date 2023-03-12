@@ -45,10 +45,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
   CANSparkMax m_rightDriveMotor1;
   CANSparkMax m_rightDriveMotor2;  
 
-  public double highCubeBackupDistanceInches = 0;
+  public double highCubeBackupDistanceInches;
   public double midCubeBackupDistanceInches;
-  public double midConeBackupDistanceInches = 12;
-  public double loadBackupDistanceInches = 3;
+  public double midConeBackupDistanceInches;
+  public double loadBackupDistanceInches;
 
   GenericEntry highCubeDistanceWidget;
   GenericEntry midCubeDistanceWidget;
@@ -220,7 +220,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
     highCubeBackupDistanceInches = highCubeDistanceWidget.getDouble(0);
     midCubeBackupDistanceInches = midCubeDistanceWidget.getDouble(15);
-    midConeBackupDistanceInches = midCubeDistanceWidget.getDouble(12);
+    midConeBackupDistanceInches = midConeDistanceWidget.getDouble(12);
     loadBackupDistanceInches = loadBackupDistanceWidget.getDouble(3);
   }
 }

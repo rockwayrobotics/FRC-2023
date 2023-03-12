@@ -36,7 +36,7 @@ public class ShootSequence extends SequentialCommandGroup {
 
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kForward)));
         this.addCommands(new WaitCommand(0.4));
-        // this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kForward, DoubleSolenoid.Value.kForward)));
+        this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kForward, DoubleSolenoid.Value.kForward)));
         // Start driving here
         this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Green)));
         this.addCommands(new WaitCommand(.5));

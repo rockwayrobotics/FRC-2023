@@ -61,6 +61,8 @@ public class RobotContainer {
 
     AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "grey"));
 
+    m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kBrake);
+
     configureBindings();
   }
 
@@ -88,7 +90,7 @@ public class RobotContainer {
     aButton.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
     xButton.onTrue(new LoadPieceSequence(m_drivebase, m_shooter, m_led));
     xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
-    yButton.whileTrue(new BucketToZero(m_shooter, 0.2));
+    yButton.whileTrue(new BucketToZero(m_shooter, 0.8));
 
     SmartDashboard.putData("Bucket Forward", new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
     SmartDashboard.putData("Bucket Reverse", new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
