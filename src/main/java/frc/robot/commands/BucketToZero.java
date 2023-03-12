@@ -23,13 +23,13 @@ public class BucketToZero extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_subsystem.spinAngleMotor(-m_speed);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_subsystem.spinAngleMotor(-m_speed);
+  }
 
   // Called once the command ends or is interrupted.
   @Override

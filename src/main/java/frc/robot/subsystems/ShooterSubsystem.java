@@ -37,12 +37,23 @@ public class ShooterSubsystem extends SubsystemBase {
   RelativeEncoder m_angleEncoder = m_angleMotor.getEncoder();
   
   DigitalInput m_bottomLimit = new DigitalInput(Constants.Digital.SHOOTER_BOTTOM_LIMIT);
+
+
+  public double cubeAngleSetpoint;
+  public double coneAngleSetpoint;
+
+
+  GenericEntry cubeAngleWidget;
+  GenericEntry coneAngleWidget;
   
   public boolean angleLimitPressed = false;
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
-    
+    ShuffleboardTab dashboardTab = Shuffleboard.getTab("Dashboard");
+
+    cubeAngleWidget = dashboardTab.addPersistent("Cube angle", 266).withPosition(2,0).getEntry();
+    coneAngleWidget = dashboardTab.addPersistent("Cone angle", 419).withPosition(2,1).getEntry();
   }
 
   public void setBucketCylinders(Value cylinder1State, Value cylinder2State) {
@@ -87,11 +98,13 @@ public class ShooterSubsystem extends SubsystemBase {
     }
 
     SmartDashboard.putNumber("Encoder revolutions", getAngleEncoder());
+
+    cubeAngleSetpoint = cubeAngleWidget.getDouble(266);
+    coneAngleSetpoint = coneAngleWidget.getDouble(419);
   }
   
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
-
   }
 }

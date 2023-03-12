@@ -12,6 +12,7 @@ import frc.robot.commands.*;
 import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -31,6 +32,7 @@ enum AutoOption {
 
 public class RobotContainer {
   ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
+  ShuffleboardTab subsystemsDashboard = Shuffleboard.getTab("Subsystems");
 
   private final DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem();
 
@@ -57,7 +59,10 @@ public class RobotContainer {
 
     m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getRightX, m_drivebase));
 
-    dashboard.add(m_drivebase).withPosition(0, 5);
+    subsystemsDashboard.add(m_drivebase);
+    subsystemsDashboard.add(m_led);
+    subsystemsDashboard.add(m_camera);
+    subsystemsDashboard.add(m_shooter);
 
     AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "grey"));
 

@@ -4,13 +4,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
-public class ShotMoveDistance extends CommandBase {
+public class ShootMoveDistance extends CommandBase {
     
-    private DrivebaseSubsystem m_drivebase;
-    private double m_speed;
-    private double m_distance = 100;
+    private final DrivebaseSubsystem m_drivebase;
+    private final double m_speed;
+    private double m_distance;
 
-    public ShotMoveDistance(DrivebaseSubsystem subsystem, double speed) {
+    public ShootMoveDistance(DrivebaseSubsystem subsystem, double speed) {
 
         m_drivebase = subsystem;
         m_speed = speed;
@@ -39,7 +39,6 @@ public class ShotMoveDistance extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        SmartDashboard.putNumber("Auto Command Distance Travelled", m_drivebase.getRDistance());
         return (Math.abs(m_drivebase.getRDistance()) >= m_distance);
     }
 

@@ -4,10 +4,18 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.cscore.HttpCamera;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import frc.robot.Constants;
+import frc.robot.commands.autoSequences.BalanceRoutine;
+import frc.robot.commands.autoSequences.CommunityRoutine;
+import frc.robot.commands.autoSequences.LongDriveForwardAutoRoutine;
+import frc.robot.commands.autoSequences.ShortDriveForwardAutoRoutine;
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -19,6 +27,8 @@ import java.util.Map;
 
 public class CameraSubsystem extends SubsystemBase {
   public static PhotonCamera camera;
+
+  ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
 
   // TODO Rewrite to be more variable
   SuppliedValueWidget<Boolean> m_distanceWidget = Shuffleboard.getTab("Dashboard").addBoolean("TURN", this::getInDistance)
@@ -37,6 +47,11 @@ public class CameraSubsystem extends SubsystemBase {
 
   public CameraSubsystem() {
     camera = new PhotonCamera(Constants.Vision.camName);
+
+    dashboard.add("Distance", bestTargetX()).withPosition(4,3);
+    dashboard.add("Horizontal", bestTargetY()).withPosition(5,3);
+    dashboard.add("Skew", bestTargetSkew()).withPosition(6,3);
+    dashboard.add("Valid alliance target", getBestAllianceTarget() != null).withPosition(7, 3);
   }
 
   public List<PhotonTrackedTarget> getTargetList() {
@@ -45,6 +60,50 @@ public class CameraSubsystem extends SubsystemBase {
       return cameraResult.getTargets();
     } else {
       return null;
+    }
+  }
+
+  public PhotonTrackedTarget getBestAllianceTarget() {
+    PhotonPipelineResult cameraResult = camera.getLatestResult();
+    PhotonTrackedTarget myResult = null;
+
+    if(cameraResult.hasTargets()) {
+      if(DriverStation.getAlliance() == DriverStation.Alliance.Blue) {
+        switch (cameraResult.getBestTarget().getFiducialId()) {
+          case 4, 6, 7, 8 -> myResult = cameraResult.getBestTarget();
+        };
+      } else if(DriverStation.getAlliance() == DriverStation.Alliance.Red) {
+        switch (cameraResult.getBestTarget().getFiducialId()) {
+          case 1,2,3,4 -> myResult = cameraResult.getBestTarget();
+        };
+      }
+    }
+
+    return myResult;
+  }
+
+  public double bestTargetX() {
+    if(getBestAllianceTarget() != null) {
+      return getBestAllianceTarget().getBestCameraToTarget().getX();
+    } else {
+      return 0;
+    }
+  }
+
+  public double bestTargetY() {
+    if(getBestAllianceTarget() != null) {
+      return getBestAllianceTarget().getBestCameraToTarget().getY();
+    } else {
+      return 0;
+    }
+  }
+
+  public double bestTargetSkew() {
+    if(getBestAllianceTarget() != null) {
+      Transform3d targetTransform = getBestAllianceTarget().getBestCameraToTarget();
+      return Math.atan2(targetTransform.getX(), targetTransform.getY());
+    } else {
+      return 0;
     }
   }
 
@@ -59,7 +118,16 @@ public class CameraSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    if(getBestAllianceTarget() != null) {
+      Transform3d bestTarget = getBestAllianceTarget().getBestCameraToTarget();
+
+      double distance = bestTarget.getX();
+      double horizontalTranslation = bestTarget.getY();
+      double skew = Math.atan2(distance, horizontalTranslation);
+
+
+    }
+
   }
   
   @Override

@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -32,7 +31,8 @@ public class ShootSequence extends SequentialCommandGroup {
         this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
 
         // Take over drivebase
-        this.addCommands(new ShotMoveDistance(drivebase, .2));
+        this.addCommands(new ShootMoveDistance(drivebase, .2));
+
 
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kForward)));
         this.addCommands(new WaitCommand(0.4));
