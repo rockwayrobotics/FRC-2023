@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivebaseSubsystem;
@@ -9,16 +11,20 @@ public class ShootAngle extends CommandBase {
 
     private final ShooterSubsystem m_shooter;
     private final DrivebaseSubsystem m_drivebase;
-    private final double m_speed;
+    private double m_maxSpeed;
     private double m_distance;
 
-    public ShootAngle(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, double speed) {
+    private final PIDController pid;
 
+    public ShootAngle(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, double maxSpeed) {
         m_shooter = shooter;
         m_drivebase = drivebase;
-        m_speed = speed;
+        m_maxSpeed = maxSpeed;
     
         addRequirements(m_shooter);
+
+        pid = new PIDController(.02, 0, 0);
+        pid.setTolerance(10);
     }
 
     @Override
@@ -29,23 +35,26 @@ public class ShootAngle extends CommandBase {
         switch (m_drivebase.m_scoringTarget) {
             case HIGH_CUBE, MID_CUBE -> m_distance = m_shooter.cubeAngleSetpoint;
             case MID_CONE -> m_distance = m_shooter.coneAngleSetpoint;
-        };
+        };        
 
-        System.out.println("Angling: " + m_distance);
+        pid.setSetpoint(m_distance);
+        pid.reset();
     }
 
     @Override
     public void execute() {
-        if(m_shooter.getAngleEncoder() > m_distance) {
-            m_shooter.spinAngleMotor(m_speed);
-        } else if(m_shooter.getAngleEncoder() < m_distance) {
-            m_shooter.spinAngleMotor(-m_speed);
-        }
+        double currentAngle = m_shooter.getAngleEncoder();
+
+        double spinPower = pid.calculate(currentAngle);
+
+        spinPower = MathUtil.clamp(spinPower, -m_maxSpeed, m_maxSpeed);
+
+        m_shooter.spinAngleMotor(spinPower);
     }
 
     @Override
     public boolean isFinished() {
-        return (m_shooter.getAngleEncoder() == m_distance);
+        return pid.atSetpoint();
     }
 
     @Override

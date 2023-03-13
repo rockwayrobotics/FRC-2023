@@ -36,6 +36,8 @@ public class LedSubsystem extends SubsystemBase {
   }
 
   private void rainbow() {
+    // System.out.println("Rainbowing");
+
     // For every pixel
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       // Calculate the hue - hue is easier for rainbows because the color
@@ -107,6 +109,7 @@ public class LedSubsystem extends SubsystemBase {
 
   public void setMode(modes mode) {
     m_mode = mode;
+    System.out.println("Set LED to: " + mode);
   }
 
   @Override

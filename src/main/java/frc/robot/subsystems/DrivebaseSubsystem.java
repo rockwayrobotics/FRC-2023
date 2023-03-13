@@ -63,11 +63,15 @@ public class DrivebaseSubsystem extends SubsystemBase {
   public DrivebaseSubsystem() {
     m_leftDriveMotor1 = new CANSparkMax(Constants.CAN.LEFT_DRIVE_MOTOR_1, MotorType.kBrushless);
     m_leftDriveMotor2 = new CANSparkMax(Constants.CAN.LEFT_DRIVE_MOTOR_2, MotorType.kBrushless);
-    leftDrive = new MotorControllerGroup(m_leftDriveMotor1,m_leftDriveMotor2);
-    leftDrive.setInverted(Constants.Drive.LEFT_DRIVE_INVERTED);
-
     m_rightDriveMotor1 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_1, MotorType.kBrushless);
     m_rightDriveMotor2 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_2, MotorType.kBrushless);
+    m_leftDriveMotor1.restoreFactoryDefaults();
+    m_leftDriveMotor2.restoreFactoryDefaults();
+    m_rightDriveMotor1.restoreFactoryDefaults();
+    m_rightDriveMotor2.restoreFactoryDefaults();
+
+    leftDrive = new MotorControllerGroup(m_leftDriveMotor1,m_leftDriveMotor2);
+    leftDrive.setInverted(Constants.Drive.LEFT_DRIVE_INVERTED);
     rightDrive = new MotorControllerGroup(m_rightDriveMotor1, m_rightDriveMotor2);
     rightDrive.setInverted(Constants.Drive.RIGHT_DRIVE_INVERTED);
 
@@ -78,7 +82,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
     // when robot goes forward, left encoder spins positive and right encoder spins negative
     m_leftDriveEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
     m_rightDriveEncoder.setDistancePerPulse(Drive.DISTANCE_PER_ENCODER_PULSE);
-    m_rightDriveEncoder.setReverseDirection(true);
+    m_leftDriveEncoder.setReverseDirection(Constants.Drive.LEFT_DRIVE_INVERTED);
+    m_rightDriveEncoder.setReverseDirection(Constants.Drive.RIGHT_DRIVE_INVERTED);
     m_leftDriveEncoder.reset();
     m_rightDriveEncoder.reset();
 
@@ -146,11 +151,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
   /**
    * Sets the speed of the drivebase.
    * @param speed Linear speed of drivetrain. -1 is full backwards, 1 is full forwards.
-   * @param rotation Rotation speed. -1 is full left, 1 is full right.
+   * @param rotation Rotation speed. -1 is full clockwise, 1 is full counterclockwise.
    */
   public void set(double speed, double rotation) {
-    m_speed = speed;
-    m_rotation = rotation;
+    m_drive.curvatureDrive(m_speed*m_scale, m_rotation*m_scale, true);
   }
 
   /**
@@ -209,13 +213,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    m_drive.curvatureDrive(m_speed*m_scale, m_rotation*m_scale, true);
-    // System.out.println(m_gyro.getPitch() + " pitch");
-    //  System.out.println(mP0_gyro.getRoll() + " roll");
-
-    SmartDashboard.putNumber("Gyro roll", getRoll());
-    SmartDashboard.putNumber("Gyro Yaw", getYaw());
-
     m_scoringTarget = m_scoringSelector.getSelected();
 
     highCubeBackupDistanceInches = highCubeDistanceWidget.getDouble(0);
