@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -30,6 +31,9 @@ public class CameraSubsystem extends SubsystemBase {
 
   ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
 
+  HttpCamera rawCamera = new HttpCamera(Constants.Vision.camName + " - Raw", "http://10.80.89.3:1181/stream.mjpg");
+  HttpCamera processedCamera = new HttpCamera(Constants.Vision.camName + " - Processed", "http://10.80.89.3:1182/stream.mjpg");
+
   // TODO Rewrite to be more variable
   SuppliedValueWidget<Boolean> m_distanceWidget = Shuffleboard.getTab("Dashboard").addBoolean("TURN", this::getInDistance)
           .withWidget(BuiltInWidgets.kBooleanBox)
@@ -46,6 +50,10 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public CameraSubsystem() {
+    CameraServer.addCamera(rawCamera);
+    CameraServer.addCamera(processedCamera);
+    dashboard.add(rawCamera).withPosition(4, 0).withSize(3, 3);
+
     camera = new PhotonCamera(Constants.Vision.camName);
 
     dashboard.add("Distance", bestTargetX()).withPosition(4,3);
