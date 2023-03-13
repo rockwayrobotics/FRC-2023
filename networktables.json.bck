@@ -1,0 +1,74 @@
+[
+  {
+    "name": "/Shuffleboard/Tuning/Balance kP",
+    "type": "double",
+    "value": 0.04,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Tuning/Balance kD",
+    "type": "double",
+    "value": 0.025,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Dashboard/High Cube Distance (inch)",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Dashboard/Mid Cube Distance (inch)",
+    "type": "double",
+    "value": 15.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Dashboard/Mid Cone Distance (inch)",
+    "type": "double",
+    "value": 12.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Dashboard/Pickup Distance (inch)",
+    "type": "double",
+    "value": 3.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Dashboard/Cube angle",
+    "type": "double",
+    "value": 266.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Dashboard/Cone angle",
+    "type": "double",
+    "value": 419.0,
+    "properties": {
+      "persistent": true
+    }
+  },
+  {
+    "name": "/Shuffleboard/Dashboard/Eject angle",
+    "type": "double",
+    "value": 0.0,
+    "properties": {
+      "persistent": true
+    }
+  }
+]

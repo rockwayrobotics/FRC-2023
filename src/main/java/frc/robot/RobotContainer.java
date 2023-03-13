@@ -84,7 +84,8 @@ public class RobotContainer {
     final JoystickButton backButton = new JoystickButton(m_driverController, XboxController.Button.kBack.value);
 
     final JoystickButton operator_aButton = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
-    final JoystickButton operator_bButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+    final JoystickButton operator_bButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
+    final JoystickButton operator_yButton = new JoystickButton(m_operatorController, XboxController.Button.kY.value); 
 
     rightBumper.onTrue(new InstantCommand(() -> m_drivebase.setScale(Constants.Drive.SLOMODE_SCALE)));
     rightBumper.onFalse(new InstantCommand(() -> m_drivebase.setScale(1)));
@@ -99,7 +100,9 @@ public class RobotContainer {
     bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, 0.5));
 
     operator_aButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8));
-
+    operator_bButton.whileTrue(new EjectAngle(m_drivebase, m_shooter, .8));
+    operator_yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
+    
     SmartDashboard.putData("Set to Mid Cone", new InstantCommand(() -> m_drivebase.setShot(ScoringTarget.MID_CONE)));
     SmartDashboard.putData("Set to Mid Cube", new InstantCommand(() -> m_drivebase.setShot(ScoringTarget.MID_CUBE)));
     SmartDashboard.putData("Set to High Cube", new InstantCommand(() -> m_drivebase.setShot(ScoringTarget.HIGH_CUBE)));

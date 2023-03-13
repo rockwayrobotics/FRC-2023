@@ -88,5 +88,6 @@ public final class Constants {
         MID_CUBE,
         HIGH_CUBE,
         MID_CONE,
+        EJECT_ANGLE
     }
 }

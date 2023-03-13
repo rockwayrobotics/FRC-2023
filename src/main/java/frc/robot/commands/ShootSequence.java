@@ -33,7 +33,7 @@ public class ShootSequence extends SequentialCommandGroup {
         // Take over drivebase
         this.addCommands(new ShootMoveDistance(drivebase, .2));
 
-
+        this.addCommands(new ShootAngle(m_drivebase, m_shooter, 0.5));
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kForward)));
         this.addCommands(new WaitCommand(0.4));
         this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kForward, DoubleSolenoid.Value.kForward)));
@@ -43,5 +43,6 @@ public class ShootSequence extends SequentialCommandGroup {
         this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kReverse, DoubleSolenoid.Value.kReverse)));
         this.addCommands(new WaitCommand(1));
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kReverse)));
+        this.addCommands(new BucketToZero(m_shooter, 0.5));
     }
 }
