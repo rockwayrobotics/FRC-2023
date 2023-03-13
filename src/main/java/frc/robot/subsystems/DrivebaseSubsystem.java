@@ -65,10 +65,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
     m_leftDriveMotor2 = new CANSparkMax(Constants.CAN.LEFT_DRIVE_MOTOR_2, MotorType.kBrushless);
     m_rightDriveMotor1 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_1, MotorType.kBrushless);
     m_rightDriveMotor2 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_2, MotorType.kBrushless);
-    m_leftDriveMotor1.restoreFactoryDefaults();
-    m_leftDriveMotor2.restoreFactoryDefaults();
-    m_rightDriveMotor1.restoreFactoryDefaults();
-    m_rightDriveMotor2.restoreFactoryDefaults();
+    // m_leftDriveMotor1.restoreFactoryDefaults();
+    // m_leftDriveMotor2.restoreFactoryDefaults();
+    // m_rightDriveMotor1.restoreFactoryDefaults();
+    // m_rightDriveMotor2.restoreFactoryDefaults();
 
     leftDrive = new MotorControllerGroup(m_leftDriveMotor1,m_leftDriveMotor2);
     leftDrive.setInverted(Constants.Drive.LEFT_DRIVE_INVERTED);
@@ -154,7 +154,8 @@ public class DrivebaseSubsystem extends SubsystemBase {
    * @param rotation Rotation speed. -1 is full clockwise, 1 is full counterclockwise.
    */
   public void set(double speed, double rotation) {
-    m_drive.curvatureDrive(m_speed*m_scale, m_rotation*m_scale, true);
+    System.out.println("Setting: " + speed*m_scale + " ROTATION: " + rotation*m_scale);
+    m_drive.curvatureDrive(speed*m_scale, rotation*m_scale, true);
   }
 
   /**

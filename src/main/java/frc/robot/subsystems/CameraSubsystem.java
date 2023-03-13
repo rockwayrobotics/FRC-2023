@@ -118,7 +118,8 @@ public class CameraSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    if(getBestAllianceTarget() != null) {
+    PhotonTrackedTarget myTarget = getBestAllianceTarget();
+    if(myTarget != null) {
       Transform3d bestTarget = getBestAllianceTarget().getBestCameraToTarget();
 
       double distance = bestTarget.getX();
