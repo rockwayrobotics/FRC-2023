@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ScoringTarget;
 import frc.robot.commands.*;
 import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
@@ -40,7 +41,8 @@ public class RobotContainer {
 
   private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
-  private final XboxController m_xboxController = new XboxController(Constants.Gamepads.XBOX);
+  private final XboxController m_driverController = new XboxController(Constants.Gamepads.DRIVER);
+  private final XboxController m_operatorController = new XboxController(Constants.Gamepads.OPERATOR);
 
   private final CameraSubsystem m_camera = new CameraSubsystem();
 
@@ -57,7 +59,7 @@ public class RobotContainer {
     m_autoChooser.addOption("Drive forward - Long", AutoOption.LongDriveForward);
     dashboard.add("Auto Routine", m_autoChooser).withSize(2, 1).withPosition(8, 0);
 
-    m_drivebase.setDefaultCommand(new DriveCommand(m_xboxController::getLeftY, m_xboxController::getRightX, m_drivebase));
+    m_drivebase.setDefaultCommand(new DriveCommand(m_driverController::getLeftY, m_driverController::getRightX, m_drivebase));
 
     subsystemsDashboard.add(m_drivebase);
     subsystemsDashboard.add(m_led);
@@ -72,31 +74,38 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    final JoystickButton rightBumper = new JoystickButton(m_xboxController, XboxController.Button.kLeftBumper.value);
-    final JoystickButton leftBumper = new JoystickButton(m_xboxController, XboxController.Button.kLeftBumper.value);
-    final JoystickButton aButton = new JoystickButton(m_xboxController, XboxController.Button.kA.value);
-    final JoystickButton bButton = new JoystickButton(m_xboxController, XboxController.Button.kB.value);
-    final JoystickButton xButton = new JoystickButton(m_xboxController, XboxController.Button.kX.value);
-    final JoystickButton yButton = new JoystickButton(m_xboxController, XboxController.Button.kY.value);
-    final JoystickButton startButton = new JoystickButton(m_xboxController, XboxController.Button.kStart.value);
-    final JoystickButton backButton = new JoystickButton(m_xboxController, XboxController.Button.kBack.value);
+    final JoystickButton rightBumper = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+    final JoystickButton leftBumper = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+    final JoystickButton aButton = new JoystickButton(m_driverController, XboxController.Button.kA.value);
+    final JoystickButton bButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
+    final JoystickButton xButton = new JoystickButton(m_driverController, XboxController.Button.kX.value);
+    final JoystickButton yButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
+    final JoystickButton startButton = new JoystickButton(m_driverController, XboxController.Button.kStart.value);
+    final JoystickButton backButton = new JoystickButton(m_driverController, XboxController.Button.kBack.value);
+
+    final JoystickButton operator_aButton = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
+    final JoystickButton operator_bButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);
+    final JoystickButton operator_yButton = new JoystickButton(m_operatorController, XboxController.Button.kY.value); 
 
     rightBumper.onTrue(new InstantCommand(() -> m_drivebase.setScale(Constants.Drive.SLOMODE_SCALE)));
     rightBumper.onFalse(new InstantCommand(() -> m_drivebase.setScale(1)));
     leftBumper.onTrue(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kCoast)));
     leftBumper.onFalse(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kBrake)));
-    // aButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
-    // bButton.onTrue(new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));
-    // xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
-    // yButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
 
     // TODO Write eject sequence
-    // TODO Write angle to 45 code
     aButton.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
     xButton.onTrue(new LoadPieceSequence(m_drivebase, m_shooter, m_led));
     xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
     yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
     bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, 0.5));
+
+    operator_aButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8));
+    operator_bButton.whileTrue(new EjectAngle(m_drivebase, m_shooter, .8));
+    operator_yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
+    
+    SmartDashboard.putData("Set to Mid Cone", new InstantCommand(() -> m_drivebase.setShot(ScoringTarget.MID_CONE)));
+    SmartDashboard.putData("Set to Mid Cube", new InstantCommand(() -> m_drivebase.setShot(ScoringTarget.MID_CUBE)));
+    SmartDashboard.putData("Set to High Cube", new InstantCommand(() -> m_drivebase.setShot(ScoringTarget.HIGH_CUBE)));
 
     SmartDashboard.putData("Bucket Forward", new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kForward, Value.kForward)));
     SmartDashboard.putData("Bucket Reverse", new InstantCommand(() -> m_shooter.setBucketCylinders(Value.kReverse, Value.kReverse)));

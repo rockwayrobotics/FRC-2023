@@ -1,0 +1,21 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Dashboard/Auto Routine": "String Chooser",
+      "/Shuffleboard/Dashboard/Scoring selector": "String Chooser",
+      "/Shuffleboard/Subsystems/CameraSubsystem": "Subsystem",
+      "/Shuffleboard/Subsystems/DrivebaseSubsystem": "Subsystem",
+      "/Shuffleboard/Subsystems/LedSubsystem": "Subsystem",
+      "/Shuffleboard/Subsystems/ShooterSubsystem": "Subsystem",
+      "/SmartDashboard/Bucket Forward": "Command",
+      "/SmartDashboard/Bucket Reverse": "Command",
+      "/SmartDashboard/Flap Forward": "Command",
+      "/SmartDashboard/Flap Reverse": "Command",
+      "/SmartDashboard/Set to High Cube": "Command",
+      "/SmartDashboard/Set to Mid Cone": "Command",
+      "/SmartDashboard/Set to Mid Cube": "Command",
+      "/SmartDashboard/Shoot Sequence": "Command"
+    }
+  }
+}

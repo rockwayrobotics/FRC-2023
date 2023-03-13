@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
-  XboxController m_XboxController = new XboxController(0);
+  XboxController m_DriverController = new XboxController(Constants.Gamepads.DRIVER);
 
   Compressor m_compressor = new Compressor(Constants.CAN.PNEUMATIC_HUB, PneumaticsModuleType.REVPH);
 
@@ -41,10 +41,12 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public double cubeAngleSetpoint;
   public double coneAngleSetpoint;
+  public double ejectAngleSetpoint;
 
 
   GenericEntry cubeAngleWidget;
   GenericEntry coneAngleWidget;
+  GenericEntry ejectAngleWidget;
   
   public boolean angleLimitPressed = false;
 
@@ -52,8 +54,9 @@ public class ShooterSubsystem extends SubsystemBase {
   public ShooterSubsystem() {
     ShuffleboardTab dashboardTab = Shuffleboard.getTab("Dashboard");
 
-    cubeAngleWidget = dashboardTab.addPersistent("Cube angle", 266).withPosition(2,0).getEntry();
-    coneAngleWidget = dashboardTab.addPersistent("Cone angle", 419).withPosition(2,1).getEntry();
+    cubeAngleWidget = dashboardTab.addPersistent("Cube angle", 266).withPosition(2,2).getEntry();
+    coneAngleWidget = dashboardTab.addPersistent("Cone angle", 419).withPosition(3,2).getEntry();
+    ejectAngleWidget = dashboardTab.addPersistent("Eject angle", 0).withPosition(2,3).getEntry();
   }
 
   public void setBucketCylinders(Value cylinder1State, Value cylinder2State) {
@@ -89,10 +92,10 @@ public class ShooterSubsystem extends SubsystemBase {
       setAngleEncoderPosition(0);
     }
 
-    if(m_XboxController.getRightTriggerAxis() > 0) {
-      spinAngleMotor(m_XboxController.getRightTriggerAxis());
-    } else if(m_XboxController.getLeftTriggerAxis() > 0) {
-      spinAngleMotor(-m_XboxController.getLeftTriggerAxis());
+    if(m_DriverController.getRightTriggerAxis() > 0) {
+      spinAngleMotor(m_DriverController.getRightTriggerAxis());
+    } else if(m_DriverController.getLeftTriggerAxis() > 0) {
+      spinAngleMotor(-m_DriverController.getLeftTriggerAxis());
     } else {
       spinAngleMotor(0);
     }
@@ -101,6 +104,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
     cubeAngleSetpoint = cubeAngleWidget.getDouble(266);
     coneAngleSetpoint = coneAngleWidget.getDouble(419);
+    ejectAngleSetpoint = ejectAngleWidget.getDouble(0);
   }
   
   @Override

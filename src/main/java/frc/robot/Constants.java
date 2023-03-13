@@ -17,7 +17,8 @@ public final class Constants {
 
     // Motor controller IDs, defined from DriverStation
     public static final class Gamepads {
-        public static final int XBOX = 0;
+        public static final int DRIVER = 0;
+        public static final int OPERATOR = 1;
     }
 
     // CAN IDs for motor controllers
@@ -87,5 +88,6 @@ public final class Constants {
         MID_CUBE,
         HIGH_CUBE,
         MID_CONE,
+        EJECT_ANGLE
     }
 }
