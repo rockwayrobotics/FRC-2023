@@ -5,7 +5,9 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.GenericEntry;
+import edu.wpi.first.networktables.StringEntry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
 import frc.robot.Constants;
 import frc.robot.Constants.Drive;
+import frc.robot.Constants.ScoringTarget;
 
 public class DrivebaseSubsystem extends SubsystemBase {
   MotorControllerGroup leftDrive;
@@ -55,9 +58,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
   GenericEntry midConeDistanceWidget;
   GenericEntry loadBackupDistanceWidget;
 
+  GenericEntry selectedShotWidget;
+
   public Constants.ScoringTarget m_scoringTarget;
 
   SendableChooser<Constants.ScoringTarget> m_scoringSelector;
+
+  Constants.ScoringTarget shotToHit = ScoringTarget.HIGH_CUBE;
 
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem() {
@@ -104,6 +111,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     midCubeDistanceWidget =  dashboardTab.addPersistent("Mid Cube Distance (inch)", 15).withPosition(0, 1).withSize(2, 1).getEntry();
     midConeDistanceWidget = dashboardTab.addPersistent("Mid Cone Distance (inch)", 12).withPosition(2, 1).withSize(2, 1).getEntry();
     loadBackupDistanceWidget = dashboardTab.addPersistent("Pickup Distance (inch)", 3).withPosition(0,3).withSize(2,1).getEntry();
+    selectedShotWidget = dashboardTab.add("Selected shot", "High Cube").withPosition(0, 2).withSize(2,1).getEntry();
   }
 
   public void calibrateGyro() {
@@ -211,8 +219,18 @@ public class DrivebaseSubsystem extends SubsystemBase {
     m_rightDriveEncoder.reset();
   }
 
+  public void setShot(Constants.ScoringTarget shotToSet) {
+    shotToHit = shotToSet;
+  }
+
   @Override
   public void periodic() {
+    switch(shotToHit) {
+      case HIGH_CUBE -> selectedShotWidget.setValue("High Cube");
+      case MID_CUBE -> selectedShotWidget.setValue("Mid Cube");
+      case MID_CONE -> selectedShotWidget.setValue("Mid Cone");
+    }
+
     m_scoringTarget = m_scoringSelector.getSelected();
 
     highCubeBackupDistanceInches = highCubeDistanceWidget.getDouble(0);

@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
-  XboxController m_XboxController = new XboxController(0);
+  XboxController m_DriverController = new XboxController(Constants.Gamepads.DRIVER);
 
   Compressor m_compressor = new Compressor(Constants.CAN.PNEUMATIC_HUB, PneumaticsModuleType.REVPH);
 
@@ -89,10 +89,10 @@ public class ShooterSubsystem extends SubsystemBase {
       setAngleEncoderPosition(0);
     }
 
-    if(m_XboxController.getRightTriggerAxis() > 0) {
-      spinAngleMotor(m_XboxController.getRightTriggerAxis());
-    } else if(m_XboxController.getLeftTriggerAxis() > 0) {
-      spinAngleMotor(-m_XboxController.getLeftTriggerAxis());
+    if(m_DriverController.getRightTriggerAxis() > 0) {
+      spinAngleMotor(m_DriverController.getRightTriggerAxis());
+    } else if(m_DriverController.getLeftTriggerAxis() > 0) {
+      spinAngleMotor(-m_DriverController.getLeftTriggerAxis());
     } else {
       spinAngleMotor(0);
     }
