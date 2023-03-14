@@ -14,12 +14,14 @@ import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import java.util.Map;
@@ -82,6 +84,10 @@ public class RobotContainer {
     final JoystickButton yButton = new JoystickButton(m_driverController, XboxController.Button.kY.value);
     final JoystickButton startButton = new JoystickButton(m_driverController, XboxController.Button.kStart.value);
     final JoystickButton backButton = new JoystickButton(m_driverController, XboxController.Button.kBack.value);
+
+    
+
+    // final Button dpadUp = new Button(() -> {return m_driverController.getPOV() == 0});
 
     final JoystickButton operator_aButton = new JoystickButton(m_operatorController, XboxController.Button.kA.value);
     final JoystickButton operator_bButton = new JoystickButton(m_operatorController, XboxController.Button.kB.value);

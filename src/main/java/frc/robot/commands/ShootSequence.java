@@ -2,9 +2,11 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.LED.modes;
 import frc.robot.subsystems.DrivebaseSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -31,7 +33,8 @@ public class ShootSequence extends SequentialCommandGroup {
         this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
 
         // Take over drivebase
-        this.addCommands(new ShootMoveDistance(drivebase, .2));
+        //this.addCommands((new ProxyCommand(new ShootMoveDistance(drivebase, 0.2))));
+        //this.addCommands(new ShootMoveDistance(drivebase, .2));
 
         this.addCommands(new ShootAngle(m_drivebase, m_shooter, 0.5));
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kForward)));
@@ -44,5 +47,6 @@ public class ShootSequence extends SequentialCommandGroup {
         this.addCommands(new WaitCommand(1));
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kReverse)));
         this.addCommands(new BucketToZero(m_shooter, 0.5));
+        this.addCommands(new InstantCommand(() -> m_led.setMode(modes.Rainbow)));
     }
 }

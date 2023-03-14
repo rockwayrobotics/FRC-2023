@@ -128,7 +128,7 @@ public class CameraSubsystem extends SubsystemBase {
   public void periodic() {
     PhotonTrackedTarget myTarget = getBestAllianceTarget();
     if(myTarget != null) {
-      Transform3d bestTarget = getBestAllianceTarget().getBestCameraToTarget();
+      Transform3d bestTarget = myTarget.getBestCameraToTarget();
 
       double distance = bestTarget.getX();
       double horizontalTranslation = bestTarget.getY();

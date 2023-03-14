@@ -69,7 +69,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void spinAngleMotor(double speed) {
-    if (angleLimitPressed && speed < 0){
+    if (angleLimitPressed && Math.abs(speed) < 0){
       m_angleMotor.set(0);
     } else {
       m_angleMotor.set(speed);
@@ -87,18 +87,19 @@ public class ShooterSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    angleLimitPressed = !m_bottomLimit.get();
+    // System.out.println("Angle limit: " + m_bottomLimit.get());
+    angleLimitPressed = !m_bottomLimit.get(); // Switch reads false when pressed
     if (angleLimitPressed){
       setAngleEncoderPosition(0);
     }
 
-    if(m_DriverController.getRightTriggerAxis() > 0) {
-      spinAngleMotor(m_DriverController.getRightTriggerAxis());
-    } else if(m_DriverController.getLeftTriggerAxis() > 0) {
-      spinAngleMotor(-m_DriverController.getLeftTriggerAxis());
-    } else {
-      spinAngleMotor(0);
-    }
+    // if(m_DriverController.getRightTriggerAxis() > 0) {
+    //   spinAngleMotor(m_DriverController.getRightTriggerAxis());
+    // } else if(m_DriverController.getLeftTriggerAxis() > 0) {
+    //   spinAngleMotor(-m_DriverController.getLeftTriggerAxis());
+    // } else {
+    //   spinAngleMotor(0);
+    // }
 
     SmartDashboard.putNumber("Encoder revolutions", getAngleEncoder());
 

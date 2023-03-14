@@ -37,19 +37,19 @@ public class DriveCommand extends CommandBase {
 
         // Up is negative on joystick. When we push the stick up, we want the robot to move in a positive direction, so we invert it here.
         // Right is positive on the joystick. When we push the stick right, we want the robot to rotate clockwise (a negative direction), so we invert it here. 
-        if(Math.abs(m_left_y.getAsDouble()) < 0.05) {
+        if(Math.abs(m_left_y.getAsDouble()) < 0.1) {
             speed = 0;
         } else {
             speed = m_left_y.getAsDouble();
         }
 
-        if(Math.abs(m_right_x.getAsDouble()) < 0.05) {
+        if(Math.abs(m_right_x.getAsDouble()) < 0.1) {
             rotation = 0;
         } else {
             rotation = m_right_x.getAsDouble();
         }
         
-        m_DrivebaseSubsystem.set(speed, -rotation*0.76);
+        m_DrivebaseSubsystem.set(-speed, -rotation*0.76);
 
         SmartDashboard.putNumber("Y", m_left_y.getAsDouble());
         SmartDashboard.putNumber("X", m_right_x.getAsDouble());

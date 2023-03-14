@@ -27,7 +27,7 @@ public class LoadPieceSequence extends SequentialCommandGroup {
         m_shooter = shooter;
         m_led = led;
 
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
 
         this.addCommands(new LoadMoveDistance(m_drivebase,.2));
 
