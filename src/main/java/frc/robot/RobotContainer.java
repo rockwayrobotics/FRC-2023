@@ -98,13 +98,13 @@ public class RobotContainer {
     final JoystickButton operator_lButton = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value); 
     final JoystickButton operator_rButton = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value); 
     
-    rightBumper.onTrue(new InstantCommand(() -> m_drivebase.setScale(Constants.Drive.SLOMODE_SCALE)));
-    rightBumper.onFalse(new InstantCommand(() -> m_drivebase.setScale(1)));
+    aButton.onTrue(new InstantCommand(() -> m_drivebase.setScale(Constants.Drive.SLOMODE_SCALE)));
+    aButton.onFalse(new InstantCommand(() -> m_drivebase.setScale(1)));
     leftBumper.onTrue(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kCoast)));
     leftBumper.onFalse(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kBrake)));
 
     // TODO Write eject sequence
-    aButton.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
+    rightBumper.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
     xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
     xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
     yButton.whileTrue(new BucketToZero(m_shooter, 0.5));

@@ -15,6 +15,7 @@ public class ShootAngle extends CommandBase {
     private double m_maxSpeed;
     private double m_distance;
     private ScoringTarget targetAngle;
+    private ScoringTarget m_angle;
 
     private final PIDController pid;
 
@@ -22,6 +23,7 @@ public class ShootAngle extends CommandBase {
         m_shooter = shooter;
         m_drivebase = drivebase;
         m_maxSpeed = maxSpeed;
+        m_angle = targetAngle;
     
         addRequirements(m_shooter);
 
@@ -34,7 +36,7 @@ public class ShootAngle extends CommandBase {
         // Resets encoder values to default
         m_drivebase.resetEncoders();
         
-        switch (targetAngle) {
+        switch (m_angle) {
             case HIGH_CUBE, MID_CUBE -> m_distance = m_shooter.cubeAngleSetpoint;
             case MID_CONE -> m_distance = m_shooter.coneAngleSetpoint;
         };        
