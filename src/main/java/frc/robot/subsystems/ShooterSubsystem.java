@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
+import frc.robot.Constants.Angle;
 
 public class ShooterSubsystem extends SubsystemBase {
   XboxController m_DriverController = new XboxController(Constants.Gamepads.DRIVER);
@@ -84,6 +85,25 @@ public class ShooterSubsystem extends SubsystemBase {
     m_angleEncoder.setPosition(position);
   }
 
+  public double cosine_law(double angle, double a, double b){
+    return Math.sqrt(Math.pow(a,2) + Math.pow(b,2) - (2 * a * b * Math.cos(angle)));
+  }
+
+  public double get_angle_cosine_law(double a, double b, double c){
+    return Math.acos((Math.pow(a,2) + Math.pow(b,2) - Math.pow(c,2)) / (2 * a * b));
+  }
+
+  public double check_angle(){
+    double encode = getAngleEncoder();
+    double length = encode * Math.pow(Angle.ANGLE_RATIO, -1);
+    return get_angle_cosine_law(Angle.PIVOT_DISTANCE, Angle.LINKAGE_RADIUS, length);
+  }
+
+  public double angleToEncoder(double angle){
+    double desired_length_change = cosine_law(angle - Angle.STARTING_ANGLE, Angle.PIVOT_DISTANCE, Angle.LINKAGE_RADIUS) - Angle.STARTING_ANGLE;
+    return desired_length_change * Angle.ANGLE_RATIO;
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -102,6 +122,7 @@ public class ShooterSubsystem extends SubsystemBase {
     // }
 
     SmartDashboard.putNumber("Encoder revolutions", getAngleEncoder());
+    SmartDashboard.putNumber("Current Angle", check_angle());
 
     cubeAngleSetpoint = cubeAngleWidget.getDouble(266);
     coneAngleSetpoint = coneAngleWidget.getDouble(419);

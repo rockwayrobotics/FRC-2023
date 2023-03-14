@@ -90,4 +90,25 @@ public final class Constants {
         MID_CONE,
         EJECT_ANGLE
     }
+    
+    public static final class Angle {
+        //Ratios
+        //motor rotations to encoder ticks (encoder ticks : rotations)
+        public static final double MOTOR_ENCODER_RATIO = 1/1;
+        // screw rotations : motor rotations (rotations : rotations)
+        public static final double MOTOR_SCREW_RATIO = 1/1;
+        //change in screw rotation : length (rotations : cm)
+        public static final double SCREW_ROTATIONS_TO_LENGTH_RATIO = 1/1;
+        //condensed ratios (cm : encoder ticks)
+        public static final double ANGLE_RATIO = SCREW_ROTATIONS_TO_LENGTH_RATIO * MOTOR_SCREW_RATIO * MOTOR_ENCODER_RATIO;
+        //Dimensions For Starting Stat
+        //angle the robot is in in its zeroed state
+        public static final double STARTING_ANGLE = 0;
+        //radius from the pivot point of the arm to the point of linkage between the screw and arm
+        public static final double LINKAGE_RADIUS = 0;
+        //distance between the pivot points of the arm and the screw
+        public static final double PIVOT_DISTANCE = 0;
+        //starting length of the screw
+        public static final double SCREW_STARING_LENGTH = 0;
+    }
 }
