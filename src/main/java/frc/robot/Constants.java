@@ -60,7 +60,12 @@ public final class Constants {
             Purple,
             Bi,
             Trans,
-            Rainbow
+            Rainbow,
+            RedGreenBreatheGradient,
+            SingleRedDot,
+            Enby,
+            AroAce,
+            BuildingRedDot
           }
     }
 

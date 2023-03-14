@@ -17,6 +17,8 @@ public class LedSubsystem extends SubsystemBase {
   private AddressableLEDBuffer m_ledBuffer;
   private int m_rainbowFirstPixelHue;
   private modes m_mode;
+  private int counter;
+  private int counter2;
 
   public LedSubsystem(
     int m_ledInt,
@@ -33,6 +35,43 @@ public class LedSubsystem extends SubsystemBase {
 
     m_mode = modes.Rainbow;
 
+  }
+
+  private double gradient_helper(double value, boolean invert){
+    double sin_wave = Math.sin(Math.PI * 2 * counter / 255);
+    if (invert){
+      return (value + (-sin_wave * 255));
+    }
+    else{
+      return (value + (sin_wave * 255));
+    }
+  }
+
+  private void red_green_breathe_gradient() {
+    for (int i = 0; i < m_ledBuffer.getLength(); i++){
+      double r = gradient_helper(i, false);
+      double g = 255 - gradient_helper(i, true);
+      double b = 0;
+      m_ledBuffer.setRGB(i, (int)r, (int)g, (int)b);
+    }
+    counter++;
+  }
+
+  private void single_red_dot(){
+    for (int i = 0; i < m_ledBuffer.getLength(); i++){
+      double r = 0;
+      if (i == counter % m_ledBuffer.getLength()){
+        r = 255;
+      }
+      double g = 0;
+      double b = 0;
+      m_ledBuffer.setRGB(i, (int)r, (int)g, (int)b);
+    }
+    counter++;
+  }
+
+  private void building_red_dots(){
+    //TODO: Implement
   }
 
   private void rainbow() {
@@ -94,6 +133,36 @@ public class LedSubsystem extends SubsystemBase {
     }
   }
 
+  private void nonbinaryFlag() {
+    for (var i = 0; i < Math.round((m_ledBuffer.getLength()/3)); i++) {
+      m_ledBuffer.setRGB(i, 255, 255, 0);
+    }
+    for (var i = Math.round((m_ledBuffer.getLength()/3)); i < Math.round((m_ledBuffer.getLength()/5)*3); i++) {
+      m_ledBuffer.setRGB(i, 192, 192, 192);
+    }
+    for (var i = Math.round((m_ledBuffer.getLength()/3)); i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 0, 53, 196);
+    }
+  }
+
+  private void aroaceFlag(){
+      for (var i = 0; i < Math.round((m_ledBuffer.getLength()/5)); i++) {
+        m_ledBuffer.setRGB(i, 255, 150, 0);
+      }
+      for(var i = 0; i < Math.round(m_ledBuffer.getLength() / 5); i++){
+        m_ledBuffer.setRGB(i, 255, 200, 0);
+      }
+      for (var i = Math.round((m_ledBuffer.getLength()/5)); i < Math.round((m_ledBuffer.getLength()/5)*3); i++) {
+        m_ledBuffer.setRGB(i, 192, 192, 192);
+      }
+      for(var i = 0; i < Math.round(m_ledBuffer.getLength() / 5); i++){
+        m_ledBuffer.setRGB(i, 0, 170, 255);
+      }
+      for (var i = Math.round((m_ledBuffer.getLength()/5)); i < m_ledBuffer.getLength(); i++) {
+        m_ledBuffer.setRGB(i, 0, 50, 255);
+      }
+  }
+
   private void transFlag() {
     for (var i = 0; i < 12; i++) {
       m_ledBuffer.setRGB(i, 51, 147, 240);
@@ -115,6 +184,8 @@ public class LedSubsystem extends SubsystemBase {
 
   public void setMode(modes mode) {
     m_mode = mode;
+    counter = 0;
+    counter2 = 0;
     System.out.println("Set LED to: " + mode);
   }
 
@@ -143,6 +214,18 @@ public class LedSubsystem extends SubsystemBase {
         case Trans:
             transFlag();
             break;
+        case RedGreenBreatheGradient:
+          red_green_breathe_gradient();
+          break;
+        case SingleRedDot:
+          single_red_dot();
+          break;
+        case Enby:
+          nonbinaryFlag();
+          break;
+        case AroAce:
+          aroaceFlag();
+          break;
         default:
             rainbow();
     }
