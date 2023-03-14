@@ -76,6 +76,12 @@ public class LedSubsystem extends SubsystemBase {
     }
   }
 
+  private void purple() {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 128, 0, 128);
+    }
+  }
+
   private void biFlag() {
     for (var i = 0; i < Math.round((m_ledBuffer.getLength()/5)*2); i++) {
       m_ledBuffer.setRGB(i, 215, 0, 113);
@@ -127,6 +133,9 @@ public class LedSubsystem extends SubsystemBase {
             break;
         case Yellow:
             yellow();
+            break;
+        case Purple:
+            purple();
             break;
         case Bi:
             biFlag();

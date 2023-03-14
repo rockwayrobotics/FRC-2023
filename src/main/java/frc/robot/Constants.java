@@ -57,6 +57,7 @@ public final class Constants {
             Red,
             Blue,
             Yellow,
+            Purple,
             Bi,
             Trans,
             Rainbow

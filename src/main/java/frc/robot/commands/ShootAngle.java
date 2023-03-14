@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ScoringTarget;
 import frc.robot.subsystems.DrivebaseSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -13,10 +14,11 @@ public class ShootAngle extends CommandBase {
     private final DrivebaseSubsystem m_drivebase;
     private double m_maxSpeed;
     private double m_distance;
+    private ScoringTarget targetAngle;
 
     private final PIDController pid;
 
-    public ShootAngle(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, double maxSpeed) {
+    public ShootAngle(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, double maxSpeed, ScoringTarget targetAngle) {
         m_shooter = shooter;
         m_drivebase = drivebase;
         m_maxSpeed = maxSpeed;
@@ -32,7 +34,7 @@ public class ShootAngle extends CommandBase {
         // Resets encoder values to default
         m_drivebase.resetEncoders();
         
-        switch (m_drivebase.m_scoringTarget) {
+        switch (targetAngle) {
             case HIGH_CUBE, MID_CUBE -> m_distance = m_shooter.cubeAngleSetpoint;
             case MID_CONE -> m_distance = m_shooter.coneAngleSetpoint;
         };        
