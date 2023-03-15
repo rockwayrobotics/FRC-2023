@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import frc.robot.Constants.LED.modes;
@@ -13,12 +15,35 @@ import frc.robot.Constants.LED.modes;
 public class LedSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
 
+  public class LED{
+    private int r;
+    private int b;
+    private int g;
+    public LED(int m_r, int m_b, int m_g){
+      r = m_r;
+      b = m_b;
+      g = m_g;
+    }
+
+    public int[] get_vals(){
+      int[] return_arr = {this.r, this.b, this.g};
+      return return_arr;
+    }
+  }
+
+  private void reset(){
+    for (int i=0; i < m_ledBuffer.getLength(); i++){
+      previous_led.add(new LED(0,0,0));
+    }
+  }
+
   private AddressableLED m_led;
   private AddressableLEDBuffer m_ledBuffer;
   private int m_rainbowFirstPixelHue;
   private modes m_mode;
   private int counter;
   private int counter2;
+  private ArrayList<LED> previous_led;
 
   public LedSubsystem(
     int m_ledInt,
@@ -69,6 +94,28 @@ public class LedSubsystem extends SubsystemBase {
     }
     counter++;
   }
+
+  private void apply_sequence(){
+    for (int i=0; i < m_ledBuffer.getLength(); i++){
+      LED current_led = previous_led.get(i);
+      int[] out = current_led.get_vals();
+      m_ledBuffer.setRGB(i, out[0], out[1], out[2]);
+    }
+    }
+
+  private void move_sequence(){
+    LED last_led = previous_led.get(previous_led.size() - 1);
+    previous_led.remove(previous_led.size() - 1);
+    previous_led.add(0, last_led);
+    apply_sequence();
+  }
+
+  private void gen_chasing_dots(){
+    previous_led.set((int)previous_led.size() / 2, new LED(0,255,0));
+    previous_led.set(0, new LED(255, 0, 0));
+  }
+
+
 
   private void building_red_dots(){
     //TODO: Implement
@@ -186,6 +233,13 @@ public class LedSubsystem extends SubsystemBase {
     m_mode = mode;
     counter = 0;
     counter2 = 0;
+    reset();
+    switch(m_mode) {
+      case ChasingDots :
+        gen_chasing_dots();
+      default :
+        reset();
+    }
     System.out.println("Set LED to: " + mode);
   }
 
@@ -225,6 +279,9 @@ public class LedSubsystem extends SubsystemBase {
           break;
         case AroAce:
           aroaceFlag();
+          break;
+        case ChasingDots:
+          move_sequence();
           break;
         default:
             rainbow();
