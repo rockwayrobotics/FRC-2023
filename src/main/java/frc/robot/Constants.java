@@ -65,7 +65,8 @@ public final class Constants {
             SingleRedDot,
             Enby,
             AroAce,
-            BuildingRedDot
+            BuildingRedDot,
+            ChasingDots
           }
     }
 
