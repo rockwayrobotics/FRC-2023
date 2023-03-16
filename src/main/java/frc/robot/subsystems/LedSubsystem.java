@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import frc.robot.Constants.LED_CONSTANTS;
 import frc.robot.Constants.LED.modes;
 
 public class LedSubsystem extends SubsystemBase {
@@ -43,7 +44,8 @@ public class LedSubsystem extends SubsystemBase {
   private modes m_mode;
   private int counter;
   private int counter2;
-  private ArrayList<LED> previous_led = new ArrayList<LED>() ;
+  private ArrayList<LED> previous_led = new ArrayList<LED>();
+  private ArrayList<LED> full_sequence = new ArrayList<LED>();
 
   public LedSubsystem(
     int m_ledInt,
@@ -109,9 +111,35 @@ public class LedSubsystem extends SubsystemBase {
     apply_sequence();
   }
 
+  private void move_sequence_from_full(){
+    int endpoint = counter + m_ledBuffer.getLength();
+    if (endpoint >= full_sequence.size()){
+      previous_led = (ArrayList<LED>)full_sequence.subList(counter, full_sequence.size() - 1);
+      previous_led.addAll(previous_led.size() - 1, full_sequence.subList(0, endpoint - full_sequence.size()));
+    }
+    else{
+      previous_led = (ArrayList<LED>)full_sequence.subList(counter, counter + m_ledBuffer.getLength());
+    }
+    apply_sequence();
+  }
+
   private void gen_chasing_dots(){
     previous_led.set((int)previous_led.size() / 2, new LED(0,255,0));
     previous_led.set(0, new LED(255, 0, 0));
+  }
+
+  private void gen_pi_sequence(){
+    String[] pi_arr = LED_CONSTANTS.PI_STRING.split(" ", 0);
+    for (int i=0; i < m_ledBuffer.getLength(); i++){
+      full_sequence.add(new LED(0,0,0));
+    }
+    for (String digit: pi_arr){
+      for (int i=0; i < Integer.valueOf(digit); i++){
+        full_sequence.add(new LED(0,255,0));
+      }
+      full_sequence.add(new LED(0,0,0));
+    }
+    full_sequence.remove(full_sequence.size() - 1);
   }
 
 
@@ -232,10 +260,14 @@ public class LedSubsystem extends SubsystemBase {
     m_mode = mode;
     counter = 0;
     counter2 = 0;
-    reset();
+    full_sequence = new ArrayList<LED>();
     switch(m_mode) {
       case ChasingDots :
         gen_chasing_dots();
+        reset();
+      case PiSequence :
+        gen_pi_sequence();
+        reset();
       default :
         reset();
     }
@@ -281,6 +313,9 @@ public class LedSubsystem extends SubsystemBase {
           break;
         case ChasingDots:
           move_sequence();
+          break;
+        case PiSequence:
+          move_sequence_from_full();
           break;
         default:
             rainbow();

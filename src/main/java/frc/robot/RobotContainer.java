@@ -105,11 +105,16 @@ public class RobotContainer {
     leftBumper.onTrue(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kCoast)));
     leftBumper.onFalse(new InstantCommand(() -> m_drivebase.setDrivebaseIdle(CANSparkMax.IdleMode.kBrake)));
 
-    // TODO Write eject sequence
-    rightBumper.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
-    xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
-    xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
-    yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
+    // // TODO Write eject sequence
+    // rightBumper.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
+    // xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
+    // xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
+    // yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
+    bButton.onTrue(new InstantCommand(() -> m_led.setMode(modes.RedGreenBreatheGradient)));
+    aButton.onTrue(new InstantCommand(() -> m_led.setMode(modes.SingleRedDot)));
+    xButton.onTrue(new InstantCommand(() -> m_led.setMode(modes.ChasingDots)));
+    yButton.onTrue(new InstantCommand(() -> m_led.setMode(modes.PiSequence)));
+
     // bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, 0.5));
 
     operator_aButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8, m_shooter.m_ScoringMode));
