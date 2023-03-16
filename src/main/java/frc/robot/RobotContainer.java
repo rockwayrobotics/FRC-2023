@@ -55,7 +55,7 @@ public class RobotContainer {
   SimpleWidget AutoFailedWidget = dashboard.add("Auto status", false).withPosition(7, 0);
 
   public RobotContainer() {
-    m_led.setMode(Constants.LED.modes.Rainbow);
+    // m_led.setMode(Constants.LED.modes.Rainbow);
 
     m_autoChooser.setDefaultOption("Auto Balance", AutoOption.AutoBalance);
     m_autoChooser.addOption("Auto Balance - No Return", AutoOption.AutoBalanceNoReturn);

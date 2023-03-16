@@ -48,7 +48,7 @@ public class LedSubsystem extends SubsystemBase {
   private int counter2;
   private ArrayList<LED> previous_led = new ArrayList<LED>();
   private ArrayList<LED> full_sequence = new ArrayList<LED>();
-  private modes[] possible_patterns = {modes.SingleRedDot, modes.ChasingDots, modes.Rainbow, modes.PiSequence, modes.RedGreenBreatheGradient}
+  private modes[] possible_patterns = {modes.SingleRedDot, modes.ChasingDots, modes.Rainbow, modes.PiSequence, modes.RedGreenBreatheGradient};
 
   public LedSubsystem(
     int m_ledInt,
@@ -63,7 +63,9 @@ public class LedSubsystem extends SubsystemBase {
 
     m_led.start();
 
-    m_mode = pick_random_pattern();
+    setMode(pick_random_pattern());
+
+    // m_mode = pick_random_pattern();
   }
 
   private double gradient_helper(double value, boolean invert){
@@ -117,18 +119,27 @@ public class LedSubsystem extends SubsystemBase {
   private void move_sequence_from_full(){
     int endpoint = counter % full_sequence.size() + m_ledBuffer.getLength();
     if (endpoint >= full_sequence.size()){
-      previous_led = (ArrayList<LED>)full_sequence.subList(counter, full_sequence.size() - 1);
-      previous_led.addAll(previous_led.size() - 1, full_sequence.subList(0, endpoint % full_sequence.size()));
+      // previous_led = (ArrayList<LED>)full_sequence.subList(counter, full_sequence.size() - 1);
+      for (LED led : full_sequence.subList(counter, full_sequence.size() - 1) ){
+        previous_led.add(led);
+      }
+      for (LED led :  full_sequence.subList(0, endpoint % full_sequence.size())){
+        previous_led.add(led);
+      }
+      // previous_led.addAll(previous_led.size() - 1, full_sequence.subList(0, endpoint % full_sequence.size()));
     }
     else{
-      previous_led = (ArrayList<LED>)full_sequence.subList(counter, counter + m_ledBuffer.getLength());
+      // previous_led = (ArrayList<LED>)full_sequence.subList(counter, counter + m_ledBuffer.getLength());
+      for (LED led : full_sequence.subList(counter, counter + m_ledBuffer.getLength())){
+        previous_led.add(led);
+      }
     }
     apply_sequence();
   }
 
 
   private void gen_chasing_dots(){
-    previous_led.set((int)previous_led.size() / 2, new LED(0,255,0));
+    previous_led.set((int)m_ledBuffer.getLength() / 2, new LED(0,255,0));
     previous_led.set(0, new LED(255, 0, 0));
   }
 
@@ -296,11 +307,18 @@ public class LedSubsystem extends SubsystemBase {
   }
 
   private int get_rand_number(int min, int max){
-    return (int) ((Math.random() * (max - min) + min));
+    var myNumber = (int) ((Math.random() * (max - min) + min));
+    System.out.println("random number selected: " + myNumber);
+
+    return myNumber;
   }
 
   public modes pick_random_pattern(){
-    return possible_patterns[get_rand_number(0, possible_patterns.length - 1)];
+    var myPattern = possible_patterns[get_rand_number(0, possible_patterns.length - 1)];
+
+    System.out.println("Selected pattern: " + myPattern);
+
+    return myPattern;
   }
 
   public void setMode(modes mode) {
@@ -310,17 +328,17 @@ public class LedSubsystem extends SubsystemBase {
     full_sequence = new ArrayList<LED>();
     switch(m_mode) {
       case ChasingDots :
+        reset();
         gen_chasing_dots();
-        reset();
       case PiSequence :
+        reset();
         gen_pi_sequence();
-        reset();
       case ExcitingMonochromeM :
+        reset();
         exciting_monochrome("m");
-        reset();
       case ExcitingMonochromeY :
-        exciting_monochrome("y");
         reset();
+        exciting_monochrome("y");
       default :
         reset();
     }
