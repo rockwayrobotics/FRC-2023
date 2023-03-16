@@ -48,6 +48,7 @@ public class LedSubsystem extends SubsystemBase {
   private int counter2;
   private ArrayList<LED> previous_led = new ArrayList<LED>();
   private ArrayList<LED> full_sequence = new ArrayList<LED>();
+  private modes[] possible_patterns = {modes.SingleRedDot, modes.ChasingDots, modes.Rainbow, modes.PiSequence, modes.RedGreenBreatheGradient}
 
   public LedSubsystem(
     int m_ledInt,
@@ -62,7 +63,7 @@ public class LedSubsystem extends SubsystemBase {
 
     m_led.start();
 
-    m_mode = modes.Rainbow;
+    m_mode = pick_random_pattern();
   }
 
   private double gradient_helper(double value, boolean invert){
@@ -294,6 +295,13 @@ public class LedSubsystem extends SubsystemBase {
     }
   }
 
+  private int get_rand_number(int min, int max){
+    return (int) ((Math.random() * (max - min) + min));
+  }
+
+  public modes pick_random_pattern(){
+    return possible_patterns[get_rand_number(0, possible_patterns.length - 1)];
+  }
 
   public void setMode(modes mode) {
     m_mode = mode;
