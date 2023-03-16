@@ -112,11 +112,11 @@ public class RobotContainer {
     yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
     // bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, 0.5));
 
-    operator_aButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8, m_shooter.m_ScoringMode));
+    operator_aButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, 1));
     // operator_bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8, Constants.ScoringTarget.MID_CONE));
     operator_yButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CONE)).andThen(new InstantCommand(() -> m_led.setMode(modes.Yellow))));
     operator_xButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CUBE)).andThen(new InstantCommand(() -> m_led.setMode(modes.Purple))));
-    operator_leftBumper.onTrue(new BucketToZero(m_shooter, 0.8));
+    operator_leftBumper.whileTrue(new BucketToZero(m_shooter, 1));
     // operator_xButton.onTrue
     // operator_startButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
     // operator_backButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Purple)));

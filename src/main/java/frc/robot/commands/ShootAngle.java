@@ -17,15 +17,13 @@ public class ShootAngle extends CommandBase {
     private double m_distance;
     // private ScoringTarget targetAngle;
     // private ScoringTarget m_angle;
-    private ScoringMode m_ScoringMode;
 
     private final PIDController pid;
 
-    public ShootAngle(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, double maxSpeed, ScoringMode scoringMode) {
+    public ShootAngle(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, double maxSpeed) {
         m_shooter = shooter;
         m_drivebase = drivebase;
         m_maxSpeed = maxSpeed;
-        m_ScoringMode = scoringMode;
     
         addRequirements(m_shooter);
 
@@ -37,11 +35,11 @@ public class ShootAngle extends CommandBase {
     public void initialize() {
         // Resets encoder values to default
         m_drivebase.resetEncoders();
-        
-        switch (m_ScoringMode) {
+
+        switch (m_shooter.m_ScoringMode) {
             case CUBE -> m_distance = m_shooter.cubeAngleSetpoint;
             case CONE -> m_distance = m_shooter.coneAngleSetpoint;
-        };        
+        };   
 
         pid.setSetpoint(m_distance);
         pid.reset();
@@ -49,6 +47,8 @@ public class ShootAngle extends CommandBase {
 
     @Override
     public void execute() {
+
+
         double currentAngle = m_shooter.getAngleEncoder();
 
         double spinPower = pid.calculate(currentAngle);
