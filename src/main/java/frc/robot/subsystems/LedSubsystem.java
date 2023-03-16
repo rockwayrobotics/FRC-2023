@@ -35,9 +35,12 @@ public class LedSubsystem extends SubsystemBase {
   }
 
   private void reset(){
+    // previous_led = new ArrayList<LED>();
+    System.out.println(previous_led.size());
     for (int i=0; i < m_ledBuffer.getLength(); i++){
       previous_led.add(new LED(0,0,0));
     }
+    System.out.println(previous_led.size());
   }
 
   private AddressableLED m_led;
@@ -114,6 +117,12 @@ public class LedSubsystem extends SubsystemBase {
     previous_led.remove(previous_led.size() - 1);
     previous_led.add(0, last_led);
     apply_sequence();
+    // System.out.println();
+    // for (int i=0; i < previous_led.size(); i++){
+    //   System.out.print(previous_led.get(i).r + ",");
+    // }
+    // System.out.print("\n");
+    System.out.println(previous_led.size());
   }
 
   private void move_sequence_from_full(){
@@ -135,12 +144,22 @@ public class LedSubsystem extends SubsystemBase {
       }
     }
     apply_sequence();
+    System.out.println(previous_led);
   }
 
 
   private void gen_chasing_dots(){
-    previous_led.set((int)m_ledBuffer.getLength() / 2, new LED(0,255,0));
-    previous_led.set(0, new LED(255, 0, 0));
+    LED red = new LED(255,0,0);
+    LED green = new LED(0,255,0);
+    LED blue = new LED(0,0,255);
+    int spacing = ((int)m_ledBuffer.getLength() / 6);
+    // previous_led.set((int)m_ledBuffer.getLength() / 2, new LED(0,255,0));
+    previous_led.set(0, red);
+    previous_led.set(spacing * 1, green);
+    previous_led.set(spacing * 2, blue);
+    previous_led.set(spacing * 3, red);
+    previous_led.set(spacing * 4, green);
+    previous_led.set(spacing * 5, blue);
   }
 
   private void gen_pi_sequence(){
@@ -326,21 +345,19 @@ public class LedSubsystem extends SubsystemBase {
     counter = 0;
     counter2 = 0;
     full_sequence = new ArrayList<LED>();
+    previous_led = new ArrayList<LED>();
+    reset();
     switch(m_mode) {
       case ChasingDots :
-        reset();
         gen_chasing_dots();
       case PiSequence :
-        reset();
         gen_pi_sequence();
       case ExcitingMonochromeM :
-        reset();
         exciting_monochrome("m");
       case ExcitingMonochromeY :
-        reset();
         exciting_monochrome("y");
       default :
-        reset();
+        break;
     }
     System.out.println("Set LED to: " + mode);
   }

@@ -111,7 +111,7 @@ public class RobotContainer {
     // xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
     // yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
     bButton.onTrue(new InstantCommand(() -> m_led.setMode(modes.RedGreenBreatheGradient)));
-    aButton.onTrue(new InstantCommand(() -> m_led.setMode(modes.SingleRedDot)));
+    aButton.onTrue(new InstantCommand(() -> m_led.setMode(modes.ExcitingMonochromeM)));
     xButton.onTrue(new InstantCommand(() -> m_led.setMode(modes.ChasingDots)));
     yButton.onTrue(new InstantCommand(() -> m_led.setMode(modes.PiSequence)));
 
