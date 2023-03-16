@@ -8,7 +8,9 @@ import com.revrobotics.CANSparkMax;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ScoringMode;
 import frc.robot.Constants.ScoringTarget;
+import frc.robot.Constants.LED.modes;
 import frc.robot.commands.*;
 import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
@@ -95,8 +97,8 @@ public class RobotContainer {
     final JoystickButton operator_yButton = new JoystickButton(m_operatorController, XboxController.Button.kY.value); 
     final JoystickButton operator_startButton = new JoystickButton(m_operatorController, XboxController.Button.kStart.value); 
     final JoystickButton operator_backButton = new JoystickButton(m_operatorController, XboxController.Button.kBack.value); 
-    final JoystickButton operator_lButton = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value); 
-    final JoystickButton operator_rButton = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value); 
+    final JoystickButton operator_leftBumper = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value); 
+    final JoystickButton operator_rightBumper = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value); 
     
     aButton.onTrue(new InstantCommand(() -> m_drivebase.setScale(Constants.Drive.SLOMODE_SCALE)));
     aButton.onFalse(new InstantCommand(() -> m_drivebase.setScale(1)));
@@ -110,14 +112,16 @@ public class RobotContainer {
     yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
     // bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, 0.5));
 
-    operator_aButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8, Constants.ScoringTarget.MID_CUBE));
-    operator_bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8, Constants.ScoringTarget.MID_CONE));
-    operator_yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
+    operator_aButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8, m_shooter.m_ScoringMode));
+    // operator_bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8, Constants.ScoringTarget.MID_CONE));
+    operator_yButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CONE)).andThen(new InstantCommand(() -> m_led.setMode(modes.Yellow))));
+    operator_xButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CUBE)).andThen(new InstantCommand(() -> m_led.setMode(modes.Purple))));
+    operator_leftBumper.onTrue(new BucketToZero(m_shooter, 0.8));
     // operator_xButton.onTrue
-    operator_startButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
-    operator_backButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Purple)));
-    operator_lButton.onTrue(new DriveDistance(m_drivebase, 0.2, -1));
-    operator_rButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));
+    // operator_startButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
+    // operator_backButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Purple)));
+    // operator_lButton.onTrue(new DriveDistance(m_drivebase, 0.2, -1));
+    // operator_rButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));
     
     
     SmartDashboard.putData("Set to Mid Cone", new InstantCommand(() -> m_drivebase.setShot(ScoringTarget.MID_CONE)));

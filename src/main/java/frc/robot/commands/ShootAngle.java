@@ -4,6 +4,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants.ScoringMode;
 import frc.robot.Constants.ScoringTarget;
 import frc.robot.subsystems.DrivebaseSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -14,16 +15,17 @@ public class ShootAngle extends CommandBase {
     private final DrivebaseSubsystem m_drivebase;
     private double m_maxSpeed;
     private double m_distance;
-    private ScoringTarget targetAngle;
-    private ScoringTarget m_angle;
+    // private ScoringTarget targetAngle;
+    // private ScoringTarget m_angle;
+    private ScoringMode m_ScoringMode;
 
     private final PIDController pid;
 
-    public ShootAngle(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, double maxSpeed, ScoringTarget targetAngle) {
+    public ShootAngle(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, double maxSpeed, ScoringMode scoringMode) {
         m_shooter = shooter;
         m_drivebase = drivebase;
         m_maxSpeed = maxSpeed;
-        m_angle = targetAngle;
+        m_ScoringMode = scoringMode;
     
         addRequirements(m_shooter);
 
@@ -36,9 +38,9 @@ public class ShootAngle extends CommandBase {
         // Resets encoder values to default
         m_drivebase.resetEncoders();
         
-        switch (m_angle) {
-            case HIGH_CUBE, MID_CUBE -> m_distance = m_shooter.cubeAngleSetpoint;
-            case MID_CONE -> m_distance = m_shooter.coneAngleSetpoint;
+        switch (m_ScoringMode) {
+            case CUBE -> m_distance = m_shooter.cubeAngleSetpoint;
+            case CONE -> m_distance = m_shooter.coneAngleSetpoint;
         };        
 
         pid.setSetpoint(m_distance);

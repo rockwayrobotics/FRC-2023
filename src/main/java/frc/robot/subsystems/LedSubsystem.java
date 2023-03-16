@@ -43,7 +43,7 @@ public class LedSubsystem extends SubsystemBase {
   private modes m_mode;
   private int counter;
   private int counter2;
-  private ArrayList<LED> previous_led;
+  private ArrayList<LED> previous_led = new ArrayList<LED>() ;
 
   public LedSubsystem(
     int m_ledInt,
@@ -59,7 +59,6 @@ public class LedSubsystem extends SubsystemBase {
     m_led.start();
 
     m_mode = modes.Rainbow;
-
   }
 
   private double gradient_helper(double value, boolean invert){

@@ -97,4 +97,9 @@ public final class Constants {
         MID_CONE,
         EJECT_ANGLE
     }
+
+    public enum ScoringMode {
+        CUBE,
+        CONE
+    }
 }

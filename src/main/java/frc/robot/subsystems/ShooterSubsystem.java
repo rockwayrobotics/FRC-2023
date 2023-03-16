@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -23,6 +25,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
 import frc.robot.Constants;
+import frc.robot.Constants.ScoringMode;
 
 public class ShooterSubsystem extends SubsystemBase {
   XboxController m_DriverController = new XboxController(Constants.Gamepads.DRIVER);
@@ -38,6 +41,8 @@ public class ShooterSubsystem extends SubsystemBase {
   
   DigitalInput m_bottomLimit = new DigitalInput(Constants.Digital.SHOOTER_BOTTOM_LIMIT);
 
+  public ScoringMode m_ScoringMode = ScoringMode.CUBE;
+
 
   public double cubeAngleSetpoint;
   public double coneAngleSetpoint;
@@ -47,6 +52,7 @@ public class ShooterSubsystem extends SubsystemBase {
   GenericEntry cubeAngleWidget;
   GenericEntry coneAngleWidget;
   GenericEntry ejectAngleWidget;
+  SimpleWidget selectedModeColourWidget;
   
   public boolean angleLimitPressed = false;
 
@@ -57,6 +63,8 @@ public class ShooterSubsystem extends SubsystemBase {
     cubeAngleWidget = dashboardTab.addPersistent("Cube angle", 266).withPosition(2,2).getEntry();
     coneAngleWidget = dashboardTab.addPersistent("Cone angle", 419).withPosition(3,2).getEntry();
     ejectAngleWidget = dashboardTab.addPersistent("Eject angle", 0).withPosition(2,3).getEntry();
+
+    selectedModeColourWidget = dashboardTab.add("Selected mode", false).withPosition(0, 0);
   }
 
   public void setBucketCylinders(Value cylinder1State, Value cylinder2State) {
@@ -84,8 +92,17 @@ public class ShooterSubsystem extends SubsystemBase {
     m_angleEncoder.setPosition(position);
   }
 
+  public void setScoringMode(ScoringMode mode) {
+    m_ScoringMode = mode;
+  }
+
   @Override
   public void periodic() {
+    switch(m_ScoringMode) {
+      case CUBE -> selectedModeColourWidget.withProperties(Map.of("colorWhenFalse", "purple"));
+      case CONE -> selectedModeColourWidget.withProperties(Map.of("colorWhenFalse", "yellow"));
+    }
+    
     // This method will be called once per scheduler run
     // System.out.println("Angle limit: " + m_bottomLimit.get());
     angleLimitPressed = !m_bottomLimit.get(); // Switch reads false when pressed

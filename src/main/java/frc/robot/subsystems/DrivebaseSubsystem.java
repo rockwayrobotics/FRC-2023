@@ -53,16 +53,16 @@ public class DrivebaseSubsystem extends SubsystemBase {
   public double midConeBackupDistanceInches;
   public double loadBackupDistanceInches;
 
-  GenericEntry highCubeDistanceWidget;
-  GenericEntry midCubeDistanceWidget;
-  GenericEntry midConeDistanceWidget;
-  GenericEntry loadBackupDistanceWidget;
+  // GenericEntry highCubeDistanceWidget;
+  // GenericEntry midCubeDistanceWidget;
+  // GenericEntry midConeDistanceWidget;
+  // GenericEntry loadBackupDistanceWidget;
 
   GenericEntry selectedShotWidget;
 
   public Constants.ScoringTarget m_scoringTarget;
 
-  SendableChooser<Constants.ScoringTarget> m_scoringSelector;
+  // SendableChooser<Constants.ScoringTarget> m_scoringSelector;
 
   Constants.ScoringTarget shotToHit = ScoringTarget.HIGH_CUBE;
 
@@ -99,18 +99,18 @@ public class DrivebaseSubsystem extends SubsystemBase {
     tuningTab.addPersistent("Balance kP", balance_kP).withPosition(0,0);
     tuningTab.addPersistent("Balance kD", balance_kD).withPosition(1,0);
 
-    m_scoringSelector = new SendableChooser<Constants.ScoringTarget>();
-    m_scoringSelector.setDefaultOption("High Cube", Constants.ScoringTarget.HIGH_CUBE);
-    m_scoringSelector.addOption("Mid Cube", Constants.ScoringTarget.MID_CUBE);
-    m_scoringSelector.addOption("Mid Cone", Constants.ScoringTarget.MID_CONE);
+    // m_scoringSelector = new SendableChooser<Constants.ScoringTarget>();
+    // m_scoringSelector.setDefaultOption("High Cube", Constants.ScoringTarget.HIGH_CUBE);
+    // m_scoringSelector.addOption("Mid Cube", Constants.ScoringTarget.MID_CUBE);
+    // m_scoringSelector.addOption("Mid Cone", Constants.ScoringTarget.MID_CONE);
 
     ShuffleboardTab dashboardTab = Shuffleboard.getTab("Dashboard");
 
-    dashboardTab.add("Scoring selector", m_scoringSelector).withSize(2,1).withPosition(0, 0);
-    highCubeDistanceWidget = dashboardTab.addPersistent("High Cube Distance (inch)", 0).withPosition(2, 0).withSize(2, 1).getEntry();
-    midCubeDistanceWidget =  dashboardTab.addPersistent("Mid Cube Distance (inch)", 15).withPosition(0, 1).withSize(2, 1).getEntry();
-    midConeDistanceWidget = dashboardTab.addPersistent("Mid Cone Distance (inch)", 12).withPosition(2, 1).withSize(2, 1).getEntry();
-    loadBackupDistanceWidget = dashboardTab.addPersistent("Pickup Distance (inch)", 3).withPosition(0,3).withSize(2,1).getEntry();
+    // dashboardTab.add("Scoring selector", m_scoringSelector).withSize(2,1).withPosition(0, 0);
+    // highCubeDistanceWidget = dashboardTab.addPersistent("High Cube Distance (inch)", 0).withPosition(2, 0).withSize(2, 1).getEntry();
+    // midCubeDistanceWidget =  dashboardTab.addPersistent("Mid Cube Distance (inch)", 15).withPosition(0, 1).withSize(2, 1).getEntry();
+    // midConeDistanceWidget = dashboardTab.addPersistent("Mid Cone Distance (inch)", 12).withPosition(2, 1).withSize(2, 1).getEntry();
+    // loadBackupDistanceWidget = dashboardTab.addPersistent("Pickup Distance (inch)", 3).withPosition(0,3).withSize(2,1).getEntry();
     selectedShotWidget = dashboardTab.add("Selected shot", "High Cube").withPosition(0, 2).withSize(2,1).getEntry();
   }
 
@@ -231,11 +231,11 @@ public class DrivebaseSubsystem extends SubsystemBase {
       case MID_CONE -> selectedShotWidget.setValue("Mid Cone");
     }
 
-    m_scoringTarget = m_scoringSelector.getSelected();
+    // m_scoringTarget = m_scoringSelector.getSelected();
 
-    highCubeBackupDistanceInches = highCubeDistanceWidget.getDouble(0);
-    midCubeBackupDistanceInches = midCubeDistanceWidget.getDouble(15);
-    midConeBackupDistanceInches = midConeDistanceWidget.getDouble(12);
-    loadBackupDistanceInches = loadBackupDistanceWidget.getDouble(3);
+    // highCubeBackupDistanceInches = highCubeDistanceWidget.getDouble(0);
+    // midCubeBackupDistanceInches = midCubeDistanceWidget.getDouble(15);
+    // midConeBackupDistanceInches = midConeDistanceWidget.getDouble(12);
+    // loadBackupDistanceInches = loadBackupDistanceWidget.getDouble(3);
   }
 }

@@ -7,6 +7,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -29,15 +30,20 @@ import java.util.Map;
 public class CameraSubsystem extends SubsystemBase {
   public static PhotonCamera camera;
 
+  GenericEntry tagDistanceEntry;
+  GenericEntry tagHorizontalEntry;
+  GenericEntry tagSkewEntry;
+  GenericEntry validAllianceTargetEntry;
+
   ShuffleboardTab dashboard = Shuffleboard.getTab("Dashboard");
 
-  HttpCamera rawCamera = new HttpCamera(Constants.Vision.camName + " - Raw", "http://10.80.89.3:1181/stream.mjpg");
-  HttpCamera processedCamera = new HttpCamera(Constants.Vision.camName + " - Processed", "http://10.80.89.3:1182/stream.mjpg");
+  // HttpCamera rawCamera = new HttpCamera(Constants.Vision.camName + " - Raw", "http://10.80.89.3:1181/stream.mjpg");
+  // HttpCamera processedCamera = new HttpCamera(Constants.Vision.camName + " - Processed", "http://10.80.89.3:1182/stream.mjpg");
 
-  // TODO Rewrite to be more variable
-  SuppliedValueWidget<Boolean> m_distanceWidget = Shuffleboard.getTab("Dashboard").addBoolean("TURN", this::getInDistance)
-          .withWidget(BuiltInWidgets.kBooleanBox)
-          .withProperties(Map.of("colorWhenFalse", "red", "colorWhenTrue", "green"));
+  // // TODO Rewrite to be more variable
+  // SuppliedValueWidget<Boolean> m_distanceWidget = Shuffleboard.getTab("Dashboard").addBoolean("TURN", this::getInDistance)
+  //         .withWidget(BuiltInWidgets.kBooleanBox)
+  //         .withProperties(Map.of("colorWhenFalse", "red", "colorWhenTrue", "green"));
 
   boolean getInDistance() {
 //    System.out.println("Updating");
@@ -50,16 +56,16 @@ public class CameraSubsystem extends SubsystemBase {
   }
 
   public CameraSubsystem() {
-    CameraServer.addCamera(rawCamera);
-    CameraServer.addCamera(processedCamera);
-    dashboard.add(rawCamera).withPosition(4, 0).withSize(3, 3);
+    // CameraServer.addCamera(rawCamera);
+    // CameraServer.addCamera(processedCamera);
+    // dashboard.add(rawCamera).withPosition(4, 0).withSize(3, 3);
 
     camera = new PhotonCamera(Constants.Vision.camName);
 
-    dashboard.add("Distance", bestTargetX()).withPosition(4,3);
-    dashboard.add("Horizontal", bestTargetY()).withPosition(5,3);
-    dashboard.add("Skew", bestTargetSkew()).withPosition(6,3);
-    dashboard.add("Valid alliance target", getBestAllianceTarget() != null).withPosition(7, 3);
+    tagDistanceEntry =  dashboard.add("Distance", bestTargetX()).withPosition(4,3).getEntry();
+    tagHorizontalEntry =  dashboard.add("Horizontal", bestTargetY()).withPosition(5,3).getEntry();
+    tagSkewEntry = dashboard.add("Skew", bestTargetSkew()).withPosition(6,3).getEntry();
+    validAllianceTargetEntry = dashboard.add("Valid alliance target", getBestAllianceTarget() != null).withPosition(7, 3).getEntry();
   }
 
   public List<PhotonTrackedTarget> getTargetList() {
@@ -126,17 +132,26 @@ public class CameraSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    double distance = 0;
+    double horizontalTranslation = 0;
+    double skew = 0;
+
     PhotonTrackedTarget myTarget = getBestAllianceTarget();
     if(myTarget != null) {
+      validAllianceTargetEntry.setBoolean(true);
+
       Transform3d bestTarget = myTarget.getBestCameraToTarget();
 
-      double distance = bestTarget.getX();
-      double horizontalTranslation = bestTarget.getY();
-      double skew = Math.atan2(distance, horizontalTranslation);
-
-
+      distance = bestTarget.getX();
+      horizontalTranslation = bestTarget.getY();
+      skew = Math.atan2(distance, horizontalTranslation);
+    } else {
+      validAllianceTargetEntry.setBoolean(false);
     }
 
+    tagDistanceEntry.setDouble(distance);
+    tagHorizontalEntry.setDouble(horizontalTranslation);
+    tagSkewEntry.setDouble(skew);
   }
   
   @Override
