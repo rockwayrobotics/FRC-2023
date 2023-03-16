@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.random.*;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -112,16 +114,17 @@ public class LedSubsystem extends SubsystemBase {
   }
 
   private void move_sequence_from_full(){
-    int endpoint = counter + m_ledBuffer.getLength();
+    int endpoint = counter % full_sequence.size() + m_ledBuffer.getLength();
     if (endpoint >= full_sequence.size()){
       previous_led = (ArrayList<LED>)full_sequence.subList(counter, full_sequence.size() - 1);
-      previous_led.addAll(previous_led.size() - 1, full_sequence.subList(0, endpoint - full_sequence.size()));
+      previous_led.addAll(previous_led.size() - 1, full_sequence.subList(0, endpoint % full_sequence.size()));
     }
     else{
       previous_led = (ArrayList<LED>)full_sequence.subList(counter, counter + m_ledBuffer.getLength());
     }
     apply_sequence();
   }
+
 
   private void gen_chasing_dots(){
     previous_led.set((int)previous_led.size() / 2, new LED(0,255,0));
@@ -140,6 +143,42 @@ public class LedSubsystem extends SubsystemBase {
       full_sequence.add(new LED(0,0,0));
     }
     full_sequence.remove(full_sequence.size() - 1);
+  }
+
+  private void exciting_monochrome(String color){
+    LED base_led;
+    switch (color) {
+      case "r" :
+        base_led = new LED(255,0,0);
+      case "b" :
+        base_led = new LED(0, 255, 0);
+      case "g" :
+       base_led = new LED(0, 0, 255);
+      case "y" :
+        base_led = new LED(255, 255, 0);
+      case "c" :
+        base_led = new LED(0, 255, 255);
+      case "m" :
+        base_led = new LED(255, 0, 255);
+      case "w" :
+        base_led = new LED(255, 255, 255);
+      default :
+        base_led = new LED(255,255,255);
+    for (int i=255; i >= 100; i--){
+      LED current_led = base_led;
+      full_sequence.add(current_led);
+      if (base_led.r != 0){
+        base_led.r--;
+      }
+      if (base_led.g != 0){
+        base_led.g--;
+      }
+      if (base_led.b != 0){
+        base_led.b--;
+      }
+    }
+
+    }
   }
 
 
@@ -268,6 +307,12 @@ public class LedSubsystem extends SubsystemBase {
       case PiSequence :
         gen_pi_sequence();
         reset();
+      case ExcitingMonochromeM :
+        exciting_monochrome("m");
+        reset();
+      case ExcitingMonochromeY :
+        exciting_monochrome("y");
+        reset();
       default :
         reset();
     }
@@ -315,6 +360,15 @@ public class LedSubsystem extends SubsystemBase {
           move_sequence();
           break;
         case PiSequence:
+          move_sequence_from_full();
+          break;
+        case ExcitingMonochromeAny:
+          move_sequence_from_full();
+          break;
+        case ExcitingMonochromeM:
+          move_sequence_from_full();
+          break;
+        case ExcitingMonochromeY:
           move_sequence_from_full();
           break;
         default:

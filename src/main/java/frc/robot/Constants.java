@@ -71,7 +71,10 @@ public final class Constants {
             AroAce,
             BuildingRedDot,
             ChasingDots,
-            PiSequence
+            PiSequence,
+            ExcitingMonochromeAny,
+            ExcitingMonochromeY,
+            ExcitingMonochromeM
           }
     }
 
