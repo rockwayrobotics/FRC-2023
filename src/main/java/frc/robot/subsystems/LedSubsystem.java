@@ -47,11 +47,13 @@ public class LedSubsystem extends SubsystemBase {
   private AddressableLEDBuffer m_ledBuffer;
   private int m_rainbowFirstPixelHue;
   private modes m_mode;
+  private int m_pacer = 0;
   private int counter;
   private int counter2;
   private ArrayList<LED> previous_led = new ArrayList<LED>();
   private ArrayList<LED> full_sequence = new ArrayList<LED>();
-  private modes[] possible_patterns = {modes.SingleRedDot, modes.ChasingDots, modes.Rainbow, modes.PiSequence, modes.RedGreenBreatheGradient};
+  //private modes[] possible_patterns = {modes.SingleRedDot, modes.ChasingDots, modes.Rainbow, modes.PiSequence, modes.RedGreenBreatheGradient};
+  private modes[] possible_patterns = {modes.PiSequence};
 
   public LedSubsystem(
     int m_ledInt,
@@ -126,6 +128,7 @@ public class LedSubsystem extends SubsystemBase {
   }
 
   private void move_sequence_from_full(){
+    previous_led = new ArrayList<LED>();
     int endpoint = counter % full_sequence.size() + m_ledBuffer.getLength();
     if (endpoint >= full_sequence.size()){
       // previous_led = (ArrayList<LED>)full_sequence.subList(counter, full_sequence.size() - 1);
@@ -144,7 +147,7 @@ public class LedSubsystem extends SubsystemBase {
       }
     }
     apply_sequence();
-    System.out.println(previous_led);
+    counter++;
   }
 
 
