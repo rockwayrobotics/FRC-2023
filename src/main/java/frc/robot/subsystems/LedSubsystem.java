@@ -22,10 +22,12 @@ public class LedSubsystem extends SubsystemBase {
     private int r;
     private int b;
     private int g;
+    private boolean final_led;
     public LED(int m_r, int m_b, int m_g){
       r = m_r;
       b = m_b;
       g = m_g;
+      final_led = false;
     }
 
     public int[] get_vals(){
@@ -36,11 +38,9 @@ public class LedSubsystem extends SubsystemBase {
 
   private void reset(){
     // previous_led = new ArrayList<LED>();
-    System.out.println(previous_led.size());
     for (int i=0; i < m_ledBuffer.getLength(); i++){
       previous_led.add(new LED(0,0,0));
     }
-    System.out.println(previous_led.size());
   }
 
   private AddressableLED m_led;
@@ -52,8 +52,7 @@ public class LedSubsystem extends SubsystemBase {
   private int counter2;
   private ArrayList<LED> previous_led = new ArrayList<LED>();
   private ArrayList<LED> full_sequence = new ArrayList<LED>();
-  //private modes[] possible_patterns = {modes.SingleRedDot, modes.ChasingDots, modes.Rainbow, modes.PiSequence, modes.RedGreenBreatheGradient};
-  private modes[] possible_patterns = {modes.PiSequence};
+  private modes[] possible_patterns = {modes.SingleRedDot, modes.ChasingDots, modes.Rainbow, modes.PiSequence, modes.RedGreenBreatheGradient};
 
   public LedSubsystem(
     int m_ledInt,
@@ -119,35 +118,27 @@ public class LedSubsystem extends SubsystemBase {
     previous_led.remove(previous_led.size() - 1);
     previous_led.add(0, last_led);
     apply_sequence();
-    // System.out.println();
-    // for (int i=0; i < previous_led.size(); i++){
-    //   System.out.print(previous_led.get(i).r + ",");
-    // }
-    // System.out.print("\n");
-    System.out.println(previous_led.size());
   }
 
-  private void move_sequence_from_full(){
+  private boolean move_sequence_from_full(){
     previous_led = new ArrayList<LED>();
     int endpoint = counter % full_sequence.size() + m_ledBuffer.getLength();
     if (endpoint >= full_sequence.size()){
-      // previous_led = (ArrayList<LED>)full_sequence.subList(counter, full_sequence.size() - 1);
       for (LED led : full_sequence.subList(counter, full_sequence.size() - 1) ){
         previous_led.add(led);
       }
       for (LED led :  full_sequence.subList(0, endpoint % full_sequence.size())){
         previous_led.add(led);
       }
-      // previous_led.addAll(previous_led.size() - 1, full_sequence.subList(0, endpoint % full_sequence.size()));
     }
     else{
-      // previous_led = (ArrayList<LED>)full_sequence.subList(counter, counter + m_ledBuffer.getLength());
       for (LED led : full_sequence.subList(counter, counter + m_ledBuffer.getLength())){
         previous_led.add(led);
       }
     }
     apply_sequence();
     counter++;
+    return full_sequence.get(endpoint).final_led;
   }
 
 
@@ -166,17 +157,24 @@ public class LedSubsystem extends SubsystemBase {
   }
 
   private void gen_pi_sequence(){
+    full_sequence = new ArrayList<LED>();
     String[] pi_arr = LED_CONSTANTS.PI_STRING.split(" ", 0);
     for (int i=0; i < m_ledBuffer.getLength(); i++){
       full_sequence.add(new LED(0,0,0));
     }
     for (String digit: pi_arr){
+      System.out.println(digit);
       for (int i=0; i < Integer.valueOf(digit); i++){
         full_sequence.add(new LED(0,255,0));
       }
       full_sequence.add(new LED(0,0,0));
     }
+    for (int i=0; i < m_ledBuffer.getLength(); i++){
+      full_sequence.add(new LED(0,0,0));
+    }
     full_sequence.remove(full_sequence.size() - 1);
+    LED last_led = full_sequence.get(full_sequence.size() - 1);
+    last_led.final_led = true;
   }
 
   private void exciting_monochrome(String color){
@@ -330,13 +328,12 @@ public class LedSubsystem extends SubsystemBase {
 
   private int get_rand_number(int min, int max){
     var myNumber = (int) ((Math.random() * (max - min) + min));
-    System.out.println("random number selected: " + myNumber);
 
     return myNumber;
   }
 
   public modes pick_random_pattern(){
-    var myPattern = possible_patterns[get_rand_number(0, possible_patterns.length - 1)];
+    var myPattern = possible_patterns[get_rand_number(0, possible_patterns.length)];
 
     System.out.println("Selected pattern: " + myPattern);
 
@@ -368,60 +365,67 @@ public class LedSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    switch(m_mode) {
-        case Green:
-            green();
+    if (m_pacer == 3){
+      switch(m_mode) {
+          case Green:
+              green();
+              break;
+          case Red:
+              red();
+              break;
+          case Blue:
+              blue();
+              break;
+          case Yellow:
+              yellow();
+              break;
+          case Purple:
+              purple();
+              break;
+          case Bi:
+              biFlag();
+              break;
+          case Trans:
+              transFlag();
+              break;
+          case RedGreenBreatheGradient:
+            red_green_breathe_gradient();
             break;
-        case Red:
-            red();
+          case SingleRedDot:
+            single_red_dot();
             break;
-        case Blue:
-            blue();
+          case Enby:
+            nonbinaryFlag();
             break;
-        case Yellow:
-            yellow();
+          case AroAce:
+            aroaceFlag();
             break;
-        case Purple:
-            purple();
+          case ChasingDots:
+            move_sequence();
             break;
-        case Bi:
-            biFlag();
+          case PiSequence:
+          //checks if it is done its sequence and then picks a new random pattern
+            if (move_sequence_from_full()){
+              setMode(pick_random_pattern());
+            }
             break;
-        case Trans:
-            transFlag();
+          case ExcitingMonochromeAny:
+            move_sequence_from_full();
             break;
-        case RedGreenBreatheGradient:
-          red_green_breathe_gradient();
-          break;
-        case SingleRedDot:
-          single_red_dot();
-          break;
-        case Enby:
-          nonbinaryFlag();
-          break;
-        case AroAce:
-          aroaceFlag();
-          break;
-        case ChasingDots:
-          move_sequence();
-          break;
-        case PiSequence:
-          move_sequence_from_full();
-          break;
-        case ExcitingMonochromeAny:
-          move_sequence_from_full();
-          break;
-        case ExcitingMonochromeM:
-          move_sequence_from_full();
-          break;
-        case ExcitingMonochromeY:
-          move_sequence_from_full();
-          break;
-        default:
-            rainbow();
+          case ExcitingMonochromeM:
+            move_sequence_from_full();
+            break;
+          case ExcitingMonochromeY:
+            move_sequence_from_full();
+            break;
+          default:
+              rainbow();
+      }
+    m_pacer = -1;
     }
     // Set the LEDs
     m_led.setData(m_ledBuffer);
+    m_pacer++;
   }
   
   @Override
