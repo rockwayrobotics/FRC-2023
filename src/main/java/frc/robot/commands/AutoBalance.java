@@ -38,7 +38,7 @@ public class AutoBalance extends CommandBase {
         double drivePower = pid.calculate(currentAngle);
         SmartDashboard.putNumber("Raw Drive Power (Auto Balance)", drivePower);
 
-        drivePower = MathUtil.clamp(drivePower, -0.15, 0.15);
+        drivePower = MathUtil.clamp(drivePower, -0.2, 0.2);
 
         m_DrivebaseSubsystem.set(drivePower, 0);
     }

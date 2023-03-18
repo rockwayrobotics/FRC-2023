@@ -101,13 +101,19 @@ public final class Constants {
 
     public enum ScoringTarget {
         MID_CUBE,
-        HIGH_CUBE,
+        CUBE,
         MID_CONE,
         EJECT_ANGLE
     }
 
     public enum ScoringMode {
         CUBE,
+        FLAT,
         CONE
+    }
+
+    public enum SideToTurn {
+        LEFT,
+        RIGHT
     }
 }

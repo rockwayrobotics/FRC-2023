@@ -2,10 +2,7 @@ package frc.robot.commands.autoSequences;
 
 import java.util.Map;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -44,22 +41,33 @@ public class BalanceRoutine extends SequentialCommandGroup {
         m_led = led;
 
         AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "yellow"));
-        m_led.setMode(Constants.LED.modes.Yellow);
+        m_led.setMode(Constants.LED.modes.Purple);
 
-        FailFastTimeoutGroup sequence = new FailFastTimeoutGroup()
-            .thenWithTimeout(new ShootSequence(m_drivebase, m_shooter, m_led), 15)
-            .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.4), 10)
-            .thenWithTimeout(new DriveUntilTipped(drivebase, 12, 0.2), 15)
-            .thenWithTimeout(new DriveUntilTipped(drivebase, 0, 0.2), 15)
-            .thenWithTimeout(new DriveDistance(drivebase, 0.2, 30), 15)
-            .then(new WaitCommand(0.5))
-            .thenWithTimeout(new DriveUntilTipped(drivebase, 14, -0.4), 15)
-            .then(new AutoBalance(drivebase))
-            .then(new WaitCommand(0.5))
-            .then(new AutoBalance(drivebase));
+        // FailFastTimeoutGroup sequence = new FailFastTimeoutGroup()
+        //     // .thenWithTimeout(new AutoShootSequence(m_drivebase, m_shooter, m_led), 3)
+        //     // .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.4), 3)
+        //     // .thenWithTimeout(new DriveUntilTipped(drivebase, 12, 0.4), 2)
+        //     // .thenWithTimeout(new DriveUntilTipped(drivebase, 0, 0.2), 2)
+        //     // .thenWithTimeout(new DriveDistance(drivebase, 0.2, 30), 3)
+        //     // .then(new WaitCommand(0.7))
+        //     // .thenWithTimeout(new DriveUntilTipped(drivebase, 16, -0.36), 3)
+        //     // .then(new AutoBalance(drivebase))
+        //     // .then(new WaitCommand(0.5))
+        //     // .then(new AutoBalance(drivebase));
 
+        this.addCommands(new AutoShootSequence(m_drivebase, m_shooter, m_led));
+        this.addCommands(new DriveUntilTipped(drivebase, -12, 0.4));
+        this.addCommands(new DriveUntilTipped(drivebase, 12, 0.4));
+        this.addCommands(new DriveUntilTipped(drivebase, 3, 0.2));
+        this.addCommands(new DriveDistance(drivebase, 0.2, 30));
+        System.out.println("balanceTime yipeee");
+        this.addCommands(new WaitCommand(0.7));
+        this.addCommands(new DriveUntilTipped(drivebase, 16, -0.36));
+        this.addCommands(new AutoBalance(drivebase));
+        this.addCommands(new WaitCommand(0.5));
+        this.addCommands(new AutoBalance(drivebase));
 
-        this.addCommands(sequence);
-        this.addCommands(new InstantCommand(() -> setStatusWidget(AutoFailedWidget, sequence)));
+        // this.addCommands(sequence);
+        // this.addCommands(new InstantCommand(() -> setStatusWidget(AutoFailedWidget, sequence)));
     }
 }

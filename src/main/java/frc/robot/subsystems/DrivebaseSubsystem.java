@@ -22,8 +22,8 @@ import frc.robot.Constants.Drive;
 import frc.robot.Constants.ScoringTarget;
 
 public class DrivebaseSubsystem extends SubsystemBase {
-  MotorControllerGroup leftDrive;
-  MotorControllerGroup rightDrive;
+  public MotorControllerGroup leftDrive;
+  public MotorControllerGroup rightDrive;
 
   private final DifferentialDrive m_drive;
 
@@ -64,7 +64,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   // SendableChooser<Constants.ScoringTarget> m_scoringSelector;
 
-  Constants.ScoringTarget shotToHit = ScoringTarget.HIGH_CUBE;
+  Constants.ScoringTarget shotToHit = ScoringTarget.CUBE;
 
   /** Creates a new DrivebaseSubsystem. */
   public DrivebaseSubsystem() {
@@ -100,7 +100,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
     tuningTab.addPersistent("Balance kD", balance_kD).withPosition(1,0);
 
     // m_scoringSelector = new SendableChooser<Constants.ScoringTarget>();
-    // m_scoringSelector.setDefaultOption("High Cube", Constants.ScoringTarget.HIGH_CUBE);
+    // m_scoringSelector.setDefaultOption("High Cube", Constants.ScoringTarget.CUBE);
     // m_scoringSelector.addOption("Mid Cube", Constants.ScoringTarget.MID_CUBE);
     // m_scoringSelector.addOption("Mid Cone", Constants.ScoringTarget.MID_CONE);
 
@@ -144,14 +144,6 @@ public class DrivebaseSubsystem extends SubsystemBase {
     m_leftDriveMotor2.setIdleMode(setting);
   }
 
-  /**
-   * Drive specificed direction 
-   */
-  public void drive(double leftPercentPower, double rightPercentPower){
-    leftDrive.set(direction * leftPercentPower);
-    rightDrive.set(direction * rightPercentPower);
-  }
-
   public void stop(){
     set(0,0);
   }
@@ -163,6 +155,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
    */
   public void set(double speed, double rotation) {
     m_drive.curvatureDrive(speed*m_scale, rotation*m_scale, true);
+  }
+
+  public void setTank(double leftSpeed, double rightSpeed) {
+    m_drive.tankDrive(leftSpeed, rightSpeed);
   }
 
   /**
@@ -225,8 +221,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    SmartDashboard.putNumber("Gyro roll", getRoll());
+
     switch(shotToHit) {
-      case HIGH_CUBE -> selectedShotWidget.setValue("High Cube");
+      case CUBE -> selectedShotWidget.setValue("High Cube");
       case MID_CUBE -> selectedShotWidget.setValue("Mid Cube");
       case MID_CONE -> selectedShotWidget.setValue("Mid Cone");
     }

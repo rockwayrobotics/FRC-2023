@@ -3,7 +3,6 @@
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Shuffleboard/Dashboard/Auto Routine": "String Chooser",
-      "/Shuffleboard/Dashboard/Scoring selector": "String Chooser",
       "/Shuffleboard/Subsystems/CameraSubsystem": "Subsystem",
       "/Shuffleboard/Subsystems/DrivebaseSubsystem": "Subsystem",
       "/Shuffleboard/Subsystems/LedSubsystem": "Subsystem",
