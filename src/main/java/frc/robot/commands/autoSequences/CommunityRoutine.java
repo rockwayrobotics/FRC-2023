@@ -44,11 +44,11 @@ public class CommunityRoutine extends SequentialCommandGroup {
         AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "yellow"));
 
         FailFastTimeoutGroup sequence = new FailFastTimeoutGroup()
-                .thenWithTimeout(new ShootSequence(m_drivebase, m_shooter, m_led), 15)
+                .thenWithTimeout(new AutoShootSequence(m_drivebase, m_shooter, m_led), 15)
                 .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.4), 15)
                 .thenWithTimeout(new DriveUntilTipped(drivebase, 12, 0.2), 15)
                 .thenWithTimeout(new DriveUntilTipped(drivebase, 0, 0.2), 15)
-                .thenWithTimeout(new DriveDistance(drivebase, 0.2, Units.inchesToMeters(30)), 15);
+                .thenWithTimeout(new DriveDistance(drivebase, 0.2, 30), 15);
 
 
         this.addCommands(sequence);

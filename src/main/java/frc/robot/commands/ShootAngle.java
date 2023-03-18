@@ -39,6 +39,7 @@ public class ShootAngle extends CommandBase {
         switch (m_shooter.m_ScoringMode) {
             case CUBE -> m_distance = m_shooter.cubeAngleSetpoint;
             case CONE -> m_distance = m_shooter.coneAngleSetpoint;
+            case FLAT -> m_distance = 0;
         };   
 
         pid.setSetpoint(m_distance);
@@ -47,8 +48,6 @@ public class ShootAngle extends CommandBase {
 
     @Override
     public void execute() {
-
-
         double currentAngle = m_shooter.getAngleEncoder();
 
         double spinPower = pid.calculate(currentAngle);
@@ -65,7 +64,7 @@ public class ShootAngle extends CommandBase {
 
     @Override
     public void end(boolean cancelled) {
-        System.out.println("Angled.");
+        System.out.println("Angled to: " + m_shooter.m_ScoringMode);
         m_shooter.spinAngleMotor(0); // Resets the angle motor to 0, ends command
     }
 }

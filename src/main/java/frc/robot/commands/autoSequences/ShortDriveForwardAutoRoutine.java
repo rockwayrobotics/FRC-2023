@@ -3,6 +3,7 @@ package frc.robot.commands.autoSequences;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.commands.AutoShootSequence;
 import frc.robot.commands.DriveDistance;
 import frc.robot.commands.FailFastTimeoutGroup;
 import frc.robot.subsystems.DrivebaseSubsystem;
@@ -41,7 +42,8 @@ public class ShortDriveForwardAutoRoutine extends SequentialCommandGroup {
         AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "yellow"));
 
         FailFastTimeoutGroup sequence = new FailFastTimeoutGroup()
-                .thenWithTimeout(new DriveDistance(drivebase, 0.2, 2), 15);
+                .thenWithTimeout(new AutoShootSequence(drivebase, shooter, led), 5)
+                .thenWithTimeout(new DriveDistance(drivebase, 0.2, 80), 10);
 
 
         this.addCommands(sequence);

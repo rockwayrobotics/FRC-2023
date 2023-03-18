@@ -12,12 +12,6 @@ import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
 
-/** Autonomously drives over the charge station, then reverses, and balances itself on top.
- * <p><strong>SETUP:</strong> Place front of robot directly facing charge station. Be sure to be far enough away that it can get the
- * speed it needs,but not too far that it takes to long to get there.
- * <p><strong>END:</strong> The robot is balanced on top of the charge station
- * <p><strong>SCORES:</strong> Auto mobility, auto engaged
- */
 public class AutoShootSequence extends SequentialCommandGroup {
     DrivebaseSubsystem m_drivebase;
     ShooterSubsystem m_shooter;

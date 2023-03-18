@@ -41,12 +41,18 @@ public class DriveUntilTipped extends CommandBase {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    System.out.println("Reached tip setpoint of "+ m_setpoint + " degrees");
+    if(!interrupted) {
+      System.out.println("Reached tip setpoint of "+ m_setpoint + " degrees");
+    } else {
+      System.out.println("Interrupted");
+    }
+    m_DrivebaseSubsystem.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(m_setpoint - m_DrivebaseSubsystem.getRoll()) <= 3;
+    // System.out.println("Current gyro: " + m_DrivebaseSubsystem.getRoll() + " Setpoint: " + m_setpoint);
+    return Math.abs(m_setpoint - m_DrivebaseSubsystem.getRoll()) <= 5;
   }
 }

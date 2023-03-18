@@ -30,6 +30,7 @@ public class DriveDistance extends CommandBase {
     @Override
     public void execute() {
         m_drivebase.set(m_speed, 0);
+        System.out.println("Executing");
     }
 
     @Override

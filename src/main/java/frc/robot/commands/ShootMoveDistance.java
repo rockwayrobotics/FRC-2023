@@ -24,7 +24,7 @@ public class ShootMoveDistance extends CommandBase {
         m_drivebase.resetEncoders();
         
         switch (m_drivebase.m_scoringTarget) {
-            case HIGH_CUBE -> m_distance = m_drivebase.highCubeBackupDistanceInches;
+            case CUBE -> m_distance = m_drivebase.highCubeBackupDistanceInches;
             case MID_CUBE -> m_distance = m_drivebase.midCubeBackupDistanceInches;
             case MID_CONE -> m_distance = m_drivebase.midConeBackupDistanceInches;
         };
