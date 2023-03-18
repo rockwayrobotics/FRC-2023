@@ -74,7 +74,9 @@ public final class Constants {
             PiSequence,
             ExcitingMonochromeAny,
             ExcitingMonochromeY,
-            ExcitingMonochromeM
+            ExcitingMonochromeM,
+            BreathingYellow,
+            BreathingMagenta
           }
     }
 

@@ -68,6 +68,7 @@ public class LedSubsystem extends SubsystemBase {
     m_led.start();
 
     setMode(pick_random_pattern());
+    // setMode(modes.BreathingMagenta);
 
     // m_mode = pick_random_pattern();
   }
@@ -82,6 +83,10 @@ public class LedSubsystem extends SubsystemBase {
     }
   }
 
+
+  private double sin_wave(double val, int set_point){
+    return Math.sin(Math.PI * 2 * val / 50) * 50 + set_point;
+  }
   private void red_green_breathe_gradient() {
     for (int i = 0; i < m_ledBuffer.getLength(); i++){
       double r = gradient_helper(i, false);
@@ -175,6 +180,15 @@ public class LedSubsystem extends SubsystemBase {
     full_sequence.remove(full_sequence.size() - 1);
     LED last_led = full_sequence.get(full_sequence.size() - 1);
     last_led.final_led = true;
+  }
+
+  private void breathing_monochrome(int hue){
+    int sat = 0;
+    for (int i=0; i < m_ledBuffer.getLength(); i++){
+      sat = (int) sin_wave((double) i + counter, 200);
+      m_ledBuffer.setHSV(i, hue, sat, sat);
+    }
+    counter++;
   }
 
   private void exciting_monochrome(String color){
@@ -406,7 +420,7 @@ public class LedSubsystem extends SubsystemBase {
           case PiSequence:
           //checks if it is done its sequence and then picks a new random pattern
             if (move_sequence_from_full()){
-              setMode(pick_random_pattern());
+              setMode(modes.PiSequence);
             }
             break;
           case ExcitingMonochromeAny:
@@ -417,6 +431,12 @@ public class LedSubsystem extends SubsystemBase {
             break;
           case ExcitingMonochromeY:
             move_sequence_from_full();
+            break;
+          case BreathingYellow:
+            breathing_monochrome(30);
+            break;
+          case BreathingMagenta:
+            breathing_monochrome(150);
             break;
           default:
               rainbow();
