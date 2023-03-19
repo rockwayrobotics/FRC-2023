@@ -82,7 +82,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    final JoystickButton rightBumper = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+    final JoystickButton rightBumper = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
     final JoystickButton leftBumper = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
     final JoystickButton aButton = new JoystickButton(m_driverController, XboxController.Button.kA.value);
     final JoystickButton bButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
@@ -106,10 +106,10 @@ public class RobotContainer {
     final Trigger righTriggerHalfPull = new Trigger(m_driverController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5, CommandScheduler.getInstance().getDefaultButtonLoop()));    
 
     // TODO Write eject sequence
-    rightBumper.whileTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
+    rightBumper.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
     xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
     xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
-    yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
+    // yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
 
     leftTriggerHalfPull.whileTrue(new HalfDriveCommand(m_driverController::getLeftY, m_driverController::getRightX, m_drivebase, SideToTurn.LEFT));
     righTriggerHalfPull.whileTrue(new HalfDriveCommand(m_driverController::getLeftY, m_driverController::getRightX, m_drivebase, SideToTurn.RIGHT));
@@ -120,7 +120,7 @@ public class RobotContainer {
     operator_yButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CONE)).andThen(new InstantCommand(() -> m_led.setMode(modes.Yellow))));
     operator_xButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CUBE)).andThen(new InstantCommand(() -> m_led.setMode(modes.Purple))));
     operator_bButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.FLAT)).andThen(new InstantCommand(() -> m_led.setMode(modes.Blue))));
-    operator_leftBumper.whileTrue(new BucketToZero(m_shooter, 1));
+    operator_leftBumper.whileTrue(new SetLEDAfterShot(m_shooter, m_led).andThen(new BucketToZero(m_shooter, 1)));
     operator_rightBumper.onTrue(new InstantCommand(() -> m_led.setMode(modes.Rainbow)));
     // operator_xButton.onTrue
     // operator_startButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));

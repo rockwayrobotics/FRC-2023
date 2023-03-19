@@ -62,7 +62,7 @@ public class BalanceRoutine extends SequentialCommandGroup {
         this.addCommands(new DriveDistance(drivebase, 0.2, 30));
         System.out.println("balanceTime yipeee");
         this.addCommands(new WaitCommand(0.7));
-        this.addCommands(new DriveUntilTipped(drivebase, 16, -0.36));
+        this.addCommands(new DriveUntilTipped(drivebase, 16, -0.5));
         this.addCommands(new AutoBalance(drivebase));
         this.addCommands(new WaitCommand(0.5));
         this.addCommands(new AutoBalance(drivebase));
