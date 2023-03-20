@@ -3,6 +3,7 @@ package frc.robot.commands.autoSequences;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
@@ -55,14 +56,22 @@ public class BalanceRoutine extends SequentialCommandGroup {
         //     // .then(new WaitCommand(0.5))
         //     // .then(new AutoBalance(drivebase));
 
+        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Red)));
         this.addCommands(new AutoShootSequence(m_drivebase, m_shooter, m_led));
+        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
         this.addCommands(new DriveUntilTipped(drivebase, -12, 0.4));
-        this.addCommands(new DriveUntilTipped(drivebase, 12, 0.4));
+        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Green)));
+        this.addCommands(new DriveUntilTipped(drivebase, 16, 0.4));
+        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Blue)));
         this.addCommands(new DriveUntilTipped(drivebase, 3, 0.2));
+        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Purple)));
         this.addCommands(new DriveDistance(drivebase, 0.2, 30));
+        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.PiSequence)));
         System.out.println("balanceTime yipeee");
         this.addCommands(new WaitCommand(0.7));
+        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));
         this.addCommands(new DriveUntilTipped(drivebase, 16, -0.5));
+        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Trans)));
         this.addCommands(new AutoBalance(drivebase));
         this.addCommands(new WaitCommand(0.5));
         this.addCommands(new AutoBalance(drivebase));

@@ -85,7 +85,7 @@ public class LedSubsystem extends SubsystemBase {
 
 
   private double sin_wave(double val, int set_point){
-    return Math.sin(Math.PI * 2 * val / 50) * 50 + set_point;
+    return Math.sin(Math.PI * 2 * val / 70) * 70 + set_point;
   }
   private void red_green_breathe_gradient() {
     for (int i = 0; i < m_ledBuffer.getLength(); i++){
@@ -186,7 +186,7 @@ public class LedSubsystem extends SubsystemBase {
     int sat = 0;
     for (int i=0; i < m_ledBuffer.getLength(); i++){
       sat = (int) sin_wave((double) i + counter, 200);
-      m_ledBuffer.setHSV(i, hue, sat, sat);
+      m_ledBuffer.setHSV(i, hue, 255, sat);
     }
     counter++;
   }

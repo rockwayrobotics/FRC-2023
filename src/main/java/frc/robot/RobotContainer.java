@@ -52,7 +52,7 @@ public class RobotContainer {
   private final XboxController m_driverController = new XboxController(Constants.Gamepads.DRIVER);
   private final XboxController m_operatorController = new XboxController(Constants.Gamepads.OPERATOR);
 
-  private final CameraSubsystem m_camera = new CameraSubsystem();
+  // private final CameraSubsystem m_camera = new CameraSubsystem();
 
   SendableChooser<AutoOption> m_autoChooser = new SendableChooser<>();
 
@@ -71,7 +71,7 @@ public class RobotContainer {
 
     subsystemsDashboard.add(m_drivebase);
     subsystemsDashboard.add(m_led);
-    subsystemsDashboard.add(m_camera);
+    // subsystemsDashboard.add(m_camera);
     subsystemsDashboard.add(m_shooter);
 
     AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "grey"));
