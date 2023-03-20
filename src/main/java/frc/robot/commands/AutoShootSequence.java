@@ -20,7 +20,7 @@ public class AutoShootSequence extends SequentialCommandGroup {
     public AutoShootSequence(DrivebaseSubsystem drivebase, ShooterSubsystem shooter, LedSubsystem led) {
         m_drivebase = drivebase;
         m_shooter = shooter;
-        m_led = led;
+        // m_led = led;
 
         // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Red)));
 
@@ -32,7 +32,7 @@ public class AutoShootSequence extends SequentialCommandGroup {
         this.addCommands(new WaitCommand(0.4));
         this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kForward, DoubleSolenoid.Value.kForward)));
         // Start driving here
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Green)));
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Green)));
         this.addCommands(new WaitCommand(.5));
         this.addCommands(new InstantCommand(() -> m_shooter.setBucketCylinders(DoubleSolenoid.Value.kReverse, DoubleSolenoid.Value.kReverse)));
         this.addCommands(new WaitCommand(1));

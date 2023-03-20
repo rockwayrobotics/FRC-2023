@@ -52,14 +52,14 @@ public class RobotContainer {
   private final XboxController m_driverController = new XboxController(Constants.Gamepads.DRIVER);
   private final XboxController m_operatorController = new XboxController(Constants.Gamepads.OPERATOR);
 
-  private final CameraSubsystem m_camera = new CameraSubsystem();
+  // private final CameraSubsystem m_camera = new CameraSubsystem();
 
   SendableChooser<AutoOption> m_autoChooser = new SendableChooser<>();
 
   SimpleWidget AutoFailedWidget = dashboard.add("Auto status", false).withPosition(7, 0);
 
   public RobotContainer() {
-    m_led.setMode(Constants.LED.modes.Rainbow);
+    // m_led.setMode(Constants.LED.modes.Rainbow);
 
     m_autoChooser.setDefaultOption("Auto Balance", AutoOption.AutoBalance);
     m_autoChooser.addOption("Auto Balance - No Return", AutoOption.AutoBalanceNoReturn);
@@ -71,7 +71,7 @@ public class RobotContainer {
 
     subsystemsDashboard.add(m_drivebase);
     subsystemsDashboard.add(m_led);
-    subsystemsDashboard.add(m_camera);
+    // subsystemsDashboard.add(m_camera);
     subsystemsDashboard.add(m_shooter);
 
     AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "grey"));
@@ -82,7 +82,7 @@ public class RobotContainer {
   }
 
   private void configureBindings() {
-    final JoystickButton rightBumper = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
+    final JoystickButton rightBumper = new JoystickButton(m_driverController, XboxController.Button.kRightBumper.value);
     final JoystickButton leftBumper = new JoystickButton(m_driverController, XboxController.Button.kLeftBumper.value);
     final JoystickButton aButton = new JoystickButton(m_driverController, XboxController.Button.kA.value);
     final JoystickButton bButton = new JoystickButton(m_driverController, XboxController.Button.kB.value);
@@ -106,10 +106,10 @@ public class RobotContainer {
     final Trigger righTriggerHalfPull = new Trigger(m_driverController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5, CommandScheduler.getInstance().getDefaultButtonLoop()));    
 
     // TODO Write eject sequence
-    rightBumper.whileTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
+    rightBumper.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
     xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
     xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
-    yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
+    // yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
 
     leftTriggerHalfPull.whileTrue(new HalfDriveCommand(m_driverController::getLeftY, m_driverController::getRightX, m_drivebase, SideToTurn.LEFT));
     righTriggerHalfPull.whileTrue(new HalfDriveCommand(m_driverController::getLeftY, m_driverController::getRightX, m_drivebase, SideToTurn.RIGHT));
@@ -117,10 +117,10 @@ public class RobotContainer {
 
     operator_aButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, 1));
     // operator_bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, .8, Constants.ScoringTarget.MID_CONE));
-    operator_yButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CONE)).andThen(new InstantCommand(() -> m_led.setMode(modes.Yellow))));
-    operator_xButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CUBE)).andThen(new InstantCommand(() -> m_led.setMode(modes.Purple))));
+    operator_yButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CONE)).andThen(new InstantCommand(() -> m_led.setMode(modes.BreathingYellow))));
+    operator_xButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.CUBE)).andThen(new InstantCommand(() -> m_led.setMode(modes.BreathingMagenta))));
     operator_bButton.onTrue(new InstantCommand(() -> m_shooter.setScoringMode(ScoringMode.FLAT)).andThen(new InstantCommand(() -> m_led.setMode(modes.Blue))));
-    operator_leftBumper.whileTrue(new BucketToZero(m_shooter, 1));
+    operator_leftBumper.whileTrue(new SetLEDAfterShot(m_shooter, m_led).andThen(new BucketToZero(m_shooter, 1)));
     operator_rightBumper.onTrue(new InstantCommand(() -> m_led.setMode(modes.Rainbow)));
     // operator_xButton.onTrue
     // operator_startButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
