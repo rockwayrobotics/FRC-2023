@@ -42,41 +42,34 @@ public class BalanceRoutine extends SequentialCommandGroup {
         m_led = led;
 
         AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "yellow"));
-        m_led.setMode(Constants.LED.modes.Purple);
+        m_led.setMode(Constants.LED.modes.Orange);
 
-        // FailFastTimeoutGroup sequence = new FailFastTimeoutGroup()
-        //     // .thenWithTimeout(new AutoShootSequence(m_drivebase, m_shooter, m_led), 3)
-        //     // .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.4), 3)
-        //     // .thenWithTimeout(new DriveUntilTipped(drivebase, 12, 0.4), 2)
-        //     // .thenWithTimeout(new DriveUntilTipped(drivebase, 0, 0.2), 2)
-        //     // .thenWithTimeout(new DriveDistance(drivebase, 0.2, 30), 3)
-        //     // .then(new WaitCommand(0.7))
-        //     // .thenWithTimeout(new DriveUntilTipped(drivebase, 16, -0.36), 3)
-        //     // .then(new AutoBalance(drivebase))
-        //     // .then(new WaitCommand(0.5))
-        //     // .then(new AutoBalance(drivebase));
+        FailFastTimeoutGroup sequence = new FailFastTimeoutGroup()
+            .thenWithTimeout(new AutoShootSequence(m_drivebase, m_shooter, m_led), 3)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, -12, 0.4), 3)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, 16, 0.4), 2)
+            .thenWithTimeout(new DriveUntilTipped(drivebase, 3, 0.2), 2)
+            .thenWithTimeout(new DriveDistance(drivebase, 0.2, 30), 3)
+            .then(new WaitCommand(0.7))
+            .thenWithTimeout(new DriveUntilTipped(drivebase, 16, -0.5), 3)
+            .then(new AutoBalance(drivebase))
+            .then(new WaitCommand(0.5))
+            .then(new AutoBalance(drivebase));
 
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Orange)));
-        this.addCommands(new AutoShootSequence(m_drivebase, m_shooter, m_led));
-        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
-        this.addCommands(new DriveUntilTipped(drivebase, -12, 0.4));
-        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Green)));
-        this.addCommands(new DriveUntilTipped(drivebase, 16, 0.4));
-        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Blue)));
-        this.addCommands(new DriveUntilTipped(drivebase, 3, 0.2));
-        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Purple)));
-        this.addCommands(new DriveDistance(drivebase, 0.2, 30));
-        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.PiSequence)));
-        System.out.println("balanceTime yipeee bing bang bong boom");
-        this.addCommands(new WaitCommand(0.7));
-        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));
-        this.addCommands(new DriveUntilTipped(drivebase, 16, -0.5));
-        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Trans)));
-        this.addCommands(new AutoBalance(drivebase));
-        this.addCommands(new WaitCommand(0.5));
-        this.addCommands(new AutoBalance(drivebase));
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Orange)));
+        // this.addCommands(new AutoShootSequence(m_drivebase, m_shooter, m_led));
+        // this.addCommands(new DriveUntilTipped(drivebase, -12, 0.4));
+        // this.addCommands(new DriveUntilTipped(drivebase, 16, 0.4));
+        // this.addCommands(new DriveUntilTipped(drivebase, 3, 0.2));
+        // this.addCommands(new DriveDistance(drivebase, 0.2, 30));
+        // System.out.println("balanceTime yipeee bing bang bong boom");
+        // this.addCommands(new WaitCommand(0.7));
+        // this.addCommands(new DriveUntilTipped(drivebase, 16, -0.5));
+        // this.addCommands(new AutoBalance(drivebase));
+        // this.addCommands(new WaitCommand(0.5));
+        // this.addCommands(new AutoBalance(drivebase));
 
-        // this.addCommands(sequence);
-        // this.addCommands(new InstantCommand(() -> setStatusWidget(AutoFailedWidget, sequence)));
+        this.addCommands(sequence);
+        this.addCommands(new InstantCommand(() -> setStatusWidget(AutoFailedWidget, sequence)));
     }
 }
