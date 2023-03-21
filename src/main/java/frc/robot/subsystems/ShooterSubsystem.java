@@ -11,7 +11,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -20,7 +19,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -73,6 +71,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setFlap(Value flapDirection) {
+    System.out.println("Flapping: " + flapDirection);
     m_flap.set(flapDirection);
   }
 
@@ -101,6 +100,7 @@ public class ShooterSubsystem extends SubsystemBase {
     switch(m_ScoringMode) {
       case CUBE -> selectedModeColourWidget.withProperties(Map.of("colorWhenFalse", "purple"));
       case CONE -> selectedModeColourWidget.withProperties(Map.of("colorWhenFalse", "yellow"));
+      case FLAT -> selectedModeColourWidget.withProperties(Map.of("colorWhenFalse", "blue"));
     }
     
     // This method will be called once per scheduler run

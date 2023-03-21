@@ -5,15 +5,12 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.networktables.BooleanEntry;
 import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.StringEntry;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj.SPI;
@@ -32,11 +29,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
 
-  private double m_rotation = 0;
-  private double m_speed = 0;
-
   private double m_scale = 1;
-  private int direction = 1;
 
   private double yawOffset;
 
@@ -227,6 +220,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
       case CUBE -> selectedShotWidget.setValue("High Cube");
       case MID_CUBE -> selectedShotWidget.setValue("Mid Cube");
       case MID_CONE -> selectedShotWidget.setValue("Mid Cone");
+      case EJECT_ANGLE -> selectedShotWidget.setValue("Flat");
     }
 
     // m_scoringTarget = m_scoringSelector.getSelected();

@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DrivebaseSubsystem;
 
@@ -27,6 +26,7 @@ public class ShootMoveDistance extends CommandBase {
             case CUBE -> m_distance = m_drivebase.highCubeBackupDistanceInches;
             case MID_CUBE -> m_distance = m_drivebase.midCubeBackupDistanceInches;
             case MID_CONE -> m_distance = m_drivebase.midConeBackupDistanceInches;
+            case EJECT_ANGLE -> m_distance = 0;
         };
 
         System.out.println("Moving: " + m_distance);

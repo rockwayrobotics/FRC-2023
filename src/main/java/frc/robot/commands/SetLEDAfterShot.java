@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import frc.robot.Constants.LED.modes;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.LedSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
@@ -38,6 +37,7 @@ public class SetLEDAfterShot extends CommandBase {
     switch(m_shooter.m_ScoringMode) {
       case CUBE -> m_LED.setMode(modes.Purple);
       case CONE -> m_LED.setMode(modes.Yellow);
+      case FLAT -> m_LED.setMode(modes.Blue);
     }
   }
 

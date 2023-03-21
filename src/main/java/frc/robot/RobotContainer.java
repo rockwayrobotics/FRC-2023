@@ -15,18 +15,13 @@ import frc.robot.Constants.LED.modes;
 import frc.robot.commands.*;
 import frc.robot.commands.autoSequences.*;
 import frc.robot.subsystems.*;
-import edu.wpi.first.networktables.GenericEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.XboxController.Axis;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -102,17 +97,18 @@ public class RobotContainer {
     final JoystickButton operator_leftBumper = new JoystickButton(m_operatorController, XboxController.Button.kLeftBumper.value); 
     final JoystickButton operator_rightBumper = new JoystickButton(m_operatorController, XboxController.Button.kRightBumper.value); 
 
-    final Trigger leftTriggerHalfPull = new Trigger(m_driverController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, 0.5, CommandScheduler.getInstance().getDefaultButtonLoop()));
-    final Trigger righTriggerHalfPull = new Trigger(m_driverController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, 0.5, CommandScheduler.getInstance().getDefaultButtonLoop()));    
+    final Trigger leftTriggerFullPull = new Trigger(m_driverController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, .8, CommandScheduler.getInstance().getDefaultButtonLoop()));
+    final Trigger rightTriggerFullPull = new Trigger(m_driverController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, .8, CommandScheduler.getInstance().getDefaultButtonLoop()));    
 
     // TODO Write eject sequence
     rightBumper.onTrue(new ShootSequence(m_drivebase, m_shooter, m_led));
     xButton.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
     xButton.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
-    // yButton.whileTrue(new BucketToZero(m_shooter, 0.5));
+    rightTriggerFullPull.onTrue(new InstantCommand(() -> m_shooter.setFlap(Value.kForward)));
+    rightTriggerFullPull.onFalse(new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
 
-    leftTriggerHalfPull.whileTrue(new HalfDriveCommand(m_driverController::getLeftY, m_driverController::getRightX, m_drivebase, SideToTurn.LEFT));
-    righTriggerHalfPull.whileTrue(new HalfDriveCommand(m_driverController::getLeftY, m_driverController::getRightX, m_drivebase, SideToTurn.RIGHT));
+    backButton.whileTrue(new HalfDriveCommand(m_driverController::getLeftY, m_driverController::getRightX, m_drivebase, SideToTurn.LEFT));
+    startButton.whileTrue(new HalfDriveCommand(m_driverController::getLeftY, m_driverController::getRightX, m_drivebase, SideToTurn.RIGHT));
     // bButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, 0.5));
 
     operator_aButton.whileTrue(new ShootAngle(m_drivebase, m_shooter, 1));
@@ -139,9 +135,6 @@ public class RobotContainer {
     SmartDashboard.putData("Flap Reverse", new InstantCommand(() -> m_shooter.setFlap(Value.kReverse)));
 
     SmartDashboard.putData("Shoot Sequence", new ShootSequence(m_drivebase, m_shooter, m_led));
-
-    backButton.whileTrue(new AutoBalance(m_drivebase));
-    startButton.onTrue(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));
   }
 
   public Command getAutonomousCommand() {

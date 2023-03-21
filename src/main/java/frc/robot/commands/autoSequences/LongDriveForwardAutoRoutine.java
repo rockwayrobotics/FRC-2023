@@ -2,7 +2,6 @@ package frc.robot.commands.autoSequences;
 
 import java.util.Map;
 
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;

@@ -7,8 +7,6 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.random.*;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
@@ -49,7 +47,6 @@ public class LedSubsystem extends SubsystemBase {
   private modes m_mode;
   private int m_pacer = 0;
   private int counter;
-  private int counter2;
   private ArrayList<LED> previous_led = new ArrayList<LED>();
   private ArrayList<LED> full_sequence = new ArrayList<LED>();
   private modes[] possible_patterns = {modes.SingleRedDot, modes.ChasingDots, modes.Rainbow, modes.PiSequence, modes.RedGreenBreatheGradient};
@@ -363,7 +360,6 @@ public class LedSubsystem extends SubsystemBase {
   public void setMode(modes mode) {
     m_mode = mode;
     counter = 0;
-    counter2 = 0;
     full_sequence = new ArrayList<LED>();
     previous_led = new ArrayList<LED>();
     reset();

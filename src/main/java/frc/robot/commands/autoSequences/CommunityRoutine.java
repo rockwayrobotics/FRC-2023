@@ -2,12 +2,9 @@ package frc.robot.commands.autoSequences;
 
 import java.util.Map;
 
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.*;
 import frc.robot.subsystems.DrivebaseSubsystem;
 import frc.robot.subsystems.LedSubsystem;

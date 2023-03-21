@@ -4,20 +4,12 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
 import frc.robot.Constants;
-import frc.robot.commands.autoSequences.BalanceRoutine;
-import frc.robot.commands.autoSequences.CommunityRoutine;
-import frc.robot.commands.autoSequences.LongDriveForwardAutoRoutine;
-import frc.robot.commands.autoSequences.ShortDriveForwardAutoRoutine;
 import org.photonvision.PhotonCamera;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,7 +17,6 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.util.List;
-import java.util.Map;
 
 public class CameraSubsystem extends SubsystemBase {
   public static PhotonCamera camera;
