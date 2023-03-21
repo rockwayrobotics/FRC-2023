@@ -42,6 +42,6 @@ public class BucketToZero extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_subsystem.angleLimitPressed;
+    return m_subsystem.bottomShooterLimitPressed;
   }
 }

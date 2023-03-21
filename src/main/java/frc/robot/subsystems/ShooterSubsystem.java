@@ -37,7 +37,8 @@ public class ShooterSubsystem extends SubsystemBase {
   CANSparkMax m_angleMotor = new CANSparkMax(Constants.CAN.SHOOTER_ANGLE_MOTOR, MotorType.kBrushless);
   RelativeEncoder m_angleEncoder = m_angleMotor.getEncoder();
   
-  DigitalInput m_bottomLimit = new DigitalInput(Constants.Digital.SHOOTER_BOTTOM_LIMIT);
+  DigitalInput m_bottomLimit1 = new DigitalInput(Constants.Digital.SHOOTER_BOTTOM_LIMIT_1);
+  DigitalInput m_bottomLimit2 = new DigitalInput(Constants.Digital.SHOOTER_BOTTOM_LIMIT_2);
 
   public ScoringMode m_ScoringMode = ScoringMode.CUBE;
 
@@ -52,7 +53,7 @@ public class ShooterSubsystem extends SubsystemBase {
   GenericEntry ejectAngleWidget;
   SimpleWidget selectedModeColourWidget;
   
-  public boolean angleLimitPressed = false;
+  public boolean bottomShooterLimitPressed = false;
 
   /** Creates a new ShooterSubsystem. */
   public ShooterSubsystem() {
@@ -76,7 +77,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void spinAngleMotor(double speed) {
-    if (angleLimitPressed && Math.abs(speed) < 0){
+    if (bottomShooterLimitPressed && Math.abs(speed) < 0){
       m_angleMotor.set(0);
     } else {
       m_angleMotor.set(speed);
@@ -105,8 +106,8 @@ public class ShooterSubsystem extends SubsystemBase {
     
     // This method will be called once per scheduler run
     // System.out.println("Angle limit: " + m_bottomLimit.get());
-    angleLimitPressed = !m_bottomLimit.get(); // Switch reads false when pressed
-    if (angleLimitPressed){
+    bottomShooterLimitPressed = !m_bottomLimit1.get() || !m_bottomLimit2.get(); // Switch reads false when pressed
+    if (bottomShooterLimitPressed){
       setAngleEncoderPosition(0);
     }
 

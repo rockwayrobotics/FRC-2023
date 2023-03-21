@@ -39,7 +39,8 @@ public final class Constants {
     public static final class Digital {
         public static final int[] LEFT_DRIVE_ENCODER = {0,1};
         public static final int[] RIGHT_DRIVE_ENCODER = {2,3};
-        public static final int SHOOTER_BOTTOM_LIMIT = 4;
+        public static final int SHOOTER_BOTTOM_LIMIT_1 = 4;
+        public static final int SHOOTER_BOTTOM_LIMIT_2 = 5;
     }
     
     // Constants related to robot driving
@@ -56,6 +57,7 @@ public final class Constants {
 
     public static final class LED {
         public final static int LED_PWM = 0;
+        public final static int LED_LENGTH = 60;
         public static enum modes {
             Green,
             Orange,

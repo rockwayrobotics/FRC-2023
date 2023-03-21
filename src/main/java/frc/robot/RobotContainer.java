@@ -40,7 +40,7 @@ public class RobotContainer {
 
   private final DrivebaseSubsystem m_drivebase = new DrivebaseSubsystem();
 
-  private final LedSubsystem m_led = new LedSubsystem(Constants.LED.LED_PWM, 60);
+  private final LedSubsystem m_led = new LedSubsystem();
 
   private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 

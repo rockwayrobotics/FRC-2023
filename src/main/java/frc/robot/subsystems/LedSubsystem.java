@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import frc.robot.Constants;
 import frc.robot.Constants.LED_CONSTANTS;
 import frc.robot.Constants.LED.modes;
 
@@ -51,13 +52,10 @@ public class LedSubsystem extends SubsystemBase {
   private ArrayList<LED> full_sequence = new ArrayList<LED>();
   private modes[] possible_patterns = {modes.SingleRedDot, modes.ChasingDots, modes.Rainbow, modes.PiSequence, modes.RedGreenBreatheGradient};
 
-  public LedSubsystem(
-    int m_ledInt,
-    int m_ledBufferInt
-  ) {
+  public LedSubsystem() {
 
-    m_led = new AddressableLED(m_ledInt);
-    m_ledBuffer = new AddressableLEDBuffer(m_ledBufferInt);
+    m_led = new AddressableLED(Constants.LED.LED_PWM);
+    m_ledBuffer = new AddressableLEDBuffer(Constants.LED.LED_LENGTH);
 
     m_led.setLength(m_ledBuffer.getLength());
     m_led.setData(m_ledBuffer);
