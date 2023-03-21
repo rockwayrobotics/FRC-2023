@@ -56,22 +56,22 @@ public class BalanceRoutine extends SequentialCommandGroup {
         //     // .then(new WaitCommand(0.5))
         //     // .then(new AutoBalance(drivebase));
 
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Red)));
+        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Orange)));
         this.addCommands(new AutoShootSequence(m_drivebase, m_shooter, m_led));
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Yellow)));
         this.addCommands(new DriveUntilTipped(drivebase, -12, 0.4));
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Green)));
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Green)));
         this.addCommands(new DriveUntilTipped(drivebase, 16, 0.4));
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Blue)));
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Blue)));
         this.addCommands(new DriveUntilTipped(drivebase, 3, 0.2));
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Purple)));
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Purple)));
         this.addCommands(new DriveDistance(drivebase, 0.2, 30));
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.PiSequence)));
-        System.out.println("balanceTime yipeee");
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.PiSequence)));
+        System.out.println("balanceTime yipeee bing bang bong boom");
         this.addCommands(new WaitCommand(0.7));
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Rainbow)));
         this.addCommands(new DriveUntilTipped(drivebase, 16, -0.5));
-        this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Trans)));
+        // this.addCommands(new InstantCommand(() -> m_led.setMode(Constants.LED.modes.Trans)));
         this.addCommands(new AutoBalance(drivebase));
         this.addCommands(new WaitCommand(0.5));
         this.addCommands(new AutoBalance(drivebase));

@@ -58,6 +58,7 @@ public final class Constants {
         public final static int LED_PWM = 0;
         public static enum modes {
             Green,
+            Orange,
             Red,
             Blue,
             Yellow,

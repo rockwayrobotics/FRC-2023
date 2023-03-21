@@ -256,6 +256,12 @@ public class LedSubsystem extends SubsystemBase {
     }
   }
 
+  private void orange() {
+    for (var i = 0; i < m_ledBuffer.getLength(); i++) {
+      m_ledBuffer.setRGB(i, 255, 165, 0);
+    }
+  }
+
   private void green() {
     for (var i = 0; i < m_ledBuffer.getLength(); i++) {
       m_ledBuffer.setRGB(i, 0, 128, 0);
@@ -386,6 +392,9 @@ public class LedSubsystem extends SubsystemBase {
               break;
           case Red:
               red();
+              break;
+          case Orange:
+              orange();
               break;
           case Blue:
               blue();
