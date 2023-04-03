@@ -1,6 +1,9 @@
 //DRIVEBASE SUBSYSTEM
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -39,10 +42,10 @@ public class DrivebaseSubsystem extends SubsystemBase {
 
   private final AHRS m_gyro = new AHRS(SPI.Port.kMXP);
   
-  private final CANSparkMax m_leftDriveMotor1 = new CANSparkMax(Constants.CAN.LEFT_DRIVE_MOTOR_1, MotorType.kBrushless);
+  private final WPI_VictorSPX m_leftDriveMotor1 = new WPI_VictorSPX(Constants.CAN.LEFT_DRIVE_MOTOR_1);
   private final CANSparkMax m_leftDriveMotor2 = new CANSparkMax(Constants.CAN.LEFT_DRIVE_MOTOR_2, MotorType.kBrushless);
 
-  private final CANSparkMax m_rightDriveMotor1 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_1, MotorType.kBrushless);
+  private final WPI_VictorSPX m_rightDriveMotor1 = new WPI_VictorSPX(Constants.CAN.RIGHT_DRIVE_MOTOR_1);
   private final CANSparkMax m_rightDriveMotor2 = new CANSparkMax(Constants.CAN.RIGHT_DRIVE_MOTOR_2, MotorType.kBrushless);
 
   private final MotorControllerGroup m_leftDrive = new MotorControllerGroup(m_leftDriveMotor1, m_leftDriveMotor2);
@@ -111,9 +114,13 @@ public class DrivebaseSubsystem extends SubsystemBase {
   }
 
   public void setDrivebaseIdle(IdleMode setting) {
-    m_rightDriveMotor1.setIdleMode(setting);
+    NeutralMode neutralMode = switch (setting) {
+      case kBrake -> NeutralMode.Brake;
+      case kCoast -> NeutralMode.Coast;
+    };
+    m_rightDriveMotor1.setNeutralMode(neutralMode);
     m_rightDriveMotor2.setIdleMode(setting);
-    m_leftDriveMotor1.setIdleMode(setting);
+    m_leftDriveMotor1.setNeutralMode(neutralMode);
     m_leftDriveMotor2.setIdleMode(setting);
   }
 

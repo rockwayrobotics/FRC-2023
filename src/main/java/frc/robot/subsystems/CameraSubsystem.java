@@ -16,11 +16,13 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.SuppliedValueWidget;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -39,12 +41,32 @@ public class CameraSubsystem extends SubsystemBase {
     .withWidget(BuiltInWidgets.kBooleanBox)
     .withProperties(Map.of("colorWhenFalse", "red", "colorWhenTrue", "green"));
 
+  SuppliedValueWidget<Double> m_xWidget = Shuffleboard.getTab("Subsystems").addDouble("X", this::getX);
+  SuppliedValueWidget<Double> m_yWidget = Shuffleboard.getTab("Subsystems").addDouble("Y", this::getY);
+
+
   boolean getInDistance() {
     var vision = CameraSubsystem.camera.getLatestResult();
     if (!vision.hasTargets()) {
       return false;
     }
     return vision.getBestTarget().getBestCameraToTarget().getX() < 5;
+  }
+
+  double getX() {
+    var vision = CameraSubsystem.camera.getLatestResult();
+    if (!vision.hasTargets()) {
+      return Double.NaN;
+    }
+    return vision.getBestTarget().getBestCameraToTarget().getX();
+  }
+
+  double getY() {
+    var vision = CameraSubsystem.camera.getLatestResult();
+    if (!vision.hasTargets()) {
+      return Double.NaN;
+    }
+    return vision.getBestTarget().getBestCameraToTarget().getY();
   }
 
   /** Creates a new CameraSubsystem. */
@@ -66,7 +88,7 @@ public class CameraSubsystem extends SubsystemBase {
       e.printStackTrace();
     }
 
-    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.CLOSEST_TO_REFERENCE_POSE, camera, Vision.robotToCam);
+    photonPoseEstimator = new PhotonPoseEstimator(aprilTagFieldLayout, PoseStrategy.LOWEST_AMBIGUITY, camera, Vision.robotToCam);
   }
 
   public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d lastEstimatedRobotPose) {
@@ -123,12 +145,30 @@ public class CameraSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // PhotonPipelineResult result = camera.getLatestResult();
-    // if(result.hasTargets()) {
-    //   SmartDashboard.putNumber("X", result.getBestTarget().getBestCameraToTarget().getX());
-    //   SmartDashboard.putNumber("Y", result.getBestTarget().getBestCameraToTarget().getY());
-      
-    // }
+    PhotonPipelineResult result = camera.getLatestResult();
+    if(result.hasTargets()) {
+      SmartDashboard.putNumber("Pose Estimator X", result.getBestTarget().getBestCameraToTarget().getX());
+      SmartDashboard.putNumber("Pose Estimator Y", result.getBestTarget().getBestCameraToTarget().getY());
+      var myResult = photonPoseEstimator.update(result);
+      // photonPoseEstimator.
+      if (myResult.isPresent()) {
+        // do something if there is a pose
+        SmartDashboard.putNumber("New pose estimator X:", myResult.get().estimatedPose.getX());
+        SmartDashboard.putNumber("New pose estimator Y:", myResult.get().estimatedPose.getY());
+        SmartDashboard.putNumber("New pose estimator yaw:", Units.radiansToDegrees(myResult.get().estimatedPose.getRotation().getZ()));        
+      } else {
+
+      }
+      // System.out.println("New pose estimator: " + myResult.);
+
+    }
+
+    // var myResult = photonPoseEstimator.update(result);
+
+    // SmartDashboard.putNumber("New pose estimator X", myResult.get());
+
+    // System.out.println("New pose estimator: " + myResult.get());
+
   }
   @Override
   public void simulationPeriodic() {

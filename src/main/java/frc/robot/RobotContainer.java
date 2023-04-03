@@ -57,7 +57,7 @@ public class RobotContainer {
     rightBumper.onFalse(new SetDriveScaleCommand(m_drivebase, 1));
 
     final JoystickButton buttonA = new JoystickButton(m_xboxController, XboxController.Button.kA.value);
-    // buttonA.whileTrue(new AlignRobotToTarget(m_drivebase, m_CameraSubsystem));
+    buttonA.whileTrue(new AlignRobotToTarget(m_drivebase, m_CameraSubsystem));
     buttonA.whileTrue(new DrivethAlign(m_drivebase, m_CameraSubsystem));
     final JoystickButton buttonB = new JoystickButton(m_xboxController, XboxController.Button.kB.value);
     buttonB.whileTrue(new DrivethAlign(m_drivebase, m_CameraSubsystem));

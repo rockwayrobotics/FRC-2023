@@ -28,11 +28,10 @@ public final class Constants {
 
     // CAN IDs for motor controllers
     public static final class CAN {
-        public static final int PNEUMATIC_HUB = 1;
-        public static final int LEFT_DRIVE_MOTOR_1 = 2;
-        public static final int LEFT_DRIVE_MOTOR_2 = 3;
-        public static final int RIGHT_DRIVE_MOTOR_1 = 4;
-        public static final int RIGHT_DRIVE_MOTOR_2 = 5;
+        public static final int LEFT_DRIVE_MOTOR_1 = 1;
+        public static final int LEFT_DRIVE_MOTOR_2 = 2;
+        public static final int RIGHT_DRIVE_MOTOR_1 = 3;
+        public static final int RIGHT_DRIVE_MOTOR_2 = 4;
         public static final int SHOOTER_ANGLE_MOTOR = 6;
     }
     
@@ -69,7 +68,7 @@ public final class Constants {
 
     public static final class Vision {
         public static final String camName = "AprilTagCam";
-        public static final Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
+        public static final Transform3d robotToCam = new Transform3d(new Translation3d(0, -0.2, 0.2), new Rotation3d(0,Units.degreesToRadians(-20),Units.degreesToRadians(-90))); //Cam mounted facing forward, half a meter forward of center, half a meter up from center.
     }
 
     public final static class Field {
@@ -77,8 +76,8 @@ public final class Constants {
         public static final double length = 5; // 5m field length
         public static final double width = 5; // 5m field width
 
-        public static final AprilTag tag0 = new AprilTag(0, new Pose3d(length, width/2, 0, new Rotation3d(0, 0, 180)));
-        public static final AprilTag tag1 = new AprilTag(1, new Pose3d(0, width/2, 0, new Rotation3d(0, 0, 0)));
+        public static final AprilTag tag0 = new AprilTag(0, new Pose3d(length, width/2, Units.inchesToMeters(31), new Rotation3d(0, 0, Units.degreesToRadians(180))));
+        public static final AprilTag tag1 = new AprilTag(1, new Pose3d(0, width/2, Units.inchesToMeters(30), new Rotation3d(0, 0, 0)));
     }
 
     // Constants related to the shooter
