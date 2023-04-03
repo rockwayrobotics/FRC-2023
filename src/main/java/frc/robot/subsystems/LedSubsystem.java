@@ -185,7 +185,7 @@ public class LedSubsystem extends SubsystemBase {
   private void breathing_monochrome(int hue){
     int sat = 0;
     for (int i=0; i < m_ledBuffer.getLength(); i++){
-      sat = (int) sin_wave((double) i + counter, 200);
+      sat = (int) sin_wave((double) i + counter, 70);
       m_ledBuffer.setHSV(i, hue, sat, sat);
     }
     counter++;

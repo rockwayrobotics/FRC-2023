@@ -4,6 +4,10 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -78,6 +82,33 @@ public final class Constants {
             BreathingYellow,
             BreathingMagenta
           }
+
+        public static enum PrideColors {
+            Pink(51, 147, 240),
+            White(192, 192, 192),
+            Blue(215, 0, 113),
+            BiPink(215, 0, 113),
+            BiPurple(156, 78, 151),
+            BiBlue(0, 53, 196),
+            NBYellow(255, 255, 0),
+            NBPurple(0, 53, 196),
+            Black(0,0,0);
+
+            public final int r;
+            public final int g;
+            public final int b;
+
+            private PrideColors(int r, int g, int b) {
+                this.r = r;
+                this.g = g;
+                this.b = b;
+            }
+
+        }
+
+        List<PrideColors> TransFlag = (List<PrideColors>) Arrays.asList(PrideColors.Blue, PrideColors.Pink, PrideColors.White, PrideColors.Pink, PrideColors.Blue);
+        List<PrideColors> NonBinaryFlag = (List<PrideColors>) Arrays.asList(PrideColors.NBYellow, PrideColors.White, PrideColors.NBPurple, PrideColors.Black);
+        List<PrideColors> BiFlag = (List<PrideColors>) Arrays.asList(PrideColors.BiPink, PrideColors.BiPurple, PrideColors.BiBlue);
     }
 
     public static final class Balance {
