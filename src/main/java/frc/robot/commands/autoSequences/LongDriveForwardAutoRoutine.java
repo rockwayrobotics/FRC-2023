@@ -40,7 +40,7 @@ public class LongDriveForwardAutoRoutine extends SequentialCommandGroup {
         AutoFailedWidget.withProperties(Map.of("colorWhenFalse", "yellow"));
         FailFastTimeoutGroup sequence = new FailFastTimeoutGroup()
             .thenWithTimeout(new AutoShootSequence(drivebase, shooter, led), 5)
-            .thenWithTimeout(new DriveDistance(drivebase, 0.3, 150), 10);
+            .thenWithTimeout(new DriveDistance(drivebase, 0.3, 110), 10);
 
 
         this.addCommands(sequence);
