@@ -147,7 +147,7 @@ public class DrivebaseSubsystem extends SubsystemBase {
    * @param rotation Rotation speed. -1 is full clockwise, 1 is full counterclockwise.
    */
   public void set(double speed, double rotation) {
-    m_drive.curvatureDrive(speed*m_scale, rotation*m_scale, true);
+    m_drive.curvatureDrive(speed*m_scale/2, rotation*m_scale/2, true);
   }
 
   public void setTank(double leftSpeed, double rightSpeed) {
