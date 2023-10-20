@@ -26,7 +26,7 @@ public class ShootSequence extends SequentialCommandGroup {
         //this.addCommands((new ProxyCommand(new ShootMoveDistance(drivebase, 0.2))));
         //this.addCommands(new ShootMoveDistance(drivebase, .2));
 
-        this.addCommands(new ShootAngle(m_drivebase, m_shooter, 1));
+        // this.addCommands(new ShootAngle(m_drivebase, m_shooter, 1));
 
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kForward)));
         this.addCommands(new WaitCommand(0.4));
@@ -38,6 +38,6 @@ public class ShootSequence extends SequentialCommandGroup {
         this.addCommands(new WaitCommand(1));
         this.addCommands(new InstantCommand(() -> m_shooter.setFlap(DoubleSolenoid.Value.kReverse)));
         this.addCommands(new SetLEDAfterShot(shooter, led));
-        this.addCommands(new BucketToZero(shooter, 0.8));
+        // this.addCommands(new BucketToZero(shooter, 0.8));
     }
 }
